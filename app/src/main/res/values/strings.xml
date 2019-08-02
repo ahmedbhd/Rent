@@ -25,4 +25,7 @@
     <string name="unselect_three_months">Unselect Prev/Curr/Next Months</string>
     <string name="clear_selections">Clear selections</string>
     <string name="log_selected_days">Log selected days</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<com.daimajia.swipe.SwipeLayout xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    swipe:leftEdgeSwipeOffset="0dp"
+    swipe:rightEdgeSwipeOffset="0dp"
+    android:layout_margin="5dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#F89802"
+        android:gravity="center"
+        android:tag="Bottom3"
+        android:weightSum="10"
+        android:layout_margin="5dp">
+
+        <ImageView
+            android:id="@+id/eye"
+            android:layout_width="27dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/telephone" />
+
+        <Button
+            android:id="@+id/open"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="4"
+            android:background="@drawable/white"
+            android:text="Call"
+            android:textColor="#F89802" />
+
+        <Button
+            android:id="@+id/delete"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="4"
+            android:background="@drawable/white"
+            android:text="Delete"
+            android:textColor="#F89802" />
+        <ImageView
+            android:id="@+id/trash"
+            android:layout_width="27dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:src="@drawable/trash" />
+    </LinearLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/item_selector">
+
+
+        <TextView
+                android:id="@+id/loc_cin"
+                style="@style/titetextstyle"
+                android:layout_width="155dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="2dp"
+                android:layout_marginEnd="120dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/avatar"
+                android:gravity="center"
+                android:text="Nom"
+                android:textAlignment="center"
+                android:textColor="#686868"
+                android:textStyle="bold"
+                swipe:layout_constraintBottom_toTopOf="@+id/loc_start"
+                swipe:layout_constraintEnd_toEndOf="parent"
+                swipe:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="8dp"
+                swipe:layout_constraintStart_toStartOf="parent"
+                swipe:layout_constraintHorizontal_bias="1.0"/>
+
+        <TextView
+                android:id="@+id/loc_end"
+                style="@style/subtitetextstyle"
+                android:layout_width="155dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:drawablePadding="2dp"
+                android:drawableEnd="@drawable/hourglassstart"
+
+                android:gravity="center"
+                android:text="Nom"
+                android:textAlignment="center"
+                android:textAppearance="@style/subtitetextstyle"
+                swipe:layout_constraintBottom_toBottomOf="parent"
+                swipe:layout_constraintEnd_toEndOf="parent"
+                swipe:layout_constraintTop_toBottomOf="@+id/loc_cin"
+                swipe:layout_constraintStart_toEndOf="@+id/loc_start"
+                android:layout_marginStart="8dp"
+                android:inputType="datetime"/>
+
+        <TextView
+                android:id="@+id/loc_start"
+                style="@style/subtitetextstyle"
+                android:layout_width="155dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="216dp"
+                android:drawablePadding="2dp"
+                android:drawableStart="@drawable/hourglassend"
+
+                android:gravity="center"
+                android:text="Nom"
+                android:textAlignment="center"
+                android:textAppearance="@style/subtitetextstyle"
+                swipe:layout_constraintBottom_toBottomOf="parent"
+                swipe:layout_constraintEnd_toEndOf="parent"
+                swipe:layout_constraintTop_toBottomOf="@+id/loc_cin"
+                android:layout_marginStart="8dp"
+                swipe:layout_constraintStart_toStartOf="parent"
+                android:inputType="datetime"/>
+
+
+    </android.support.constraint.ConstraintLayout>
+</com.daimajia.swipe.SwipeLayout>

@@ -14,4 +14,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+
+    <style name="titetextstyle" parent="TextAppearance.AppCompat.Medium">
+    </style>
+
+    <style name="subtitetextstyle" parent="TextAppearance.AppCompat.Caption">
+    </style>
 </resources>
