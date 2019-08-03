@@ -1,87 +1,124 @@
 package com.rent
 
-
+import android.content.ClipData
 import android.graphics.Canvas
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
+import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
 import com.rent.adapters.CustomListAdapter
 import com.rent.adapters.MainAdapter
+import com.rent.adapters.util.RecyclerItemTouchHelperListner
 import com.rent.data.Model
 import com.rent.data.PaymentServices
+import com.rent.tools.PhoneGrantings
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_loc_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
-import kotlinx.android.synthetic.main.fragment_payment.*
-import java.util.ArrayList
+import java.util.*
 
 
-class PaymentFragment : Fragment() {
-    companion object {
-        fun newInstance(): PaymentFragment {
-            return PaymentFragment()
-        }
-    }
-    //private var customListAdapter: CustomListAdapter? = null
 
+
+
+
+
+class LocDetailActivity : AppCompatActivity() {
+
+    private var location:Model.location? = null
     private val paymentService by lazy {
         PaymentServices.create()
     }
     private var disposable: Disposable? = null
-
-
+    private var payments: MutableList<Model.payment>? = ArrayList()
     var list: RecyclerView? = null
+    private var dataset = mutableListOf("Chicken", "Fish", "Beef", "Pork", "Lamb")
 
     private lateinit var customListAdapter: RecyclerView.Adapter<*>
-
-    //private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
-    private var dataset = mutableListOf("Chicken", "Fish", "Beef", "Pork", "Lamb")
-    private var payments: MutableList<Model.payment>? = ArrayList()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_loc_detail)
+
+        val intentContent: String
+
+        val intent = intent
+        if (intent.hasExtra("myObject2")) { // actions when this activity is called from favourites list
+            intentContent = intent.getStringExtra("myObject2")
+            location = Gson().fromJson(intentContent, Model.location::class.java)
+            println("location $location")
+        }
+
+        det_cin.text = location!!.cin
+        det_text.text = location!!.text
+//        val format = SimpleDateFormat("yyyy-mm-dd mm:ss", Locale.getDefault())
+//        val date = format.parse(location!!.start)
+
+        det_date_debu.text = location!!.start
+        det_date_fin.text = location!!.end
+        list = findViewById<RecyclerView>(R.id.det_listview)
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val root= inflater.inflate(R.layout.fragment_payment, container, false)
-        val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Payments"
-        list = root.findViewById(R.id.det_listview22) as RecyclerView
+
+
+        val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
+        toggleButton.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+            } else {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
+        }
+
+        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(view: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    toggleButton!!.isChecked = true
+                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    toggleButton!!.isChecked = false
+                }
+            }
+
+            override fun onSlide(view: View, v: Float) {
+
+            }
+        })
+
+
+        if (PhoneGrantings.isNetworkAvailable(this)) // online actions
+            selectLocPayments()
+        else
+            Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
 
 
 
-        selectLocPayments()
-        return root
     }
+
 
     private fun selectLocPayments() {
         disposable =
-            paymentService.selectPayments()
+            paymentService.selectLocPayments(Integer.parseInt(location!!.id))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
                         payments = result as MutableList<Model.payment>?
                         println("hhhhhhhhhhhh $payments")
-                        //dataset.add(payments!![0].type)
-
                         prepareRecyclerView()
                         customListAdapter.notifyDataSetChanged()
                     },
@@ -91,10 +128,10 @@ class PaymentFragment : Fragment() {
 
     private fun prepareRecyclerView(){
         customListAdapter = CustomListAdapter(payments!!)
-        viewManager = LinearLayoutManager(context!!)
+        viewManager = LinearLayoutManager(this)
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
-        deleteIcon = ContextCompat.getDrawable(context!!, R.drawable.ic_delete_white_24dp)!!
+        deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete_white_24dp)!!
 
         list!!.apply {
             setHasFixedSize(true)

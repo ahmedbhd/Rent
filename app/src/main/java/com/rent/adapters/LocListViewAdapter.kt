@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.FragmentActivity
-import android.support.v4.content.ContextCompat.startActivity
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.core.content.ContextCompat.startActivity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +23,7 @@ import com.daimajia.swipe.SimpleSwipeListener
 import com.daimajia.swipe.SwipeLayout
 import com.daimajia.swipe.adapters.BaseSwipeAdapter
 import com.google.gson.Gson
+import com.rent.LocDetailActivity
 import com.rent.MainActivity
 import com.rent.R
 import com.rent.data.LocationServices
@@ -60,7 +61,16 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
 
 
-        swipeLayout.setOnDoubleClickListener { _, _ -> Toast.makeText(mContext, "DoubleClick", Toast.LENGTH_SHORT).show() }
+        swipeLayout.setOnDoubleClickListener { _, _ ->
+            run {
+                Toast.makeText(mContext, "DoubleClick", Toast.LENGTH_SHORT).show();
+                val intent = Intent(mContext, LocDetailActivity().javaClass)
+                val res: Model.location? = locations[position]
+                println("res ${res.toString()}")
+                intent.putExtra("myObject2", Gson().toJson(res))
+                manager!!.startActivity(intent)
+            }
+        }
 
         // delete action
         v.findViewById<Button>(R.id.delete).setOnClickListener {
@@ -69,12 +79,6 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
          //display the details in detail activity
         v.findViewById<Button>(R.id.open).setOnClickListener {
-            //Toast.makeText(mContext, "click open", Toast.LENGTH_SHORT).show();
-//            val intent = Intent(mContext, DisResActivity().javaClass)
-//            val res: Model.ResultRestaurant? = favourites[position]
-//            println("res ${res.toString()}")
-//            intent.putExtra("myObject2", Gson().toJson(res))
-//            manager!!.startActivity(intent)
             phoneCall(locations[position].tel)
         }
         return v

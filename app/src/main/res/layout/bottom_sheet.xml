@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/bottomSheet"
+              android:layout_width="match_parent"
+              android:layout_height="300dp"
+              android:background="@android:color/white"
+              android:orientation="vertical"
+              app:behavior_peekHeight="?actionBarSize"
+              app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <!--expand to top android:layout_height="match_parent"-->
+    <!--android:layout_height="300dp"-->
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/cardview_dark_background"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp">
+
+        <ToggleButton
+                android:id="@+id/toggleButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/tb_up_down"
+                android:text=""
+                android:textOff=""
+                android:textOn="" />
+
+
+    </RelativeLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/det_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+</LinearLayout>

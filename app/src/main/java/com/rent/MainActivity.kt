@@ -2,15 +2,16 @@ package com.rent
 
 import android.content.Context
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.TextView
 import com.rent.data.LocationServices
 import com.rent.data.Model
+import com.rent.data.PaymentServices
 import com.rent.tools.PhoneGrantings
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -83,6 +84,8 @@ class MainActivity : AppCompatActivity() {
                 )
     }
 
+
+
     private fun selectLocationById() {
 
         disposable =
@@ -91,10 +94,12 @@ class MainActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
-                        location = result as Model.location?
+                        location = result
                         println("hhhhhhhhhhhh $location")
                     },
                     { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
                 )
     }
+
+
 }

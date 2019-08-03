@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 
@@ -48,7 +48,7 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
             return
         }
 
-        if (getOrientation(parent)==LinearLayoutManager.VERTICAL) {
+        if (getOrientation(parent)== LinearLayoutManager.VERTICAL) {
             outRect.top = mDivider!!.intrinsicHeight
         } else {
             outRect.left = mDivider!!.intrinsicWidth
@@ -70,7 +70,7 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
         val orientation = getOrientation(parent)
         val childCount = parent.childCount
 
-        if (orientation==LinearLayoutManager.VERTICAL) {
+        if (orientation== LinearLayoutManager.VERTICAL) {
             size = mDivider!!.intrinsicHeight
             left = parent.paddingLeft
             right = parent.width - parent.paddingRight
@@ -84,7 +84,7 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
             val child = parent.getChildAt(i)
             val params = child.layoutParams as RecyclerView.LayoutParams
 
-            if (orientation==LinearLayoutManager.VERTICAL) {
+            if (orientation== LinearLayoutManager.VERTICAL) {
                 top = child.top - params.topMargin
                 bottom = top + size
             } else { //horizontal
@@ -99,7 +99,7 @@ class DividerItemDecoration : RecyclerView.ItemDecoration {
         if (mShowLastDivider && childCount > 0) {
             val child = parent.getChildAt(childCount - 1)
             val params = child.layoutParams as RecyclerView.LayoutParams
-            if (orientation==LinearLayoutManager.VERTICAL) {
+            if (orientation== LinearLayoutManager.VERTICAL) {
                 top = child.bottom + params.bottomMargin
                 bottom = top + size
             } else { // horizontal

@@ -50,7 +50,7 @@
             android:src="@drawable/trash" />
     </LinearLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -122,5 +122,5 @@
                 android:inputType="datetime"/>
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.daimajia.swipe.SwipeLayout>

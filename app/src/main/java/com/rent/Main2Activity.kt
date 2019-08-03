@@ -1,11 +1,11 @@
 package com.rent
 
 import android.os.Bundle
-import android.support.annotation.IdRes
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.OrientationHelper
-import android.support.v7.widget.Toolbar
+import androidx.annotation.IdRes
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.RadioGroup
