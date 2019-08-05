@@ -112,6 +112,20 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="68dp"
             app:layout_constraintTop_toBottomOf="@+id/textView6"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            app:backgroundTint="@color/dollar"
+            android:onClick="ShowPopup"
+            app:srcCompat="@drawable/dollar"
+            android:id="@+id/floatingActionButton"
+            android:layout_marginBottom="92dp"
+            app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent" tools:layout_editor_absoluteY="0dp"
@@ -120,6 +134,8 @@
                 layout="@layout/bottom_sheet"
                 />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

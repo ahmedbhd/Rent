@@ -40,4 +40,10 @@ interface PaymentServices {
 
     @GET("services.php?action=selectLocPayments")
     fun selectLocPayments(@Query ("locationKey") locationKey:Int): Observable<List<Model.payment>>
+
+    @GET("services.php?action=addPayment")
+    fun addPayment(@Query ("amount") amount:Int ,
+                   @Query ("date") date:String,
+                   @Query ("locationKey") locationKey:Int,
+                   @Query ("type") type:String): Observable<String>
 }

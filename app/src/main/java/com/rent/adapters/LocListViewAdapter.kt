@@ -33,6 +33,9 @@ import com.rent.tools.PhoneGrantings
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.text.SimpleDateFormat
+import java.util.*
+import android.text.format.DateFormat;
 
 // Online Favourite list Adapter
 class LocListViewAdapter(private val mContext: Context, private var locations: MutableList<Model.location>, private val manager: FragmentActivity?) : BaseSwipeAdapter() {
@@ -63,7 +66,7 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
         swipeLayout.setOnDoubleClickListener { _, _ ->
             run {
-                Toast.makeText(mContext, "DoubleClick", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "DoubleClick", Toast.LENGTH_SHORT).show()
                 val intent = Intent(mContext, LocDetailActivity().javaClass)
                 val res: Model.location? = locations[position]
                 println("res ${res.toString()}")
@@ -92,12 +95,34 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
         val cin = convertView.findViewById(R.id.loc_cin) as TextView
         val dateStart = convertView.findViewById(R.id.loc_start) as TextView
         val dateEnd = convertView.findViewById(R.id.loc_end) as TextView
+        val timeEnd = convertView.findViewById(R.id.etime) as TextView
+        val timeStart = convertView.findViewById(R.id.stime) as TextView
 
 
         // Populate the data into the template view using the data object
         cin.text = p.cin
-        dateStart.text = p.start
-        dateEnd.text = p.end
+        val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+        var date = format.parse(p.start)
+        var mDay          =  DateFormat.format("dd",   date)
+        var mMonth  = DateFormat.format("MM",   date)
+        var mYear         = DateFormat.format("yyyy", date)
+        var mHour         = DateFormat.format("hh", date)
+        var mMinute         = DateFormat.format("mm", date)
+
+        dateStart.text = "$mYear-$mMonth-$mDay"
+        timeStart.text = "$mHour:$mMinute"
+
+         date = format.parse(p.end)
+         mDay          =  DateFormat.format("dd",   date)
+         mMonth  = DateFormat.format("MM",   date)
+         mYear         = DateFormat.format("yyyy", date)
+         mHour         = DateFormat.format("hh", date)
+         mMinute         = DateFormat.format("mm", date)
+
+        dateEnd.text = "$mYear-$mMonth-$mDay"
+        timeEnd.text = "$mHour:$mMinute"
+
 
 
 

@@ -1,5 +1,8 @@
 package com.rent
 
+import android.app.DatePickerDialog
+import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.ClipData
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
@@ -28,11 +31,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_loc_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import java.util.*
-
-
-
-
-
+import android.widget.TextView
+import com.rent.adapters.util.TimePickerFragment.Companion.time
+import kotlinx.android.synthetic.main.custompopup.*
+import java.text.SimpleDateFormat
 
 
 class LocDetailActivity : AppCompatActivity() {
@@ -51,9 +53,21 @@ class LocDetailActivity : AppCompatActivity() {
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
 
+
+    lateinit var myDialog: Dialog
+
+    private var mYear: Int = 0
+    private var mMonth: Int = 0
+    private var mDay: Int = 0
+    private var mHour: Int = 0
+    private var mMinute: Int = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loc_detail)
+        val actionBar = (this as AppCompatActivity).supportActionBar
+        actionBar!!.title = "Detail Location"
 
         val intentContent: String
 
@@ -73,7 +87,7 @@ class LocDetailActivity : AppCompatActivity() {
         det_date_fin.text = location!!.end
         list = findViewById<RecyclerView>(R.id.det_listview)
 
-
+        myDialog =  Dialog(this)
 
 
         val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
@@ -89,6 +103,11 @@ class LocDetailActivity : AppCompatActivity() {
             override fun onStateChanged(view: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     toggleButton!!.isChecked = true
+                    if (PhoneGrantings.isNetworkAvailable(applicationContext)) // online actions
+                        selectLocPayments()
+                    else
+                        Toast.makeText(applicationContext, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
+
                 } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
                     toggleButton!!.isChecked = false
                 }
@@ -100,13 +119,11 @@ class LocDetailActivity : AppCompatActivity() {
         })
 
 
-        if (PhoneGrantings.isNetworkAvailable(this)) // online actions
-            selectLocPayments()
-        else
-            Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
 
 
 
+
+//        floatingActionButton.setOnClickListener {ShowPopup()}
     }
 
 
@@ -127,7 +144,9 @@ class LocDetailActivity : AppCompatActivity() {
     }
 
     private fun prepareRecyclerView(){
-        customListAdapter = CustomListAdapter(payments!!)
+        val supportFragmentManager = supportFragmentManager
+
+        customListAdapter = CustomListAdapter(payments!! , this)
         viewManager = LinearLayoutManager(this)
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
@@ -188,10 +207,97 @@ class LocDetailActivity : AppCompatActivity() {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
 
+
         }
 
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(list)
+    }
+
+
+    fun ShowPopup(v :View) {
+        myDialog.setCanceledOnTouchOutside(false)
+
+        myDialog.show()
+
+        myDialog.setContentView(R.layout.custompopup2)
+
+        myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val txt: TextView = myDialog.findViewById(R.id.txtclose) as TextView
+        val btn: Button = myDialog.findViewById(R.id.btnfollow) as Button
+        val type: EditText = myDialog.findViewById(R.id.add_type) as EditText
+        val amount: EditText = myDialog.findViewById(R.id.add_amount) as EditText
+        val dateBtn: ImageView = myDialog.findViewById(R.id.imageDate) as ImageView
+        val timeBtn: ImageView = myDialog.findViewById(R.id.imageTime) as ImageView
+        val dateText: TextView = myDialog.findViewById(R.id.add_date) as TextView
+
+        val time = myDialog.findViewById(com.rent.R.id.add_time) as TextView
+
+        val c = Calendar.getInstance(Locale.FRANCE)
+        mHour = c.get(Calendar.HOUR_OF_DAY)
+        mMinute = c.get(Calendar.MINUTE)
+        mYear = c.get(Calendar.YEAR)
+        mMonth = c.get(Calendar.MONTH)
+        mDay = c.get(Calendar.DAY_OF_MONTH)
+
+        time.text = "$mHour:$mMinute"
+        dateText.text = mYear.toString()+ "-"+mMonth+ 1+ "-" + (mDay )
+
+        timeBtn.setOnClickListener {
+
+
+            val timePickerDialog = TimePickerDialog(
+                this,
+                TimePickerDialog.OnTimeSetListener { view: TimePicker, hourOfDay:Int, minute: Int
+                    -> time.text = "$hourOfDay:$minute"
+                },
+                mHour, mMinute, true
+            )
+            timePickerDialog.show()
+        }
+
+        dateBtn.setOnClickListener {
+
+
+
+            val datePickerDialog = DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth
+                    -> dateText.text =year.toString()+"-"+ dayOfMonth+ "-" + (monthOfYear + 1)  },
+                mYear, // Initial year selection
+                mMonth, // Initial month selection
+                mDay // Inital day selection
+            )
+            datePickerDialog.show()
+        }
+
+
+        txt.setOnClickListener { myDialog.dismiss() }
+        btn.setOnClickListener {
+            println(amount.text.toString())
+            println(type.text.toString())
+
+//            addPayment(Integer.parseInt(amount.text.toString()),date,type.text.toString())
+            myDialog.dismiss()
+        }
+
+    }
+
+    private fun addPayment ( amount: Int,  date:String,  type:String){
+        println(Integer.parseInt(location!!.id))
+        disposable =
+            paymentService.addPayment(amount,date,Integer.parseInt(location!!.id),type)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                       println(result+"dddddddddddddddddd")
+                        if (result == "success")
+                            Toast.makeText(this, "Payment Ajouté", Toast.LENGTH_LONG).show()
+
+                    },
+                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
+                )
     }
 
 }

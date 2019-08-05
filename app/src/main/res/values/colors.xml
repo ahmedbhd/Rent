@@ -9,4 +9,8 @@
     <color name="bgRowBackground">#FA315B</color>
     <color name="itemName">#535353</color>
     <color name="Description">#A9A9A9</color>
+    <color name="orange">#eaad43</color>
+    <color name="bluelight">#49acd5</color>
+    <color name="dollar">#79F856</color>
+
 </resources>

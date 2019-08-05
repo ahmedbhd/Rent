@@ -90,7 +90,8 @@ class PaymentFragment : Fragment() {
     }
 
     private fun prepareRecyclerView(){
-        customListAdapter = CustomListAdapter(payments!!)
+
+        customListAdapter = CustomListAdapter(payments!!,context!!)
         viewManager = LinearLayoutManager(context!!)
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))

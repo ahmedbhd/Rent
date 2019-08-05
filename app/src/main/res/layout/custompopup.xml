@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="350dp"
+              android:layout_height="550dp"
+              android:background="@android:color/black"
+              android:padding="5dp"
+              android:layout_gravity="center">
+
+    <!--<TextView-->
+            <!--android:id="@+id/txtclose"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:textColor="@color/backgroundColor"-->
+            <!--android:text="X"-->
+            <!--android:textStyle="bold"-->
+            <!--android:layout_gravity="end"-->
+            <!--android:gravity="center"-->
+            <!--android:background="@drawable/cerclebackground"/>-->
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+        <!--<EditText-->
+                <!--android:layout_width="150dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textSize="18sp"-->
+
+                <!--android:textColor="@color/backgroundColor"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:id="@+id/add_type"-->
+                <!--android:textAlignment="center"-->
+                <!--android:hint="Type"-->
+                <!--android:gravity="start"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+
+        <!--<EditText-->
+                <!--android:layout_width="150dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="@color/backgroundColor"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:textSize="18sp"-->
+
+                <!--android:id="@+id/add_amount"-->
+                <!--android:inputType="numberSigned"-->
+                <!--android:textAlignment="center"-->
+                <!--android:hint="Montant"-->
+                <!--android:gravity="end"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--<TextView-->
+            <!--android:layout_width="150dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@color/backgroundColor"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:textSize="18sp"-->
+
+            <!--android:id="@+id/add_time"-->
+            <!--android:textAlignment="center"-->
+            <!--android:text="@string/_00_00_00"/>-->
+
+    <!--<CalendarView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/add_calendar"-->
+            <!--android:background="#CDDC39"-->
+            <!--android:backgroundTint="#FFEB3B"-->
+            <!--android:selectedWeekBackgroundColor="#03A9F4"-->
+            <!--android:textAlignment="center"/>-->
+
+    <!--<Button-->
+            <!--android:id="@+id/btnfollow"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/enregistrer"-->
+            <!--android:layout_marginTop="25dp"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--android:background="@drawable/buttonstyle"-->
+            <!--android:textColor="@color/backgroundColor"/>-->
+
+</LinearLayout>
