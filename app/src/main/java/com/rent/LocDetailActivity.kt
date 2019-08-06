@@ -3,25 +3,22 @@ package com.rent
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.content.ClipData
 import android.graphics.Canvas
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import com.google.android.material.bottomsheet.BottomSheetBehavior
+import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.*
-import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.rent.adapters.CustomListAdapter
-import com.rent.adapters.MainAdapter
-import com.rent.adapters.util.RecyclerItemTouchHelperListner
 import com.rent.data.Model
 import com.rent.data.PaymentServices
 import com.rent.tools.PhoneGrantings
@@ -31,10 +28,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_loc_detail.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import java.util.*
-import android.widget.TextView
-import com.rent.adapters.util.TimePickerFragment.Companion.time
-import kotlinx.android.synthetic.main.custompopup.*
-import java.text.SimpleDateFormat
 
 
 class LocDetailActivity : AppCompatActivity() {

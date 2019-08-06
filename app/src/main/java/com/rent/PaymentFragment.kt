@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rent.adapters.CustomListAdapter
-import com.rent.adapters.MainAdapter
 import com.rent.data.Model
 import com.rent.data.PaymentServices
 import io.reactivex.android.schedulers.AndroidSchedulers
