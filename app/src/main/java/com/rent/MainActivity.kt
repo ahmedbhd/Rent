@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.TextView
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.rent.data.LocationServices
 import com.rent.data.Model
 import com.rent.data.PaymentServices
@@ -62,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         println("in main activity")
+        AndroidThreeTen.init(this)
+
         if (PhoneGrantings.isNetworkAvailable(this))
             selectLocationById()
         addFragment(HomeFragment.newInstance(), R.id.page)

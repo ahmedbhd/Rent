@@ -1,203 +1,185 @@
 package com.rent
 
 
+import android.app.ProgressDialog.show
+import android.content.Intent
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Bundle
+import android.text.format.DateFormat
+import android.util.TypedValue
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.RadioGroup
+import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.IdRes
-import androidx.recyclerview.widget.OrientationHelper
-import com.applikeysolutions.cosmocalendar.selection.MultipleSelectionManager
-import com.applikeysolutions.cosmocalendar.selection.criteria.BaseCriteria
-import com.applikeysolutions.cosmocalendar.selection.criteria.WeekDayCriteria
-import com.applikeysolutions.cosmocalendar.selection.criteria.month.CurrentMonthCriteria
-import com.applikeysolutions.cosmocalendar.selection.criteria.month.NextMonthCriteria
-import com.applikeysolutions.cosmocalendar.selection.criteria.month.PreviousMonthCriteria
-import com.applikeysolutions.cosmocalendar.utils.SelectionType
-import com.applikeysolutions.cosmocalendar.view.CalendarView
+import androidx.annotation.ColorRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.children
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.threetenabp.AndroidThreeTen
+import com.kizitonwose.calendarview.model.CalendarDay
+import com.kizitonwose.calendarview.model.CalendarMonth
+import com.kizitonwose.calendarview.model.DayOwner
+import com.kizitonwose.calendarview.ui.DayBinder
+import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
+import com.kizitonwose.calendarview.ui.ViewContainer
+import com.kizitonwose.calendarview.utils.next
+import com.kizitonwose.calendarview.utils.previous
 import com.rent.data.LocationServices
 import com.rent.data.Model
+import com.rent.tools.*
+import com.rent.tools.inflate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.calendar_day_legend.view.*
+import kotlinx.android.synthetic.main.example_5_calendar_day.view.*
+import kotlinx.android.synthetic.main.fragment_home.*
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.YearMonth
+import org.threeten.bp.format.DateTimeFormatter
+import kotlinx.android.synthetic.main.calendar_day_legend.view.*
+import kotlinx.android.synthetic.main.example_5_calendar_day.view.*
+import kotlinx.android.synthetic.main.example_5_event_item_view.*
+import kotlinx.android.synthetic.main.example_5_event_item_view.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.function.Consumer
-import android.provider.SyncStateContract.Helpers.update
-import android.text.format.DateFormat
-import android.widget.FrameLayout
-import androidx.annotation.IntegerRes
-import com.applikeysolutions.cosmocalendar.model.Day
-import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlin.collections.ArrayList
 
 
-class HomeFragment : Fragment(){
+data class Flight(val time: LocalDateTime, val departure: Airport, val destination: Airport,  val color: Int) {
+    data class Airport(val city: String, val code: String)
+}
 
-    private var disposable: Disposable? = null
-    private val locationService by lazy {
-        LocationServices.create()
+class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHolder>() {
+
+    val flights = mutableListOf<Flight>()
+
+    private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm")
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeItemsViewHolder {
+        return HomeItemsViewHolder(parent.inflate(R.layout.example_5_event_item_view))
     }
 
-    private var locations: ArrayList<Model.location>? = ArrayList()
+    override fun onBindViewHolder(viewHolder: HomeItemsViewHolder, position: Int) {
+        viewHolder.bind(flights[position])
+    }
 
-    private var calendarView: CalendarView? = null
+    override fun getItemCount(): Int = flights.size
 
-    private var threeMonthsCriteriaList: MutableList<BaseCriteria>? = null
-    private var fridayCriteria: WeekDayCriteria? = null
+    inner class HomeItemsViewHolder(override val containerView: View) :
+        RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-    private var fridayCriteriaEnabled: Boolean = false
-    private var threeMonthsCriteriaEnabled: Boolean = false
+        fun bind(loc: Flight) {
+            val itemflighttext = containerView.findViewById<TextView>(R.id.itemFlightDateText)
+//            val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+//
+//            var date = format.parse(loc.start)
+//            var mDay          =  DateFormat.format("dd",   date)
+//            var mMonth  = DateFormat.format("MM",   date)
+//            var mYear         = DateFormat.format("yyyy", date)
+//            var mHour         = DateFormat.format("hh", date)
+//            var mMinute         = DateFormat.format("mm", date)
+//
+//            val currentMonth = YearMonth.of(mYear.)
+                itemflighttext.text = formatter.format(loc.time)
+            itemflighttext.setBackgroundColor(loc.color)
 
-    private var menuFridays: MenuItem? = null
-    private var menuThreeMonth: MenuItem? = null
+            containerView.findViewById<TextView>(R.id.itemDepartureAirportCodeText).text = loc.departure.code
+            containerView.findViewById<TextView>(R.id.itemDepartureAirportCityText).text = loc.departure.city
 
+//            containerView.findViewById<TextView>(R.id.itemDestinationAirportCodeText).text = flight.destination.code
+//            containerView.findViewById<TextView>(R.id.itemDestinationAirportCityText).text = flight.destination.city
+        }
+    }
+}
+
+
+class HomeFragment : Fragment() {
     companion object {
         fun newInstance(): HomeFragment {
             return HomeFragment()
         }
     }
+    private var disposable: Disposable? = null
+    private val locationService by lazy {
+        LocationServices.create()
+    }
+    private var locations: ArrayList<Model.location>? = ArrayList()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        initViews(root)
-        createCriterias()
-        val cLayout = root.findViewById<FrameLayout>(R.id.calendarLayout)
 
-        return root
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val actionBar = (activity as AppCompatActivity).supportActionBar
+        actionBar!!.title = "Home"
+        setHasOptionsMenu(true)
+
+        selectLocations()
+
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
+
+    private var selectedDate: LocalDate? = null
+    private val monthTitleFormatter = DateTimeFormatter.ofPattern("MMMM")
+
+    private val flightsAdapter = HomeItemsAdapter()
+//    private val flights = generateFlights().groupBy { it.time.toLocalDate() }
+    private  var  flights :Map<LocalDate,List<Flight>>? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        exFiveRv.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        exFiveRv.adapter = flightsAdapter
+
+
+
+
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.example_5_toolbar_color)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().window.statusBarColor = requireContext().getColorCompat(R.color.colorPrimaryDark)
+    }
+
+    private fun updateAdapterForDate(date: LocalDate?) {
+        flightsAdapter.flights.clear()
+        flightsAdapter.flights.addAll(flights!![date].orEmpty())
+        flightsAdapter.notifyDataSetChanged()
     }
 
 
-    private fun initViews(v: View) {
-        calendarView = v.findViewById<CalendarView>(R.id.calendar_view)
-        calendarView!!.calendarOrientation = OrientationHelper.HORIZONTAL
-        calendarView!!.selectionType = SelectionType.RANGE
-        if (calendarView!!.selectionManager is RangeSelectionManager) {
-            val rangeSelectionManager = calendarView!!.selectionManager as RangeSelectionManager
-            val calendar = Calendar.getInstance()
-            calendar.add(Calendar.DATE, 3)
-            rangeSelectionManager.toggleDay( Day(Calendar.getInstance()))
-            rangeSelectionManager.toggleDay( Day(calendar))
-            calendarView!!.update()
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.menu,menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+             R.id.add_loc -> {
+                 val intent = Intent(context!!, AddLocActivity().javaClass)
+
+                 activity!!.startActivity(intent)
+             }
+
         }
-        calendarView!!.isClickable = false
+        return super.onOptionsItemSelected(item)
     }
-
-    private fun createCriterias() {
-        fridayCriteria = WeekDayCriteria(Calendar.FRIDAY)
-
-        threeMonthsCriteriaList = ArrayList()
-        threeMonthsCriteriaList!!.add(CurrentMonthCriteria())
-        threeMonthsCriteriaList!!.add(NextMonthCriteria())
-        threeMonthsCriteriaList!!.add(PreviousMonthCriteria())
-    }
-
-
-
-
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.select_all_fridays -> {
-                fridayMenuClick()
-                return true
-            }
-
-            R.id.select_three_months -> {
-                threeMonthsMenuClick()
-                return true
-            }
-
-            R.id.clear_selections -> {
-                clearSelectionsMenuClick()
-                return true
-            }
-
-            R.id.log_selected_days -> {
-                logSelectedDaysMenuClick()
-                return true
-            }
-
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun fridayMenuClick() {
-        if (fridayCriteriaEnabled) {
-            menuFridays!!.title = getString(R.string.select_all_fridays)
-            unselectAllFridays()
-        } else {
-            menuFridays!!.title = getString(R.string.unselect_all_fridays)
-            selectAllFridays()
-        }
-        fridayCriteriaEnabled = !fridayCriteriaEnabled
-    }
-
-    private fun threeMonthsMenuClick() {
-        if (threeMonthsCriteriaEnabled) {
-            menuThreeMonth!!.title = getString(R.string.select_three_months)
-            unselectThreeMonths()
-        } else {
-            menuThreeMonth!!.title = getString(R.string.unselect_three_months)
-            selectThreeMonths()
-        }
-        threeMonthsCriteriaEnabled = !threeMonthsCriteriaEnabled
-    }
-
-    private fun selectAllFridays() {
-        if (calendarView!!.selectionManager is MultipleSelectionManager) {
-            (calendarView!!.selectionManager as MultipleSelectionManager).addCriteria(fridayCriteria)
-        }
-        calendarView!!.update()
-    }
-
-    private fun unselectAllFridays() {
-        if (calendarView!!.selectionManager is MultipleSelectionManager) {
-            (calendarView!!.selectionManager as MultipleSelectionManager).removeCriteria(fridayCriteria)
-        }
-        calendarView!!.update()
-    }
-
-    private fun selectThreeMonths() {
-        if (calendarView!!.selectionManager is MultipleSelectionManager) {
-            (calendarView!!.selectionManager as MultipleSelectionManager).addCriteriaList(threeMonthsCriteriaList)
-        }
-        calendarView!!.update()
-    }
-
-    private fun unselectThreeMonths() {
-        if (calendarView!!.selectionManager is MultipleSelectionManager) {
-            (calendarView!!.selectionManager as MultipleSelectionManager).removeCriteriaList(threeMonthsCriteriaList)
-        }
-        calendarView!!.update()
-    }
-
-    private fun clearSelectionsMenuClick() {
-        calendarView!!.clearSelections()
-
-        fridayCriteriaEnabled = false
-        threeMonthsCriteriaEnabled = false
-        menuFridays!!.title = getString(R.string.select_all_fridays)
-        menuThreeMonth!!.title = getString(R.string.select_three_months)
-    }
-
-
-    private fun logSelectedDaysMenuClick() {
-        Toast.makeText(context!!, "Selected " + calendarView!!.selectedDays.size, Toast.LENGTH_SHORT).show()
-    }
-
-
-
 
     private fun selectLocations() {
-        val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-
         disposable =
             locationService.selectLocations()
                 .subscribeOn(Schedulers.io())
@@ -205,44 +187,121 @@ class HomeFragment : Fragment(){
                 .subscribe(
                     { result ->
                         locations = result as ArrayList<Model.location>?
-                        println("hhhhhhhhhhhh $locations")
-                        locations!!.forEach( Consumer {
-                            val dateStart = format.parse(it.start)
-                            val dateEnd = format.parse(it.end)
-//                            calendarView.setMinDate(calendar.getTimeInMillis());
-//                            calendar.add(Calendar.DAY_OF_MONTH, 90);
-//                            calendarView.setMaxDate(calendar.getTimeInMillis());
-                            val mDayStart          =  DateFormat.format("dd",   dateStart)
-                            val mDayEnd          =  DateFormat.format("dd",   dateEnd)
+                        println(locations)
+                        flights =  generateFlights(locations!!).groupBy { it.time.toLocalDate() }
 
-                            if (calendarView!!.selectionManager is RangeSelectionManager) {
-                                val rangeSelectionManager = calendarView!!.selectionManager as RangeSelectionManager
-
-                                val calStart = Calendar.getInstance()
-                                val sDay          =  DateFormat.format("dd",   calStart)
-                                val sMonth  = DateFormat.format("MM",   calStart)
-                                val sYear         = DateFormat.format("yyyy", calStart)
-                                calStart.set(Calendar.DAY_OF_MONTH,sDay.toString().toInt())
-                                calStart.set(Calendar.MONTH,sMonth.toString().toInt()) // 0-11 so 1 less
-                                calStart.set(Calendar.YEAR, sYear.toString().toInt())
-
-                                val calEnd = Calendar.getInstance()
-                                val eDay          =  DateFormat.format("dd",   calEnd)
-                                val eMonth  = DateFormat.format("MM",   calEnd)
-                                val eYear         = DateFormat.format("yyyy", calEnd)
-                                calEnd.set(Calendar.DAY_OF_MONTH,eDay.toString().toInt())
-                                calEnd.set(Calendar.MONTH,eMonth.toString().toInt()) // 0-11 so 1 less
-                                calEnd.set(Calendar.YEAR, eYear.toString().toInt())
-
-                                rangeSelectionManager.toggleDay(Day(calStart))
-                                rangeSelectionManager.toggleDay(Day(calEnd))
-                                calendarView!!.update()
-                            }
-
-                        })
-
+                        prepareView()
+                        flightsAdapter.notifyDataSetChanged()
                     },
                     { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
                 )
+    }
+
+    private fun prepareView(){
+        exFiveRv.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
+
+        val daysOfWeek = daysOfWeekFromLocale()
+
+        val currentMonth = YearMonth.now()
+        exFiveCalendar.setup(currentMonth.minusMonths(10), currentMonth.plusMonths(10), daysOfWeek.first())
+        exFiveCalendar.scrollToMonth(currentMonth)
+
+        class DayViewContainer(view: View) : ViewContainer(view) {
+            lateinit var day: CalendarDay // Will be set when this container is bound.
+            val textView = view.exFiveDayText
+            val layout = view.exFiveDayLayout
+            val flightTopView = view.exFiveDayFlightTop
+            val flightBottomView = view.exFiveDayFlightBottom
+
+            init {
+                view.setOnClickListener {
+                    if (day.owner == DayOwner.THIS_MONTH) {
+                        if (selectedDate != day.date) {
+                            val oldDate = selectedDate
+                            selectedDate = day.date
+                            exFiveCalendar.notifyDateChanged(day.date)
+                            oldDate?.let { exFiveCalendar.notifyDateChanged(it) }
+                            updateAdapterForDate(day.date)
+                        }
+                    }
+                }
+            }
+        }
+        exFiveCalendar.dayBinder = object : DayBinder<DayViewContainer> {
+            override fun create(view: View) = DayViewContainer(view)
+            override fun bind(container: DayViewContainer, day: CalendarDay) {
+                container.day = day
+                val textView = container.textView
+                val layout = container.layout
+                textView.text = day.date.dayOfMonth.toString()
+
+                val flightTopView = container.flightTopView
+                val flightBottomView = container.flightBottomView
+
+                flightTopView.background = null
+                flightBottomView.background = null
+
+                if (day.owner == DayOwner.THIS_MONTH) {
+                    textView.setTextColorRes(R.color.example_5_text_grey)
+                    layout.setBackgroundResource(if (selectedDate == day.date) R.drawable.example_5_selected_bg else 0)
+
+                    val flights = flights!![day.date]
+                    if (flights != null) {
+                        if (flights.count() == 1) {
+                            flightBottomView.setBackgroundColor(flights[0].color)
+                        } else {
+                            flightTopView.setBackgroundColor(flights[0].color)
+                            flightBottomView.setBackgroundColor(flights[1].color)
+                        }
+                    }
+                } else {
+                    textView.setTextColorRes(R.color.example_5_text_grey_light)
+                    layout.background = null
+                }
+            }
+        }
+
+        class MonthViewContainer(view: View) : ViewContainer(view) {
+            val legendLayout = view.legendLayout
+        }
+        exFiveCalendar.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
+            override fun create(view: View) = MonthViewContainer(view)
+            override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+                // Setup each header day text if we have not done that already.
+                if (container.legendLayout.tag == null) {
+                    container.legendLayout.tag = month.yearMonth
+                    container.legendLayout.children.map { it as TextView }.forEachIndexed { index, tv ->
+                        tv.text = daysOfWeek[index].name.take(3)
+                        tv.setTextColorRes(R.color.example_5_text_grey)
+                        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                    }
+                    month.yearMonth
+                }
+            }
+        }
+
+        exFiveCalendar.monthScrollListener = { month ->
+            val title = "${monthTitleFormatter.format(month.yearMonth)} ${month.yearMonth.year}"
+            exFiveMonthYearText.text = title
+
+            selectedDate?.let {
+                // Clear selection if we scroll to a new month.
+                selectedDate = null
+                exFiveCalendar.notifyDateChanged(it)
+                updateAdapterForDate(null)
+            }
+        }
+
+        exFiveNextMonthImage.setOnClickListener {
+            exFiveCalendar.findFirstVisibleMonth()?.let {
+                exFiveCalendar.smoothScrollToMonth(it.yearMonth.next)
+            }
+        }
+
+        exFivePreviousMonthImage.setOnClickListener {
+            exFiveCalendar.findFirstVisibleMonth()?.let {
+                exFiveCalendar.smoothScrollToMonth(it.yearMonth.previous)
+            }
+        }
     }
 }

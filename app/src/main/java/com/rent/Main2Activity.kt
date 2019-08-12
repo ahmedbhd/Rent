@@ -153,7 +153,7 @@ class Main2Activity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener {
     }
 
 
-    private fun logSelectedDaysMenuClick() {
+        private fun logSelectedDaysMenuClick() {
         Toast.makeText(this, "Selected " + calendarView!!.selectedDays.size, Toast.LENGTH_SHORT).show()
     }
 
