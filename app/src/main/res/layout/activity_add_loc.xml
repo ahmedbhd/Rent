@@ -9,43 +9,274 @@
 
 
     <LinearLayout
-            android:id="@+id/colorFrame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/showDatePickerButton"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:orientation="horizontal"
-            android:layout_marginStart="20dp"
-            app:layout_constraintHorizontal_bias="0.0">
+            app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
 
+            android:id="@+id/addLocContainer"
+            android:gravity="center"
+            android:foregroundGravity="center"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">
 
-        <TextView
-                android:text="Changer le couleur"
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="10dp">
+
+            <TextView
+                    android:id="@+id/tvText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Detail Locataire"
+                    android:textColor="#C1F75959"
+                    android:textStyle="italic"/>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toLeftOf="@id/tvText"
+                    android:background="#FF0000"
+                    />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_toRightOf="@id/tvText"
+                    android:background="#FF0000"
+                    />
+
+        </RelativeLayout>
+
+        <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView2"
-                android:layout_marginEnd="20dp"/>
+                android:id="@+id/add_cin"
+                android:textAlignment="center"
+                android:hint="Carte identitée"
+                android:layout_margin="5dp"/>
 
-        <TextView
+        <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/circle"
-                android:textColor="@android:color/white"
+                android:id="@+id/add_name"
+                android:textAlignment="center"
+                android:hint="Nom et prénom"
+                android:layout_margin="5dp"/>
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/add_tel"
+                android:layout_margin="5dp"
+                android:hint="Telephone"
+                android:textAlignment="center"
+                android:inputType="phone"/>
+
+
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:id="@+id/mark" />
+                android:layout_margin="5dp">
+
+            <TextView
+                    android:text="Locataire"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView12"
+                    android:layout_weight="1"
+                    android:textAlignment="center"/>
+
+            <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinnerusers"
+                    android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+            <TextView
+                    android:id="@+id/tvText2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Detail Location"
+                    android:textColor="#C1F75959"
+                    android:textStyle="italic"/>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_toLeftOf="@id/tvText2"
+                    android:background="#FF0000"
+                    />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:layout_toRightOf="@id/tvText2"
+                    android:background="#FF0000"
+                    />
+
+        </RelativeLayout>
     </LinearLayout>
 
-    <ToggleButton
-            android:id="@+id/showDatePickerButton"
-            style="@style/Widget.AppCompat.Button.Colored"
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show Date Picker"
-            app:layout_constraintBottom_toTopOf="@+id/coordinatorLayoutCal"
+            android:id="@+id/AddlayoutDetails"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"/>
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/addLocContainer">
+
+
+        <LinearLayout
+                android:id="@+id/colorFrame"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+
+            <TextView
+                    android:text="Changer le couleur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_marginEnd="20dp"
+                    android:textColor="#FC161515"
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circle"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:id="@+id/mark"/>
+        </LinearLayout>
+
+        <ImageView
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                app:srcCompat="@drawable/calendaricon"
+                android:id="@+id/imageDateAdd"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                />
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/AddDateLayout"
+                android:layout_margin="5dp"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+            <TextView
+                    android:text="De: "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView9"
+                    android:layout_gravity="center_horizontal|center_vertical"
+
+                    android:layout_marginStart="5dp"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textSize="18sp"
+
+                    android:id="@+id/add_date_start"
+                    android:textAlignment="center"
+                    android:text="@string/date"
+                    android:layout_weight="1"
+                    android:textStyle="italic"/>
+
+            <TextView
+                    android:text="A: "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView10"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textSize="18sp"
+
+                    android:id="@+id/add_date_end"
+                    android:textAlignment="center"
+                    android:text="@string/date"
+                    android:layout_weight="1"
+                    android:textStyle="italic"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textSize="18sp"
+
+                    android:id="@+id/add_time_add"
+                    android:textAlignment="center"
+                    android:text="@string/_00_00_00"
+                    android:layout_weight="1"
+                    android:textStyle="italic"/>
+
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/clockicon"
+                    android:id="@+id/imageTimeAdd"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"

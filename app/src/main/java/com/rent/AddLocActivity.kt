@@ -1,8 +1,10 @@
 package com.rent
 
+import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.OrientationHelper
@@ -17,6 +19,13 @@ import kotlinx.android.synthetic.main.add_cal_bottomsheet.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.util.*
+import android.view.MotionEvent
+import android.widget.TextView
+import android.widget.TimePicker
+import androidx.annotation.NonNull
+import androidx.core.view.MotionEventCompat
+import com.rent.adapters.util.TimePickerFragment.Companion.time
+import java.text.SimpleDateFormat
 
 
 class AddLocActivity : AppCompatActivity()  {
@@ -28,15 +37,18 @@ class AddLocActivity : AppCompatActivity()  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_loc)
+        val actionBar = (this as AppCompatActivity).supportActionBar
+        actionBar!!.title = "Nouveau Location"
         initViews()
 
         val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheetCal )
         bottomSheetBehavior.isHideable = true
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        showDatePickerButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
+
+
+        imageDateAdd.setOnClickListener{
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
+
         }
         cancel_add.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -46,11 +58,28 @@ class AddLocActivity : AppCompatActivity()  {
         save_add.setOnClickListener {
             println(calendarView!!.selectedDays[0])
             println(calendarView!!.selectedDays[calendarView!!.selectedDays.size-1])
-            Toast.makeText(this, "Selected from "+calendarView!!.selectedDays[0]+" To "+calendarView!!.selectedDays[calendarView!!.selectedDays.size-1]
-                , Toast.LENGTH_SHORT).show()
+
+            val format =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val start = format.format(calendarView!!.selectedDays[0].calendar.time)
+            val end = format.format( calendarView!!.selectedDays[calendarView!!.selectedDays.size-1].calendar.time)
+
+            add_date_start.text = start
+            add_date_end.text = end
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         }
 
+        imageTimeAdd.setOnClickListener {
+
+            val timePickerDialog = TimePickerDialog(
+                this,
+                TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay:Int, minute: Int
+                    -> add_time_add.text = "$hourOfDay:$minute"
+                },
+                0, 0, true
+            )
+            timePickerDialog.show()
+        }
         mDefaultColor = this.getColorCompat(R.color.orange_800)
 //        mark.setBackgroundColor(mDefaultColor)
 

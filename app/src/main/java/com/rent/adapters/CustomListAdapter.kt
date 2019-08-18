@@ -11,12 +11,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.rent.adapters.util.LocaleHelper
 import com.rent.data.Model
 import java.util.*
+import android.widget.ArrayAdapter
+import com.rent.R
 
 
 /**
@@ -36,6 +37,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
      private var mDay: Int = 0
     private var mHour: Int = 0
     private var mMinute: Int = 0
+    private var typePaiement:String = "Avance"
 
     class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
         val amount: TextView = v.findViewById(com.rent.R.id.tv_name)
@@ -87,18 +89,16 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         myDialog.setContentView(com.rent.R.layout.custompopup2  )
 
         myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val txt: TextView = myDialog.findViewById(com.rent.R.id.txtclose) as TextView
-        val btn: Button = myDialog.findViewById(com.rent.R.id.btnfollow) as Button
+        val txt: TextView = myDialog.findViewById(R.id.txtclose) as TextView
+        val btn: Button = myDialog.findViewById(R.id.btnfollow) as Button
 
-        val type: EditText = myDialog.findViewById(com.rent.R.id.add_type) as EditText
-        val amount: EditText = myDialog.findViewById(com.rent.R.id.add_amount) as EditText
-        val dateBtn: ImageView = myDialog.findViewById(com.rent.R.id.imageDate) as ImageView
-        val timeBtn: ImageView = myDialog.findViewById(com.rent.R.id.imageTime) as ImageView
-        val dateText: TextView = myDialog.findViewById(com.rent.R.id.add_date) as TextView
+        val amount: EditText = myDialog.findViewById(R.id.add_amount) as EditText
+        val dateBtn: ImageView = myDialog.findViewById(R.id.imageDate) as ImageView
+        val timeBtn: ImageView = myDialog.findViewById(R.id.imageTime) as ImageView
+        val dateText: TextView = myDialog.findViewById(R.id.add_date) as TextView
 
-        val time = myDialog.findViewById(com.rent.R.id.add_time) as TextView
+        val time = myDialog.findViewById(R.id.add_time) as TextView
 
-        type.setText(payment.type, TextView.BufferType.EDITABLE)
         amount.setText(payment.amount, TextView.BufferType.EDITABLE)
 
         val c = Calendar.getInstance(Locale.FRANCE)
@@ -111,11 +111,13 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         time.text = "$mHour:$mMinute"
         dateText.text = mYear.toString()+ "-"+mMonth+ 1+ "-" + (mDay )
 
+
+
         timeBtn.setOnClickListener {
 
             val timePickerDialog = TimePickerDialog(
                 myContext,
-                TimePickerDialog.OnTimeSetListener {view: TimePicker , hourOfDay:Int , minute: Int
+                TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay:Int, minute: Int
                     -> time.text = "$hourOfDay:$minute"
                 },
                 mHour, mMinute, true
@@ -127,7 +129,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
 
             val datePickerDialog = DatePickerDialog(
                 myContext,
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth
                     -> dateText.text =year.toString()+"-"+ dayOfMonth+ "-" + (monthOfYear + 1)  },
                 mYear, // Initial year selection
                 mMonth, // Initial month selection
@@ -136,11 +138,35 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
             datePickerDialog.show()
         }
 
+        val users = arrayOf("Avance", "Reste")
+        val spinner: Spinner = myDialog.findViewById(com.rent.R.id.types_spinner)
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        val adapter = ArrayAdapter(myContext,R.layout.drop_down_list_types , users)
+        spinner.adapter = adapter
 
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+                // An item was selected. You can retrieve the selected item using
+                // parent.getItemAtPosition(pos)
+                println("hhhhhhhhh"+parent.getItemAtPosition(pos))
+                typePaiement = parent.getItemAtPosition(pos).toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Another interface callback
+            }
+        }
+
+        val spinnerAdap = spinner.adapter as ArrayAdapter<String>
+
+        if (payment.type == "payment") {
+            val spinnerPosition = spinnerAdap.getPosition("Reste")
+
+            spinner.setSelection(spinnerPosition)
+        }
         txt.setOnClickListener { myDialog.dismiss() }
         btn.setOnClickListener {
             println(amount.text.toString())
-            println(type.text.toString())
 
 //            addPayment(Integer.parseInt(amount.text.toString()),date,type.text.toString())
             myDialog.dismiss()

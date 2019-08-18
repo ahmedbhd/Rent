@@ -10,7 +10,6 @@ object Model {
 
     data class payment(val id: String , val amount: String,val date: String , val locationKey:String, val type: String)
 
-    data class locataire(val id: Int , val cin: String,val fullName: String , val numTel:List<String>)
-
+    data class locataire(val id: Int , val cin: String,val full_name: String , val numTel:List<String>)
 
 }

@@ -115,7 +115,6 @@ class LocDetailActivity : AppCompatActivity() {
 
 
 
-
 //        floatingActionButton.setOnClickListener {ShowPopup()}
     }
 
@@ -218,13 +217,12 @@ class LocDetailActivity : AppCompatActivity() {
         myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val txt: TextView = myDialog.findViewById(R.id.txtclose) as TextView
         val btn: Button = myDialog.findViewById(R.id.btnfollow) as Button
-        val type: EditText = myDialog.findViewById(R.id.add_type) as EditText
         val amount: EditText = myDialog.findViewById(R.id.add_amount) as EditText
         val dateBtn: ImageView = myDialog.findViewById(R.id.imageDate) as ImageView
         val timeBtn: ImageView = myDialog.findViewById(R.id.imageTime) as ImageView
         val dateText: TextView = myDialog.findViewById(R.id.add_date) as TextView
 
-        val time = myDialog.findViewById(com.rent.R.id.add_time) as TextView
+        val time = myDialog.findViewById(R.id.add_time) as TextView
 
         val c = Calendar.getInstance(Locale.FRANCE)
         mHour = c.get(Calendar.HOUR_OF_DAY)
@@ -235,6 +233,10 @@ class LocDetailActivity : AppCompatActivity() {
 
         time.text = "$mHour:$mMinute"
         dateText.text = mYear.toString()+ "-"+mMonth+ 1+ "-" + (mDay )
+
+
+
+
 
         timeBtn.setOnClickListener {
 
@@ -265,10 +267,27 @@ class LocDetailActivity : AppCompatActivity() {
         }
 
 
+        val users = arrayOf("Avance", "Reste")
+        val spinner: Spinner = myDialog.findViewById(com.rent.R.id.types_spinner)
+        val adapter = ArrayAdapter(this,R.layout.drop_down_list_types , users)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener =  object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
+                // An item was selected. You can retrieve the selected item using
+                // parent.getItemAtPosition(pos)
+                println("hhhhhhhhh"+parent.getItemAtPosition(pos))
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Another interface callback
+            }
+        }
+
+
         txt.setOnClickListener { myDialog.dismiss() }
         btn.setOnClickListener {
             println(amount.text.toString())
-            println(type.text.toString())
 
 //            addPayment(Integer.parseInt(amount.text.toString()),date,type.text.toString())
             myDialog.dismiss()

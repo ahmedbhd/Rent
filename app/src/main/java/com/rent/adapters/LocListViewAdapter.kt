@@ -64,9 +64,8 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
 
 
-        swipeLayout.setOnDoubleClickListener { _, _ ->
+        swipeLayout.setOnClickListener {
             run {
-                Toast.makeText(mContext, "DoubleClick", Toast.LENGTH_SHORT).show()
                 val intent = Intent(mContext, LocDetailActivity().javaClass)
                 val res: Model.location? = locations[position]
                 println("res ${res.toString()}")

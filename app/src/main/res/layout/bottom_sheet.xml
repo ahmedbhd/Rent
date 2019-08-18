@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
               android:id="@+id/bottomSheet"
               android:layout_width="match_parent"
               android:layout_height="300dp"
@@ -12,11 +13,12 @@
     <!--expand to top android:layout_height="match_parent"-->
     <!--android:layout_height="300dp"-->
 
-    <RelativeLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/cardview_dark_background"
             android:paddingEnd="8dp"
+            android:orientation="horizontal"
             android:paddingStart="8dp">
 
         <ToggleButton
@@ -25,14 +27,32 @@
                 android:layout_height="30dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
                 android:background="@drawable/tb_up_down"
                 android:text=""
                 android:textOff=""
-                android:textOn="" />
+                android:textOn=""
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center|start"/>
+
+        <TextView
+                android:text="List Paiements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:textColor="#FDFCF9F9"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center|end"
+                tools:layout_editor_absoluteX="145dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center|end"
+                android:layout_marginStart="20dp"/>
 
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView

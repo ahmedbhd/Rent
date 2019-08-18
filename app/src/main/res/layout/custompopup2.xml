@@ -22,20 +22,45 @@
             android:background="@drawable/cerclebackground"
             android:layout_margin="2dp"/>
 
-    <EditText
-            android:layout_width="150dp"
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="18sp"
+            android:gravity="center">
 
-            android:textColor="@color/backgroundColor"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/add_type"
-            android:textAlignment="center"
-            android:hint="Type"
-            android:gravity="start"
-            android:layout_margin="5dp"
-            android:textColorHint="#9FE7E0E0"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+
+                android:textColor="@color/backgroundColor"
+                android:layout_gravity="center|center_horizontal"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:textColorHint="#9FE7E0E0"
+                android:text="Type :"/>
+
+        <Spinner
+                android:id="@+id/types_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="20sp"
+
+                android:textColor="@color/backgroundColor"
+                android:layout_gravity="center|center_horizontal"
+                android:textAlignment="center"
+                android:backgroundTint="#F0EEEEEE"
+                android:foregroundTint="#E9F1E5E5"
+                android:contextClickable="false"
+                android:background="#FFFEFE"
+                android:entries="@array/types_array"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:scrollbarSize="10dp"/>
+    </LinearLayout>
 
     <EditText
             android:layout_width="150dp"
