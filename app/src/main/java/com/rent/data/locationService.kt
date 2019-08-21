@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -19,7 +20,7 @@ interface LocationServices {
                 )
                 .addConverterFactory(GsonConverterFactory.create())
 //                    .addConverterFactory(ScalarsConverterFactory.create())
-                .baseUrl("https://bhd4.000webhostapp.com/")
+                .baseUrl("http://xosted.alwaysdata.net/location/")
                 .build()
 
             return retrofit.create(LocationServices::class.java)
@@ -27,13 +28,13 @@ interface LocationServices {
     }
 
 
-    @GET("services.php?action=selectLocations")
+    @GET("read.php")
     fun selectLocations(): Observable<List<Model.location>>
 
 
-    @GET("services.php?action=selectLocationById")
+    @GET("read.php")
     fun selectLocationById(@Query ("id") id:Int): Observable<Model.location>
 
-    @GET("services.php?action=delLocation")
+    @DELETE("delete.php")
     fun deleteLocation(@Query ("id") id:Int): Observable<String>
 }

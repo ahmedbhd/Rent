@@ -169,7 +169,7 @@ class HomeFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-             R.id.add_loc -> {
+                 R.id.add_loc -> {
                  val intent = Intent(context!!, AddLocActivity().javaClass)
 
                  activity!!.startActivity(intent)

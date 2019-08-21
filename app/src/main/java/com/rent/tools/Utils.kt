@@ -66,8 +66,8 @@ fun generateFlights(locations :ArrayList<Model.location>): List<Flight> {
 
     locations.forEach(Consumer { loc ->
         val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val localDateStart = format.parse(loc.start)
-        val localDateEnd = format.parse(loc.end)
+        val localDateStart = format.parse(loc.dateDebut)
+        val localDateEnd = format.parse(loc.dateFin)
 
         val datesInRange = ArrayList<Date>()
         val calendar = GregorianCalendar()
@@ -95,7 +95,7 @@ fun generateFlights(locations :ArrayList<Model.location>): List<Flight> {
 
             val currentMonth16 = currentMonth.atDay(mDay.toString().toInt())
             list.add(Flight(currentMonth16.atTime(mHour.toString().toInt(), mMinute.toString().toInt()),
-                Airport(loc.cin, loc.text), Airport("Abuja", "ABV"), Color.parseColor(loc.color)))
+                Airport(loc.locataire.cin, loc.locataire.full_name), Airport("Abuja", "ABV"), Color.parseColor(loc.color)))
         })
 
     })

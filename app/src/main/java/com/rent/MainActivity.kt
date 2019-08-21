@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.TextView
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.rent.adapters.util.LocaleHelper
 import com.rent.data.LocationServices
 import com.rent.data.Model
 import com.rent.data.PaymentServices
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         println("in main activity")
         AndroidThreeTen.init(this)
+        LocaleHelper.setLocale(applicationContext, "fr")
 
         if (PhoneGrantings.isNetworkAvailable(this))
             selectLocationById()

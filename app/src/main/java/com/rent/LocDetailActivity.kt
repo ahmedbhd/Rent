@@ -1,32 +1,44 @@
 package com.rent
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.format.DateFormat
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
+import com.applikeysolutions.cosmocalendar.model.Day
+import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager
+import com.applikeysolutions.cosmocalendar.utils.SelectionType
+import com.applikeysolutions.cosmocalendar.view.CalendarView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.rent.adapters.CustomListAdapter
+import com.rent.adapters.util.TimePickerFragment.Companion.time
 import com.rent.data.Model
 import com.rent.data.PaymentServices
 import com.rent.tools.PhoneGrantings
+import com.rent.tools.getColorCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_loc_detail.*
+import kotlinx.android.synthetic.main.activity_loc_detail.imageDateAdd
+import kotlinx.android.synthetic.main.add_cal_bottomsheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
+import yuku.ambilwarna.AmbilWarnaDialog
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -39,7 +51,6 @@ class LocDetailActivity : AppCompatActivity() {
     private var disposable: Disposable? = null
     private var payments: MutableList<Model.payment>? = ArrayList()
     var list: RecyclerView? = null
-    private var dataset = mutableListOf("Chicken", "Fish", "Beef", "Pork", "Lamb")
 
     private lateinit var customListAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -56,6 +67,14 @@ class LocDetailActivity : AppCompatActivity() {
     private var mMinute: Int = 0
 
 
+
+    private var mDefaultColor :Int = 0
+    private lateinit var newStringColor:String
+    private lateinit var sdate:Date
+    private lateinit var edate:Date
+    private var calendarView: CalendarView? = null
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loc_detail)
@@ -70,29 +89,79 @@ class LocDetailActivity : AppCompatActivity() {
             location = Gson().fromJson(intentContent, Model.location::class.java)
             println("location $location")
         }
+        val format =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        edate = format.parse(location!!.dateFin)
+        sdate = format.parse(location!!.dateDebut)
 
-        det_cin.text = location!!.cin
-        det_text.text = location!!.text
+        initViews()
+        det_cin.setText(location!!.locataire.cin)
+        det_text.setText( location!!.locataire.full_name)
 //        val format = SimpleDateFormat("yyyy-mm-dd mm:ss", Locale.getDefault())
 //        val date = format.parse(location!!.start)
 
-        det_date_debu.text = location!!.start
-        det_date_fin.text = location!!.end
+        det_date_debu.text = location!!.dateDebut
+        det_date_fin.text = location!!.dateFin
         list = findViewById<RecyclerView>(R.id.det_listview)
 
         myDialog =  Dialog(this)
 
 
-        val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
+
+
+
+
+        val c = Calendar.getInstance()
+        c.time = sdate
+
+        mHour = c.get(Calendar.HOUR_OF_DAY)
+        mMinute = c.get(Calendar.MINUTE)
+        mYear = c.get(Calendar.YEAR)
+        mMonth = c.get(Calendar.MONTH)
+        mDay = c.get(Calendar.DAY_OF_MONTH)
+        det_date_debu.text = mYear.toString()+ "-"+(mMonth+ 1)+ "-" + (mDay )
+
+        c.time = edate
+
+
+        mYear = c.get(Calendar.YEAR)
+        mMonth = c.get(Calendar.MONTH)
+        mDay = c.get(Calendar.DAY_OF_MONTH)
+        det_date_fin.text = mYear.toString()+ "-"+(mMonth+ 1)+ "-" + (mDay )
+
+        add_time_det.text = "$mHour:$mMinute"
+
+        imageTimeDet.setOnClickListener {
+
+            val timePickerDialog = TimePickerDialog(
+                this,
+                TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay:Int, minute: Int
+                    -> add_time_det.text = "$hourOfDay:$minute"
+                },
+                0, 0, true
+            )
+            timePickerDialog.show()
+        }
+
+        mDefaultColor = Color.parseColor(location!!.color)
+        val background = markDet.background
+        (background as GradientDrawable).setColor(mDefaultColor)
+
+        markDet.setOnClickListener {
+            openColorPicker(this)
+        }
+
+        val bottomSheetListBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
         toggleButton.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+                bottomSheetListBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+
             } else {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                bottomSheetListBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED)
+
             }
         }
 
-        bottomSheetBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetListBehavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(view: View, newState: Int) {
                 if (newState == BottomSheetBehavior.STATE_EXPANDED) {
                     toggleButton!!.isChecked = true
@@ -113,27 +182,80 @@ class LocDetailActivity : AppCompatActivity() {
 
 
 
+        val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheetCal )
+        bottomSheetBehavior.isHideable = true
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
+
+        imageDateAdd.setOnClickListener{
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            bottomSheetListBehavior.isHideable = true
+            bottomSheetListBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        cancel_add.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetListBehavior.isHideable = false
+            bottomSheetListBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        save_add.setOnClickListener {
+            println(calendarView!!.selectedDays[0])
+            println(calendarView!!.selectedDays[calendarView!!.selectedDays.size-1])
+
+            val format =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val start = format.format(calendarView!!.selectedDays[0].calendar.time)
+            val end = format.format( calendarView!!.selectedDays[calendarView!!.selectedDays.size-1].calendar.time)
+
+            det_date_debu.text = start
+            det_date_fin.text = end
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetListBehavior.isHideable = false
+            bottomSheetListBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
 
 //        floatingActionButton.setOnClickListener {ShowPopup()}
     }
 
 
-    private fun selectLocPayments() {
-        disposable =
-            paymentService.selectLocPayments(Integer.parseInt(location!!.id))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { result ->
-                        payments = result as MutableList<Model.payment>?
-                        println("hhhhhhhhhhhh $payments")
-                        prepareRecyclerView()
-                        customListAdapter.notifyDataSetChanged()
-                    },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
-                )
+    private fun openColorPicker(mContext: Context){
+        val onAmbilWarnaListener = object: AmbilWarnaDialog.OnAmbilWarnaListener {
+            override fun  onCancel (dialog : AmbilWarnaDialog){
+
+            }
+            override fun onOk(dialog: AmbilWarnaDialog, color:Int){
+                mDefaultColor = color
+                val background = markDet.background
+                (background as GradientDrawable).setColor(mDefaultColor)
+                newStringColor = String.format("#%06X", 0xFFFFFF and mDefaultColor)
+                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
+            }
+        }
+        val colorPicker = AmbilWarnaDialog(this, mDefaultColor,onAmbilWarnaListener)
+        colorPicker.show()
     }
+
+    private fun initViews() {
+        calendarView = findViewById<CalendarView>(R.id.calendar_view)
+        calendarView!!.calendarOrientation = OrientationHelper.HORIZONTAL
+        calendarView!!.selectionType = SelectionType.RANGE
+        if (calendarView!!.selectionManager is RangeSelectionManager) {
+            val rangeSelectionManager = calendarView!!.selectionManager as RangeSelectionManager
+
+
+
+
+            val sCalendar = Calendar.getInstance()
+            sCalendar.time = sdate
+            val eCalendar = Calendar.getInstance()
+            eCalendar.time = edate
+
+            rangeSelectionManager.toggleDay( Day(sCalendar))
+            rangeSelectionManager.toggleDay( Day(eCalendar))
+            calendarView!!.update()
+        }
+    }
+
 
     private fun prepareRecyclerView(){
         val supportFragmentManager = supportFragmentManager
@@ -207,6 +329,7 @@ class LocDetailActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     fun ShowPopup(v :View) {
         myDialog.setCanceledOnTouchOutside(false)
 
@@ -232,7 +355,7 @@ class LocDetailActivity : AppCompatActivity() {
         mDay = c.get(Calendar.DAY_OF_MONTH)
 
         time.text = "$mHour:$mMinute"
-        dateText.text = mYear.toString()+ "-"+mMonth+ 1+ "-" + (mDay )
+        dateText.text = mYear.toString()+ "-"+(mMonth+ 1)+ "-" + (mDay )
 
 
 
@@ -296,9 +419,9 @@ class LocDetailActivity : AppCompatActivity() {
     }
 
     private fun addPayment ( amount: Int,  date:String,  type:String){
-        println(Integer.parseInt(location!!.id))
+        println(location!!.id)
         disposable =
-            paymentService.addPayment(amount,date,Integer.parseInt(location!!.id),type)
+            paymentService.addPayment(Model.payment(0,date,amount,type,location!!))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -311,5 +434,21 @@ class LocDetailActivity : AppCompatActivity() {
                     { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
                 )
     }
+    private fun selectLocPayments() {
+        disposable =
+            paymentService.selectLocPayments(location!!.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        payments = result as MutableList<Model.payment>?
+                        println("hhhhhhhhhhhh $payments")
+                        prepareRecyclerView()
+                        customListAdapter.notifyDataSetChanged()
 
+
+                    },
+                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
+                )
+    }
 }

@@ -39,6 +39,7 @@ class AddLocActivity : AppCompatActivity()  {
         setContentView(R.layout.activity_add_loc)
         val actionBar = (this as AppCompatActivity).supportActionBar
         actionBar!!.title = "Nouveau Location"
+
         initViews()
 
         val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheetCal )

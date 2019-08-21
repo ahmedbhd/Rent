@@ -53,7 +53,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
     }
 
     override fun onBindViewHolder(viewHolder: MainViewHolder, position: Int) {
-        viewHolder.amount.text = list[position].amount
+        viewHolder.amount.text = list[position].montant.toString()
         viewHolder.type.text = list[position].type
         myDialog =  Dialog(myContext)
         viewHolder.itemView.setOnClickListener {
@@ -81,12 +81,11 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
 
     @SuppressLint("SetTextI18n")
     fun ShowPopup(v :View, payment: Model.payment) {
-        LocaleHelper.setLocale(myContext, "fr")
         myDialog.setCanceledOnTouchOutside(false)
 
         myDialog.show()
 
-        myDialog.setContentView(com.rent.R.layout.custompopup2  )
+        myDialog.setContentView(R.layout.custompopup2  )
 
         myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val txt: TextView = myDialog.findViewById(R.id.txtclose) as TextView
@@ -99,7 +98,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
 
         val time = myDialog.findViewById(R.id.add_time) as TextView
 
-        amount.setText(payment.amount, TextView.BufferType.EDITABLE)
+        amount.setText(payment.montant.toString(), TextView.BufferType.EDITABLE)
 
         val c = Calendar.getInstance(Locale.FRANCE)
         mHour = c.get(Calendar.HOUR_OF_DAY)
@@ -109,7 +108,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         mDay = c.get(Calendar.DAY_OF_MONTH)
 
         time.text = "$mHour:$mMinute"
-        dateText.text = mYear.toString()+ "-"+mMonth+ 1+ "-" + (mDay )
+        dateText.text = mYear.toString()+ "-"+(mMonth+ 1)+ "-" + (mDay )
 
 
 

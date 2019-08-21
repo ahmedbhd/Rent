@@ -81,7 +81,7 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
          //display the details in detail activity
         v.findViewById<Button>(R.id.open).setOnClickListener {
-            phoneCall(locations[position].tel)
+//            phoneCall(locations[position].tel)
         }
         return v
     }
@@ -99,10 +99,10 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
 
         // Populate the data into the template view using the data object
-        cin.text = p.cin
+        cin.text = p.locataire.cin
         val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
-        var date = format.parse(p.start)
+        var date = format.parse(p.dateDebut)
         var mDay          =  DateFormat.format("dd",   date)
         var mMonth  = DateFormat.format("MM",   date)
         var mYear         = DateFormat.format("yyyy", date)
@@ -112,7 +112,7 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
         dateStart.text = "$mYear-$mMonth-$mDay"
         timeStart.text = "$mHour:$mMinute"
 
-         date = format.parse(p.end)
+         date = format.parse(p.dateFin)
          mDay          =  DateFormat.format("dd",   date)
          mMonth  = DateFormat.format("MM",   date)
          mYear         = DateFormat.format("yyyy", date)
@@ -141,10 +141,10 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
     private var disposable: Disposable? = null
 
     //====================================== delete this restaurant from favourite in data base ======================================
-    private fun delLocation(id: String, position: Int) {
+    private fun delLocation(id: Int, position: Int) {
 
         disposable =
-            locationServices.deleteLocation( Integer.parseInt(id) )
+            locationServices.deleteLocation( id )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
