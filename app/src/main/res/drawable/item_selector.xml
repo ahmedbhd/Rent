@@ -3,6 +3,6 @@
 
     <item android:drawable="@color/backgroundColorPress" android:state_pressed="true"/>
     <item android:drawable="@color/backgroundColorPress" android:state_focused="true"/>
-    <item android:drawable="@color/backgroundColor"/>
+    <item android:drawable="@color/example_5_item_view_bg_color"/>
 
 </selector>

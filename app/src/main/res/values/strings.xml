@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Rent</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Calendrier</string>
+    <string name="title_dashboard">Locations</string>
+    <string name="title_notifications">Paiements</string>
     <string name="title_activity_main2">Main2Activity</string>
 
     <!-- MAIN -->
@@ -32,7 +32,8 @@
     <string name="date">00-00-00</string>
     <string name="_00_00_00">00:00</string>
     <string-array name="types_array">
-            <item>Avance</item>
-            <item>Reste</item>
-        </string-array>
+        <item>Avance</item>
+        <item>Reste</item>
+    </string-array>
+    <string name="title_activity_splash">Splash</string>
 </resources>

@@ -4,9 +4,7 @@ import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface LocationServices {
 
@@ -31,10 +29,15 @@ interface LocationServices {
     @GET("read.php")
     fun selectLocations(): Observable<List<Model.location>>
 
+    @POST("create.php")
+    fun ajouterLocation(@Body loc: Model.location):Observable<Model.location>
 
     @GET("read.php")
     fun selectLocationById(@Query ("id") id:Int): Observable<Model.location>
 
     @DELETE("delete.php")
-    fun deleteLocation(@Query ("id") id:Int): Observable<String>
+    fun deleteLocation(@Query ("id") id:Int): Observable<Model.msgResult>
+
+    @PUT("update.php")
+    fun updateLocation(@Body loc: Model.location):Observable<Model.location>
 }

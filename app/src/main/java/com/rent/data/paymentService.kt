@@ -32,18 +32,18 @@ interface PaymentServices {
 
 
     @GET("read_one.php")
-    fun selectPaymentById(@Query ("id") id:Int): Observable<Model.location>
+    fun selectPaymentById(@Query ("id") id:Int): Observable<Model.payment>
 
     @DELETE("delete.php")
-    fun deletePayment(@Body  paiement:Model.payment): Observable<Model.location>
+    fun deletePayment(@Query ("id") id:Int): Observable<Model.msgResult>
 
     @GET("readbyLocationId.php")
     fun selectLocPayments(@Query ("locationid") locationKey:Int): Observable<List<Model.payment>>
 
     @POST("create.php")
-    fun addPayment(@Body paiement:Model.payment): Observable<String>
+    fun addPayment(@Body paiement:Model.payment): Observable<Model.msgResult>
 
 
     @PUT("update.php")
-    fun updatePayment(@Body paiement:Model.payment): Observable<String>
+    fun updatePayment(@Body paiement:Model.payment): Observable<Model.payment>
 }

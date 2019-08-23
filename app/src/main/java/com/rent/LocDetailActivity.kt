@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
+import android.text.InputType
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.*
@@ -26,6 +28,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.rent.adapters.CustomListAdapter
 import com.rent.adapters.util.TimePickerFragment.Companion.time
+import com.rent.adapters.util.ViewDialog
+import com.rent.data.LocataireServices
+import com.rent.data.LocationServices
 import com.rent.data.Model
 import com.rent.data.PaymentServices
 import com.rent.tools.PhoneGrantings
@@ -33,6 +38,7 @@ import com.rent.tools.getColorCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_add_loc.*
 import kotlinx.android.synthetic.main.activity_loc_detail.*
 import kotlinx.android.synthetic.main.activity_loc_detail.imageDateAdd
 import kotlinx.android.synthetic.main.add_cal_bottomsheet.*
@@ -44,10 +50,18 @@ import java.util.*
 
 class LocDetailActivity : AppCompatActivity() {
 
-    private var location:Model.location? = null
+    private lateinit var viewDialog: ViewDialog
+    private lateinit var locationOld:Model.location
     private val paymentService by lazy {
         PaymentServices.create()
     }
+    private val locationService by lazy {
+        LocationServices.create()
+    }
+    private val locataireService by lazy {
+        LocataireServices.create()
+    }
+
     private var disposable: Disposable? = null
     private var payments: MutableList<Model.payment>? = ArrayList()
     var list: RecyclerView? = null
@@ -57,6 +71,7 @@ class LocDetailActivity : AppCompatActivity() {
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
 
+    private var stringTel:String =""
 
     lateinit var myDialog: Dialog
 
@@ -74,7 +89,7 @@ class LocDetailActivity : AppCompatActivity() {
     private lateinit var edate:Date
     private var calendarView: CalendarView? = null
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loc_detail)
@@ -86,27 +101,29 @@ class LocDetailActivity : AppCompatActivity() {
         val intent = intent
         if (intent.hasExtra("myObject2")) { // actions when this activity is called from favourites list
             intentContent = intent.getStringExtra("myObject2")
-            location = Gson().fromJson(intentContent, Model.location::class.java)
-            println("location $location")
+            locationOld = Gson().fromJson(intentContent, Model.location::class.java)
+            println("location $locationOld")
+            stringTel = locationOld.locataire.num_tel
         }
-        val format =  SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        edate = format.parse(location!!.dateFin)
-        sdate = format.parse(location!!.dateDebut)
+        val format =  SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault())
+        edate = format.parse(locationOld.date_fin)
+        sdate = format.parse(locationOld.date_debut)
 
         initViews()
-        det_cin.setText(location!!.locataire.cin)
-        det_text.setText( location!!.locataire.full_name)
+        det_cin.setText(locationOld.locataire.cin)
+        det_text.setText( locationOld.locataire.full_name)
 //        val format = SimpleDateFormat("yyyy-mm-dd mm:ss", Locale.getDefault())
 //        val date = format.parse(location!!.start)
 
-        det_date_debu.text = location!!.dateDebut
-        det_date_fin.text = location!!.dateFin
+        det_date_debu.text = locationOld.date_debut
+        det_date_fin.text = locationOld.date_fin
         list = findViewById<RecyclerView>(R.id.det_listview)
 
         myDialog =  Dialog(this)
 
 
 
+        viewDialog = ViewDialog(this)
 
 
 
@@ -142,7 +159,7 @@ class LocDetailActivity : AppCompatActivity() {
             timePickerDialog.show()
         }
 
-        mDefaultColor = Color.parseColor(location!!.color)
+        mDefaultColor = Color.parseColor(locationOld.color)
         val background = markDet.background
         (background as GradientDrawable).setColor(mDefaultColor)
 
@@ -209,12 +226,29 @@ class LocDetailActivity : AppCompatActivity() {
 
             det_date_debu.text = start
             det_date_fin.text = end
+
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             bottomSheetListBehavior.isHideable = false
             bottomSheetListBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-//        floatingActionButton.setOnClickListener {ShowPopup()}
+        add_tel_det.setOnClickListener{
+            ShowPopupTel()
+        }
+
+        updateLoc.setOnClickListener {
+            locationOld.date_fin = det_date_fin.text.toString()+" "+add_time_det.text.toString()
+            locationOld.date_debut = det_date_debu.text.toString()+" "+add_time_det.text.toString()
+            locationOld.color = newStringColor
+            updateLocation()
+        }
+
+
+        updateLoca.setOnClickListener {
+            locationOld.locataire.cin = det_cin.text.toString()
+            locationOld.locataire.full_name = det_text.text.toString()
+            updateLocataire()
+        }
     }
 
 
@@ -258,9 +292,8 @@ class LocDetailActivity : AppCompatActivity() {
 
 
     private fun prepareRecyclerView(){
-        val supportFragmentManager = supportFragmentManager
 
-        customListAdapter = CustomListAdapter(payments!! , this)
+        customListAdapter = CustomListAdapter(payments!! , this,this)
         viewManager = LinearLayoutManager(this)
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
@@ -381,7 +414,7 @@ class LocDetailActivity : AppCompatActivity() {
             val datePickerDialog = DatePickerDialog(
                 this,
                 DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth
-                    -> dateText.text =year.toString()+"-"+ dayOfMonth+ "-" + (monthOfYear + 1)  },
+                    -> dateText.text =year.toString()+ "-" + (monthOfYear + 1) +"-"+ dayOfMonth },
                 mYear, // Initial year selection
                 mMonth, // Initial month selection
                 mDay // Inital day selection
@@ -390,16 +423,16 @@ class LocDetailActivity : AppCompatActivity() {
         }
 
 
+        var selectedType = "Avance"
         val users = arrayOf("Avance", "Reste")
-        val spinner: Spinner = myDialog.findViewById(com.rent.R.id.types_spinner)
+        val spinner: Spinner = myDialog.findViewById(R.id.types_spinner)
         val adapter = ArrayAdapter(this,R.layout.drop_down_list_types , users)
         spinner.adapter = adapter
         spinner.onItemSelectedListener =  object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 // An item was selected. You can retrieve the selected item using
                 // parent.getItemAtPosition(pos)
-                println("hhhhhhhhh"+parent.getItemAtPosition(pos))
-
+                selectedType = parent.getItemAtPosition(pos).toString()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -412,31 +445,107 @@ class LocDetailActivity : AppCompatActivity() {
         btn.setOnClickListener {
             println(amount.text.toString())
 
-//            addPayment(Integer.parseInt(amount.text.toString()),date,type.text.toString())
+            if (amount.text.isEmpty() )
+                Toast.makeText(this,"Manque d'information",Toast.LENGTH_LONG).show()
+            else
+                addPayment(Integer.parseInt(amount.text.toString()),dateText.text.toString()+" "+time.text.toString()+":00" ,selectedType)
+
+        }
+
+    }
+
+    fun ShowPopupTel() {
+        myDialog.setCanceledOnTouchOutside(false)
+
+        myDialog.show()
+
+        myDialog.setContentView(R.layout.custompopup)
+
+//        myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val txt: TextView = myDialog.findViewById(R.id.txtcloseTel) as TextView
+        val imgAdd: ImageView = myDialog.findViewById(R.id.addTelimg) as ImageView
+        val addTel1: EditText = myDialog.findViewById(R.id.addtel) as EditText
+
+        val btn: Button = myDialog.findViewById(R.id.saveTel) as Button
+        val myLayout: LinearLayout = myDialog.findViewById(R.id.listnumbers) as LinearLayout
+
+
+
+        val telArray = ArrayList<EditText>()
+
+        if (stringTel!=""){
+            val tab = stringTel.split(",")
+            addTel1.setText(tab[0])
+            for (i in 1 until tab.size) {
+                val myEditText  = EditText(this) // Pass it an Activity or Context
+                myEditText.hint="Telephone"
+                myEditText.inputType = InputType.TYPE_CLASS_PHONE
+                myEditText.setText(tab[i])
+                myEditText.layoutParams =
+                    LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
+                myLayout.addView(myEditText)
+                telArray.add(myEditText)
+            }
+
+        }
+
+        imgAdd.setOnClickListener{
+            val myEditText  = EditText(this) // Pass it an Activity or Context
+            myEditText.hint="Telephone"
+            myEditText.inputType = InputType.TYPE_CLASS_PHONE
+            myEditText.layoutParams =
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT) // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
+            myLayout.addView(myEditText)
+            telArray.add(myEditText)
+        }
+
+
+
+        txt.setOnClickListener { myDialog.dismiss() }
+        btn.setOnClickListener {
+            stringTel= addTel1.text.toString()
+            telArray.forEach{
+                stringTel = stringTel+","+it.text.toString()
+            }
+            println(stringTel)
+            locationOld.locataire.num_tel = stringTel
             myDialog.dismiss()
         }
 
     }
 
+
+
     private fun addPayment ( amount: Int,  date:String,  type:String){
-        println(location!!.id)
+        val newPayment = Model.payment(0,date,amount,type,locationOld)
+        viewDialog .showDialog()
+        println(newPayment)
+
         disposable =
-            paymentService.addPayment(Model.payment(0,date,amount,type,location!!))
+            paymentService.addPayment(newPayment)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
-                       println(result+"dddddddddddddddddd")
-                        if (result == "success")
-                            Toast.makeText(this, "Payment Ajouté", Toast.LENGTH_LONG).show()
+                        viewDialog.hideDialog()
 
+                            Toast.makeText(this, "Payment Ajouté", Toast.LENGTH_LONG).show()
+                            myDialog.dismiss()
                     },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
+                    { error ->
+                        Toast.makeText(this,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog .hideDialog()
+                    }
                 )
     }
+
+
     private fun selectLocPayments() {
+        viewDialog.showDialog()
+
         disposable =
-            paymentService.selectLocPayments(location!!.id)
+            paymentService.selectLocPayments(locationOld.id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -446,9 +555,61 @@ class LocDetailActivity : AppCompatActivity() {
                         prepareRecyclerView()
                         customListAdapter.notifyDataSetChanged()
 
+                        viewDialog.hideDialog()
 
                     },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
+                    { error ->
+                        Toast.makeText(this,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog.hideDialog()
+                    }
+                )
+    }
+
+    private fun updateLocataire(){
+        viewDialog.showDialog()
+
+        disposable =
+            locataireService.updateLocataire(locationOld.locataire)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        viewDialog.hideDialog()
+
+                        Toast.makeText(this, "Modification avec succée",Toast.LENGTH_LONG).show()
+
+                    },
+                    { error ->
+                        Toast.makeText(this,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog.hideDialog()
+                    }
+                )
+
+    }
+
+    private fun updateLocation(){
+        viewDialog.showDialog()
+
+        disposable =
+            locationService.updateLocation(locationOld)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        viewDialog.hideDialog()
+
+                        Toast.makeText(this, "Modification avec succée",Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, MainActivity().javaClass)
+
+                        startActivity(intent)
+                    },
+                    { error ->
+                        Toast.makeText(this,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog.hideDialog()
+                    }
                 )
     }
 }

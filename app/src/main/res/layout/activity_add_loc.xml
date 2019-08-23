@@ -9,19 +9,19 @@
 
 
     <LinearLayout
+            android:id="@+id/addLocContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:orientation="vertical"
-
-            android:id="@+id/addLocContainer"
-            android:gravity="center"
-            android:foregroundGravity="center"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
+            app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
                 android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                     android:layout_marginRight="10dp"
                     android:text="Detail Locataire"
                     android:textColor="#C1F75959"
-                    android:textStyle="italic"/>
+                    android:textStyle="italic" />
 
             <View
                     android:layout_width="match_parent"
@@ -46,8 +46,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_toLeftOf="@id/tvText"
-                    android:background="#FF0000"
-                    />
+                    android:background="#FF0000" />
 
             <View
                     android:layout_width="match_parent"
@@ -55,68 +54,47 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_toRightOf="@id/tvText"
-                    android:background="#FF0000"
-                    />
+                    android:background="#FF0000" />
 
         </RelativeLayout>
 
         <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/add_cin"
-                android:textAlignment="center"
-                android:hint="Carte identitée"
-                android:layout_margin="5dp"/>
-
-        <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_name"
-                android:textAlignment="center"
-                android:hint="Nom et prénom"
-                android:layout_margin="5dp"/>
-
-        <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/add_tel"
                 android:layout_margin="5dp"
-                android:hint="Telephone"
-                android:textAlignment="center"
-                android:inputType="phone"/>
+                android:hint="Carte identitée"
+                android:inputType="number"
+                android:textAlignment="center" />
 
+        <EditText
+                android:id="@+id/add_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:hint="Nom et prénom"
+                android:textAlignment="center" />
 
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+        <TextView
+                android:id="@+id/add_tel"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:drawableEnd="@drawable/phonelist"
+                android:drawablePadding="2dp"
                 android:gravity="center"
-                android:layout_margin="5dp">
+                android:text="Telephones"
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
-            <TextView
-                    android:text="Locataire"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView12"
-                    android:layout_weight="1"
-                    android:textAlignment="center"/>
-
-            <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinnerusers"
-                    android:layout_weight="1"/>
-
-        </LinearLayout>
 
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
 
             <TextView
                     android:id="@+id/tvText2"
@@ -127,7 +105,7 @@
                     android:layout_marginRight="10dp"
                     android:text="Detail Location"
                     android:textColor="#C1F75959"
-                    android:textStyle="italic"/>
+                    android:textStyle="italic" />
 
             <View
                     android:layout_width="match_parent"
@@ -135,8 +113,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_toLeftOf="@id/tvText2"
-                    android:background="#FF0000"
-                    />
+                    android:background="#FF0000" />
 
             <View
                     android:layout_width="match_parent"
@@ -144,138 +121,167 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
                     android:layout_toRightOf="@id/tvText2"
-                    android:background="#FF0000"
-                    />
+                    android:background="#FF0000" />
 
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
-            android:orientation="vertical"
+            android:id="@+id/AddlayoutDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/AddlayoutDetails"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addLocContainer">
 
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Locataire"
+                    android:textAlignment="center" />
+
+            <Spinner
+                    android:id="@+id/spinnerusers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+        </LinearLayout>
 
         <LinearLayout
                 android:id="@+id/colorFrame"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
 
 
             <TextView
-                    android:text="Changer le couleur"
+                    android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView2"
                     android:layout_marginEnd="20dp"
+                    android:text="Changer le couleur"
                     android:textColor="#FC161515"
                     android:textSize="18sp"
-                    android:textStyle="bold|italic"/>
+                    android:textStyle="bold|italic" />
 
             <TextView
+                    android:id="@+id/mark"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/circle"
-                    android:textColor="@android:color/white"
                     android:gravity="center"
-                    android:id="@+id/mark"/>
+                    android:textColor="@android:color/white" />
         </LinearLayout>
 
         <ImageView
+                android:id="@+id/imageDateAdd"
                 android:layout_width="40dp"
                 android:layout_height="30dp"
-                app:srcCompat="@drawable/calendaricon"
-                android:id="@+id/imageDateAdd"
-                android:layout_weight="1"
                 android:layout_gravity="center"
-                />
+                android:layout_weight="1"
+                app:srcCompat="@drawable/calendaricon" />
 
         <LinearLayout
-                android:orientation="horizontal"
+                android:id="@+id/AddDateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/AddDateLayout"
-                android:layout_margin="5dp"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:layout_margin="5dp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
             <TextView
-                    android:text="De: "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/textView9"
-                    android:layout_gravity="center_horizontal|center_vertical"
-
-                    android:layout_marginStart="5dp"/>
-
-            <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:textSize="18sp"
-
-                    android:id="@+id/add_date_start"
-                    android:textAlignment="center"
-                    android:text="@string/date"
-                    android:layout_weight="1"
-                    android:textStyle="italic"/>
-
-            <TextView
-                    android:text="A: "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView10"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"/>
+
+                    android:text="De: " />
 
             <TextView
+                    android:id="@+id/add_date_start"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:textSize="18sp"
 
-                    android:id="@+id/add_date_end"
-                    android:textAlignment="center"
-                    android:text="@string/date"
                     android:layout_weight="1"
-                    android:textStyle="italic"/>
+                    android:text="@string/date"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+            <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="A: " />
+
+            <TextView
+                    android:id="@+id/add_date_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+
+                    android:layout_weight="1"
+                    android:text="@string/date"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
 
         </LinearLayout>
 
         <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
             <TextView
+                    android:id="@+id/add_time_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:textSize="18sp"
 
-                    android:id="@+id/add_time_add"
-                    android:textAlignment="center"
-                    android:text="@string/_00_00_00"
                     android:layout_weight="1"
-                    android:textStyle="italic"/>
+                    android:text="@string/_00_00_00"
+                    android:textAlignment="center"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
             <ImageView
+                    android:id="@+id/imageTimeAdd"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:srcCompat="@drawable/clockicon"
-                    android:id="@+id/imageTimeAdd"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:layout_gravity="center"/>
+                    app:srcCompat="@drawable/clockicon" />
         </LinearLayout>
+
+        <Button
+                android:id="@+id/addLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Ajouter Location" />
     </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

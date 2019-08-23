@@ -1,24 +1,18 @@
 package com.rent
 
 
-import android.app.ProgressDialog.show
 import android.content.Intent
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.util.TypedValue
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jakewharton.threetenabp.AndroidThreeTen
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -30,7 +24,6 @@ import com.kizitonwose.calendarview.utils.previous
 import com.rent.data.LocationServices
 import com.rent.data.Model
 import com.rent.tools.*
-import com.rent.tools.inflate
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -42,14 +35,11 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.YearMonth
 import org.threeten.bp.format.DateTimeFormatter
-import kotlinx.android.synthetic.main.calendar_day_legend.view.*
-import kotlinx.android.synthetic.main.example_5_calendar_day.view.*
-import kotlinx.android.synthetic.main.example_5_event_item_view.*
-import kotlinx.android.synthetic.main.example_5_event_item_view.view.*
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.function.Consumer
 import kotlin.collections.ArrayList
+import com.rent.adapters.util.ViewDialog
+
+
 
 
 data class Flight(val time: LocalDateTime, val departure: Airport, val destination: Airport,  val color: Int) {
@@ -60,7 +50,7 @@ class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHold
 
     val flights = mutableListOf<Flight>()
 
-    private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm")
+    private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm" , Locale.FRANCE)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeItemsViewHolder {
         return HomeItemsViewHolder(parent.inflate(R.layout.example_5_event_item_view))
@@ -77,30 +67,23 @@ class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHold
 
         fun bind(loc: Flight) {
             val itemflighttext = containerView.findViewById<TextView>(R.id.itemFlightDateText)
-//            val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//
-//            var date = format.parse(loc.start)
-//            var mDay          =  DateFormat.format("dd",   date)
-//            var mMonth  = DateFormat.format("MM",   date)
-//            var mYear         = DateFormat.format("yyyy", date)
-//            var mHour         = DateFormat.format("hh", date)
-//            var mMinute         = DateFormat.format("mm", date)
-//
-//            val currentMonth = YearMonth.of(mYear.)
-                itemflighttext.text = formatter.format(loc.time)
+
+            itemflighttext.text = formatter.format(loc.time)
             itemflighttext.setBackgroundColor(loc.color)
 
             containerView.findViewById<TextView>(R.id.itemDepartureAirportCodeText).text = loc.departure.code
             containerView.findViewById<TextView>(R.id.itemDepartureAirportCityText).text = loc.departure.city
 
-//            containerView.findViewById<TextView>(R.id.itemDestinationAirportCodeText).text = flight.destination.code
-//            containerView.findViewById<TextView>(R.id.itemDestinationAirportCityText).text = flight.destination.city
         }
     }
 }
 
 
 class HomeFragment : Fragment() {
+
+    var viewDialog: ViewDialog? = null
+
+
     companion object {
         fun newInstance(): HomeFragment {
             return HomeFragment()
@@ -117,8 +100,9 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Home"
+        actionBar!!.title = "Calendrier"
         setHasOptionsMenu(true)
+        viewDialog = ViewDialog(activity!!)
 
         selectLocations()
 
@@ -129,7 +113,6 @@ class HomeFragment : Fragment() {
     private val monthTitleFormatter = DateTimeFormatter.ofPattern("MMMM")
 
     private val flightsAdapter = HomeItemsAdapter()
-//    private val flights = generateFlights().groupBy { it.time.toLocalDate() }
     private  var  flights :Map<LocalDate,List<Flight>>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -180,6 +163,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun selectLocations() {
+        viewDialog!!.showDialog()
+
         disposable =
             locationService.selectLocations()
                 .subscribeOn(Schedulers.io())
@@ -192,8 +177,14 @@ class HomeFragment : Fragment() {
 
                         prepareView()
                         flightsAdapter.notifyDataSetChanged()
+                        viewDialog!!.hideDialog()
+
                     },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
+                    { error ->
+                        Toast.makeText(context,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog!!.hideDialog()
+                    }
                 )
     }
 
@@ -245,7 +236,8 @@ class HomeFragment : Fragment() {
                     textView.setTextColorRes(R.color.example_5_text_grey)
                     layout.setBackgroundResource(if (selectedDate == day.date) R.drawable.example_5_selected_bg else 0)
 
-                    val flights = flights!![day.date]
+                    val flights
+                            = flights!![day.date]
                     if (flights != null) {
                         if (flights.count() == 1) {
                             flightBottomView.setBackgroundColor(flights[0].color)

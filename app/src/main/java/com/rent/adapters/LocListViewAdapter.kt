@@ -1,22 +1,22 @@
 package com.rent.adapters
 
-import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentActivity
-import androidx.core.content.ContextCompat.startActivity
+import android.text.format.DateFormat
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 import com.daimajia.swipe.SimpleSwipeListener
@@ -24,21 +24,23 @@ import com.daimajia.swipe.SwipeLayout
 import com.daimajia.swipe.adapters.BaseSwipeAdapter
 import com.google.gson.Gson
 import com.rent.LocDetailActivity
-import com.rent.MainActivity
 import com.rent.R
+import com.rent.adapters.util.ViewDialog
 import com.rent.data.LocationServices
 import com.rent.data.Model
-import com.rent.tools.PhoneGrantings
-
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
-import android.text.format.DateFormat;
 
 // Online Favourite list Adapter
-class LocListViewAdapter(private val mContext: Context, private var locations: MutableList<Model.location>, private val manager: FragmentActivity?) : BaseSwipeAdapter() {
+class LocListViewAdapter(private val mContext: Context,private val activity: Activity,private var locations: MutableList<Model.location>, private val manager: FragmentActivity?) : BaseSwipeAdapter() {
+
+
+    private lateinit var viewDialog: ViewDialog
+    lateinit var myDialog: Dialog
+
     override fun getCount(): Int {
         return locations.count()
     }
@@ -64,7 +66,7 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
 
 
-        swipeLayout.setOnClickListener {
+        swipeLayout.setOnDoubleClickListener { _, _ ->
             run {
                 val intent = Intent(mContext, LocDetailActivity().javaClass)
                 val res: Model.location? = locations[position]
@@ -80,14 +82,19 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
         }
 
          //display the details in detail activity
+        myDialog =  Dialog(mContext)
+        viewDialog = ViewDialog(activity)
+
         v.findViewById<Button>(R.id.open).setOnClickListener {
-//            phoneCall(locations[position].tel)
+            ShowPopupTel(locations[position].locataire.num_tel)
         }
         return v
     }
 
     @SuppressLint("SetTextI18n")
     override fun fillValues(position: Int, convertView: View) {
+
+
 
         val p = locations[position]
 
@@ -99,10 +106,10 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
 
         // Populate the data into the template view using the data object
-        cin.text = p.locataire.cin
+        cin.text = p.locataire.full_name
         val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
-        var date = format.parse(p.dateDebut)
+        var date = format.parse(p.date_debut)
         var mDay          =  DateFormat.format("dd",   date)
         var mMonth  = DateFormat.format("MM",   date)
         var mYear         = DateFormat.format("yyyy", date)
@@ -112,7 +119,7 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
         dateStart.text = "$mYear-$mMonth-$mDay"
         timeStart.text = "$mHour:$mMinute"
 
-         date = format.parse(p.dateFin)
+         date = format.parse(p.date_fin)
          mDay          =  DateFormat.format("dd",   date)
          mMonth  = DateFormat.format("MM",   date)
          mYear         = DateFormat.format("yyyy", date)
@@ -142,43 +149,103 @@ class LocListViewAdapter(private val mContext: Context, private var locations: M
 
     //====================================== delete this restaurant from favourite in data base ======================================
     private fun delLocation(id: Int, position: Int) {
-
+        viewDialog.showDialog()
+println("id "+id)
         disposable =
             locationServices.deleteLocation( id )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 { result ->
-                                    run {
 
-                                        println(result)
-                                        if (result=="success") {
+
+                                        println("msg  "+result)
+                                        if (result.message=="location was deleted.") {
 
                                             Toast.makeText(mContext, "Delete succeeded", Toast.LENGTH_SHORT).show()
 
                                             locations.removeAt(position)
                                             notifyDataSetChanged()
+                                            viewDialog.hideDialog()
 
-                                        }
+
                                     }
                                 },
-                                { error -> println(error.message+"aaaaaaaaa") }
+                            { error ->
+                                viewDialog.hideDialog()
+                                Toast.makeText(mContext,"Opération échouée!",Toast.LENGTH_LONG).show()
+                                println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                            }
                         )
     }
 
     private fun phoneCall(tel:String){
-        val callIntent = Intent(Intent.ACTION_CALL)
-        callIntent.data = Uri.parse("tel:$tel")
-        println("in call")
-        if (ActivityCompat.checkSelfPermission(
-                mContext,
-                Manifest.permission.CALL_PHONE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        println("to call")
-        manager!!.startActivity(callIntent)
+//        val callIntent = Intent(Intent.ACTION_CALL)
+//        callIntent.data = Uri.parse("tel:$tel")
+//        println("in call")
+//        if (ActivityCompat.checkSelfPermission(
+//                mContext,
+//                Manifest.permission.CALL_PHONE
+//            ) != PackageManager.PERMISSION_GRANTED
+//        ) {
+//            return
+//        }
+//        println("to call")
+//        manager!!.startActivity(callIntent)
+
+
+        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$tel"))
+        manager!!.startActivity(intent)
     }
 
+
+    fun ShowPopupTel(stringTel:String) {
+        myDialog.setCanceledOnTouchOutside(false)
+
+        myDialog.show()
+
+        myDialog.setContentView(R.layout.custompopupcall)
+
+//        myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val txt: TextView = myDialog.findViewById(R.id.txtcloseCall) as TextView
+        val addTel1: TextView = myDialog.findViewById(R.id.callnumberCall) as TextView
+
+        val myLayout: LinearLayout = myDialog.findViewById(R.id.listcalls) as LinearLayout
+
+
+
+
+        if (stringTel!=""){
+            val tab = stringTel.split(",")
+            addTel1.text = tab[0]
+            addTel1.setOnClickListener{
+                phoneCall(tab[0])
+            }
+            for (i in 1 until tab.size) {
+                val myTextView  = TextView(mContext) // Pass it an Activity or Context
+                myTextView.text = tab[i]
+
+                myTextView.setCompoundDrawablesWithIntrinsicBounds (R.drawable.phonesettings,0,0,0)
+                myTextView.compoundDrawablePadding = 5
+                myTextView.gravity = Gravity.CENTER
+                myTextView.setPadding(5,5,5,5)
+                myTextView.textSize = 20f
+                val parms =LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT ) // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
+                parms.gravity = Gravity.CENTER
+                parms.setMargins(5,5,5,5)
+                myTextView.layoutParams = parms
+                myLayout.addView(myTextView)
+                myTextView.setOnClickListener{
+                    phoneCall(tab[i])
+                }
+            }
+
+        }else {
+            addTel1.visibility = View.GONE
+        }
+
+        txt.setOnClickListener { myDialog.dismiss() }
+
+
+    }
 }

@@ -57,28 +57,33 @@
         android:background="@drawable/item_selector">
 
 
-        <TextView
-                android:id="@+id/loc_cin"
-                style="@style/titetextstyle"
-                android:layout_width="155dp"
-                android:layout_height="40dp"
-                android:layout_marginBottom="2dp"
-                android:layout_marginEnd="120dp"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="2dp"
-                android:drawableStart="@drawable/avatar"
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:gravity="center"
-                android:text="cin"
-                android:textAlignment="center"
-                android:textColor="#686868"
-                android:textStyle="bold"
+                android:orientation="vertical"
                 swipe:layout_constraintBottom_toTopOf="@+id/vstart"
-                swipe:layout_constraintEnd_toEndOf="parent"
-                swipe:layout_constraintTop_toTopOf="parent"
-                android:layout_marginStart="8dp"
+                swipe:layout_constraintEnd_toStartOf="@+id/vend"
                 swipe:layout_constraintStart_toStartOf="parent"
-                swipe:layout_constraintHorizontal_bias="1.0"
-                android:textSize="23sp"/>
+                swipe:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                    android:id="@+id/loc_cin"
+                    style="@style/titetextstyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/avatar"
+                    android:drawablePadding="2dp"
+                    android:text="full name"
+                    android:textAlignment="center"
+                    android:textColor="#686868"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+        </LinearLayout>
 
         <LinearLayout
                 android:orientation="horizontal"

@@ -4,12 +4,15 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".LocationFragment">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_containerLoc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <ListView
             android:id="@+id/flistfav"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="8dp" />
+            android:layout_height="match_parent"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

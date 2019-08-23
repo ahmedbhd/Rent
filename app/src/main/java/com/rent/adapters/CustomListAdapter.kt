@@ -17,32 +17,47 @@ import com.rent.adapters.util.LocaleHelper
 import com.rent.data.Model
 import java.util.*
 import android.widget.ArrayAdapter
-import com.rent.R
+import com.rent.data.PaymentServices
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import android.text.method.TextKeyListener.clear
+import android.R
+import android.app.Activity
+import com.rent.adapters.util.ViewDialog
 
 
 /**
  * Created by Sanjeev k Saroj on 28/2/17.
  */
 
-class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Context)
+class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Context ,var activity:Activity)
     : RecyclerView.Adapter<CustomListAdapter.MainViewHolder>(){
 
 
+    private lateinit var viewDialog: ViewDialog
     private var removedPosition: Int = 0
     private var removedItem: Model.payment? = null
     lateinit var myDialog: Dialog
 
-     private var mYear: Int = 0
-     private var mMonth: Int = 0
-     private var mDay: Int = 0
+    private var mYear: Int = 0
+    private var mMonth: Int = 0
+    private var mDay: Int = 0
     private var mHour: Int = 0
     private var mMinute: Int = 0
     private var typePaiement:String = "Avance"
 
-    class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val amount: TextView = v.findViewById(com.rent.R.id.tv_name)
-        val type: TextView = v.findViewById(com.rent.R.id.description)
 
+    private val paymentServices by lazy {
+        PaymentServices.create()
+    }
+    private var disposable: Disposable? = null
+
+
+    class MainViewHolder(v: View) : RecyclerView.ViewHolder(v) {
+        val amount: TextView = v.findViewById(com.rent.R.id.textmontant)
+        val type: TextView = v.findViewById(com.rent.R.id.description)
+        val name: TextView = v.findViewById(com.rent.R.id.tv_name)
 
     }
 
@@ -52,10 +67,15 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         return MainViewHolder(v)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: MainViewHolder, position: Int) {
-        viewHolder.amount.text = list[position].montant.toString()
-        viewHolder.type.text = list[position].type
+        viewHolder.amount.text = list[position].montant.toString() +" ( "+list[position].type+" )"
+        viewHolder.type.text = list[position].paiement_date
+        viewHolder.name.text = list[position].location.locataire.full_name
+
         myDialog =  Dialog(myContext)
+        viewDialog = ViewDialog(activity)
+
         viewHolder.itemView.setOnClickListener {
             println("item clicked")
             ShowPopup(viewHolder.itemView,list[position])
@@ -65,11 +85,12 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
     fun removeItem(position: Int, viewHolder: RecyclerView.ViewHolder) {
         removedItem = list[position]
         removedPosition = position
-
+        deletePayment(removedItem!!)
         list.removeAt(position)
         notifyItemRemoved(position)
 
         Snackbar.make(viewHolder.itemView, "Payment Supprimé", Snackbar.LENGTH_LONG).setAction("UNDO") {
+            addPayment(removedItem!!)
             list.add(removedPosition, removedItem!!)
             notifyItemInserted(removedPosition)
 
@@ -85,18 +106,18 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
 
         myDialog.show()
 
-        myDialog.setContentView(R.layout.custompopup2  )
+        myDialog.setContentView(com.rent.R.layout.custompopup2  )
 
         myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val txt: TextView = myDialog.findViewById(R.id.txtclose) as TextView
-        val btn: Button = myDialog.findViewById(R.id.btnfollow) as Button
+        val txt: TextView = myDialog.findViewById(com.rent.R.id.txtclose) as TextView
+        val btn: Button = myDialog.findViewById(com.rent.R.id.btnfollow) as Button
 
-        val amount: EditText = myDialog.findViewById(R.id.add_amount) as EditText
-        val dateBtn: ImageView = myDialog.findViewById(R.id.imageDate) as ImageView
-        val timeBtn: ImageView = myDialog.findViewById(R.id.imageTime) as ImageView
-        val dateText: TextView = myDialog.findViewById(R.id.add_date) as TextView
+        val amount: EditText = myDialog.findViewById(com.rent.R.id.add_amount) as EditText
+        val dateBtn: ImageView = myDialog.findViewById(com.rent.R.id.imageDate) as ImageView
+        val timeBtn: ImageView = myDialog.findViewById(com.rent.R.id.imageTime) as ImageView
+        val dateText: TextView = myDialog.findViewById(com.rent.R.id.add_date) as TextView
 
-        val time = myDialog.findViewById(R.id.add_time) as TextView
+        val time = myDialog.findViewById(com.rent.R.id.add_time) as TextView
 
         amount.setText(payment.montant.toString(), TextView.BufferType.EDITABLE)
 
@@ -129,7 +150,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
             val datePickerDialog = DatePickerDialog(
                 myContext,
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth
-                    -> dateText.text =year.toString()+"-"+ dayOfMonth+ "-" + (monthOfYear + 1)  },
+                    -> dateText.text =year.toString()+ "-" + (monthOfYear + 1) +"-"+ dayOfMonth },
                 mYear, // Initial year selection
                 mMonth, // Initial month selection
                 mDay // Inital day selection
@@ -140,7 +161,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         val users = arrayOf("Avance", "Reste")
         val spinner: Spinner = myDialog.findViewById(com.rent.R.id.types_spinner)
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(myContext,R.layout.drop_down_list_types , users)
+        val adapter = ArrayAdapter(myContext, com.rent.R.layout.drop_down_list_types , users)
         spinner.adapter = adapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -165,12 +186,84 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         }
         txt.setOnClickListener { myDialog.dismiss() }
         btn.setOnClickListener {
-            println(amount.text.toString())
 
-//            addPayment(Integer.parseInt(amount.text.toString()),date,type.text.toString())
+            updatePayment(payment.id,Integer.parseInt(amount.text.toString()),dateText.text.toString()+" "+time.text.toString()+":00",typePaiement , payment.location)
             myDialog.dismiss()
         }
 
     }
 
+
+    private fun addPayment ( pay: Model.payment){
+//        viewDialog.showDialog()
+
+        disposable =
+            paymentServices.addPayment(pay)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+//                        viewDialog.hideDialog()
+
+                        Toast.makeText(myContext, "Payment Ajouté", Toast.LENGTH_LONG).show()
+
+                    },
+                    { error ->
+//                        viewDialog.hideDialog()
+
+                        Toast.makeText(myContext,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    }
+                )
+    }
+
+
+
+    private fun updatePayment (id:Int, amount: Int,  date:String,  type:String , loc:Model.location){
+        val newPayment = Model.payment(id,date,amount,type,loc)
+        println(newPayment)
+        viewDialog.showDialog()
+        disposable =
+            paymentServices.updatePayment(newPayment)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        viewDialog.hideDialog()
+
+                        Toast.makeText(myContext, "Paiement Modifié", Toast.LENGTH_LONG).show()
+
+                    },
+                    { error ->
+                        viewDialog.hideDialog()
+
+                        Toast.makeText(myContext,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    }
+                )
+    }
+
+
+    private fun deletePayment ( pay:Model.payment){
+        viewDialog.showDialog()
+
+        disposable =
+            paymentServices.deletePayment(pay.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+                        viewDialog.hideDialog()
+
+                        Toast.makeText(myContext, "Paiement Supprimé", Toast.LENGTH_LONG).show()
+
+                    },
+                    { error ->
+                        viewDialog.hideDialog()
+
+                        Toast.makeText(myContext,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    }
+                )
+    }
 }

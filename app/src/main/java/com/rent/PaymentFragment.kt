@@ -6,13 +6,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,9 +23,10 @@ import com.rent.data.PaymentServices
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.bottom_sheet.*
+import java.util.*
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.rent.adapters.util.ViewDialog
 import kotlinx.android.synthetic.main.fragment_payment.*
-import java.util.ArrayList
 
 
 class PaymentFragment : Fragment() {
@@ -36,6 +37,7 @@ class PaymentFragment : Fragment() {
     }
     //private var customListAdapter: CustomListAdapter? = null
 
+    private lateinit var viewDialog: ViewDialog
     private val paymentService by lazy {
         PaymentServices.create()
     }
@@ -50,8 +52,8 @@ class PaymentFragment : Fragment() {
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
-    private var dataset = mutableListOf("Chicken", "Fish", "Beef", "Pork", "Lamb")
     private var payments: MutableList<Model.payment>? = ArrayList()
+    private lateinit var swipe: SwipeRefreshLayout
 
 
     override fun onCreateView(
@@ -61,9 +63,19 @@ class PaymentFragment : Fragment() {
         // Inflate the layout for this fragment
         val root= inflater.inflate(R.layout.fragment_payment, container, false)
         val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Payments"
+        actionBar!!.title = "Paiements"
         list = root.findViewById(R.id.det_listview22) as RecyclerView
+        swipe =  root.findViewById(R.id.swipeContainer) as SwipeRefreshLayout
 
+        swipe.setOnRefreshListener {
+            // Your code to refresh the list here.
+            // Make sure you call swipeContainer.setRefreshing(false)
+            // once the network request has completed successfully.
+            selectLocPayments()
+            swipe.isRefreshing = false
+
+        }
+        viewDialog = ViewDialog(activity!!)
 
 
         selectLocPayments()
@@ -71,6 +83,8 @@ class PaymentFragment : Fragment() {
     }
 
     private fun selectLocPayments() {
+        viewDialog .showDialog()
+
         disposable =
             paymentService.selectPayments()
                 .subscribeOn(Schedulers.io())
@@ -83,14 +97,20 @@ class PaymentFragment : Fragment() {
 
                         prepareRecyclerView()
                         customListAdapter.notifyDataSetChanged()
+                        viewDialog.hideDialog()
+
                     },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
-                )
+                    { error ->
+                        Toast.makeText(context,"Opération échouée!", Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog .hideDialog()
+                    }                )
     }
 
     private fun prepareRecyclerView(){
 
-        customListAdapter = CustomListAdapter(payments!!,context!!)
+        customListAdapter = CustomListAdapter(payments!!,context!!,activity!!)
+
         viewManager = LinearLayoutManager(context!!)
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))

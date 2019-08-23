@@ -17,9 +17,13 @@ import com.rent.tools.PhoneGrantings
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
+import com.rent.adapters.util.ViewDialog
 
 
 class LocationFragment : Fragment() {
+    private lateinit var viewDialog: ViewDialog
     private var disposable: Disposable? = null
     private val locationService by lazy {
         LocationServices.create()
@@ -27,6 +31,9 @@ class LocationFragment : Fragment() {
     private var locations: ArrayList<Model.location>? = ArrayList()
     private var mAdapter: LocListViewAdapter? = null
     var list: ListView? = null
+    lateinit var swipeLayout: SwipeRefreshLayout
+
+
 
     companion object {
         fun newInstance(): LocationFragment {
@@ -42,6 +49,8 @@ class LocationFragment : Fragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar!!.title = "Locations"
 
+        viewDialog = ViewDialog(activity!!)
+
         list = root.findViewById(R.id.flistfav) as ListView
 
         if (PhoneGrantings.isNetworkAvailable(activity!!)) // online actions
@@ -50,12 +59,19 @@ class LocationFragment : Fragment() {
             Toast.makeText(context, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
 
 
-            // Inflate the layout for this fragment
+        swipeLayout = root.findViewById(R.id.swipe_containerLoc)
+        // Adding Listener
+        swipeLayout.setOnRefreshListener{
+           selectLocations()
+            swipeLayout.isRefreshing= false
+        }
+
         return root
     }
 
 
     private fun selectLocations() {
+        viewDialog.showDialog()
 
         disposable =
             locationService.selectLocations()
@@ -63,12 +79,16 @@ class LocationFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { result ->
-                        mAdapter = LocListViewAdapter(context!!, result as MutableList<Model.location>, activity)
+                        mAdapter = LocListViewAdapter(context!!,activity!!, result as MutableList<Model.location>, activity)
                         mAdapter!!.mode = Attributes.Mode.Single
                         list!!.adapter = mAdapter
-                        println("hhhhhhhhhhhh $locations")
+                        viewDialog.hideDialog()
                     },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
+                    { error ->
+                        Toast.makeText(context,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                        viewDialog.hideDialog()
+                    }
                 )
     }
 

@@ -1,89 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
-              android:layout_width="350dp"
-              android:layout_height="550dp"
-              android:background="@android:color/black"
-              android:padding="5dp"
-              android:layout_gravity="center">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/listphones"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:padding="5dp">
 
-    <!--<TextView-->
-            <!--android:id="@+id/txtclose"-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:textColor="@color/backgroundColor"-->
-            <!--android:text="X"-->
-            <!--android:textStyle="bold"-->
-            <!--android:layout_gravity="end"-->
-            <!--android:gravity="center"-->
-            <!--android:background="@drawable/cerclebackground"/>-->
+    <TextView
+            android:id="@+id/txtcloseTel"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/cerclebackground"
+            android:gravity="center"
+            android:text="X"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
-    <!--<androidx.constraintlayout.widget.ConstraintLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+    <LinearLayout
+            android:id="@+id/listnumbers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            android:padding="5dp">
 
-        <!--<EditText-->
-                <!--android:layout_width="150dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textStyle="bold"-->
-                <!--android:textSize="18sp"-->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <!--android:textColor="@color/backgroundColor"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:id="@+id/add_type"-->
-                <!--android:textAlignment="center"-->
-                <!--android:hint="Type"-->
-                <!--android:gravity="start"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <EditText
+                    android:id="@+id/addtel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Telephone"
+                    android:inputType="phone" />
 
-        <!--<EditText-->
-                <!--android:layout_width="150dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="@color/backgroundColor"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:textSize="18sp"-->
+            <ImageView
+                    android:id="@+id/addTelimg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@android:drawable/ic_input_add" />
+        </LinearLayout>
+    </LinearLayout>
 
-                <!--android:id="@+id/add_amount"-->
-                <!--android:inputType="numberSigned"-->
-                <!--android:textAlignment="center"-->
-                <!--android:hint="Montant"-->
-                <!--android:gravity="end"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
-    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
-
-    <!--<TextView-->
-            <!--android:layout_width="150dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textColor="@color/backgroundColor"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:textSize="18sp"-->
-
-            <!--android:id="@+id/add_time"-->
-            <!--android:textAlignment="center"-->
-            <!--android:text="@string/_00_00_00"/>-->
-
-    <!--<CalendarView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/add_calendar"-->
-            <!--android:background="#CDDC39"-->
-            <!--android:backgroundTint="#FFEB3B"-->
-            <!--android:selectedWeekBackgroundColor="#03A9F4"-->
-            <!--android:textAlignment="center"/>-->
-
-    <!--<Button-->
-            <!--android:id="@+id/btnfollow"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/enregistrer"-->
-            <!--android:layout_marginTop="25dp"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:background="@drawable/buttonstyle"-->
-            <!--android:textColor="@color/backgroundColor"/>-->
+    <Button
+            android:id="@+id/saveTel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:text="@string/enregistrer" />
 
 </LinearLayout>

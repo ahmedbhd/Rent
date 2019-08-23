@@ -1,5 +1,6 @@
 package com.rent.tools
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.text.format.DateFormat
 import com.rent.Flight
@@ -16,6 +17,7 @@ import kotlin.collections.ArrayList
 
 private typealias Airport = Flight.Airport
 
+@SuppressLint("Range")
 fun generateFlights(locations :ArrayList<Model.location>): List<Flight> {
     val list = mutableListOf<Flight>()
 
@@ -66,8 +68,8 @@ fun generateFlights(locations :ArrayList<Model.location>): List<Flight> {
 
     locations.forEach(Consumer { loc ->
         val format =  SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        val localDateStart = format.parse(loc.dateDebut)
-        val localDateEnd = format.parse(loc.dateFin)
+        val localDateStart = format.parse(loc.date_debut)
+        val localDateEnd = format.parse(loc.date_fin)
 
         val datesInRange = ArrayList<Date>()
         val calendar = GregorianCalendar()
