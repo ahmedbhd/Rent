@@ -90,11 +90,14 @@
 
         <Button
                 android:id="@+id/updateLoca"
+
+                android:theme="@style/FlatButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_margin="12dp"
+                android:padding="8dp"
                 android:text="Modifier Locataire" />
-
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -258,13 +261,18 @@
                     app:srcCompat="@drawable/clockicon" />
         </LinearLayout>
 
+
         <Button
                 android:id="@+id/updateLoc"
+
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:text="Modifier location" />
+                android:layout_margin="12dp"
+                android:padding="8dp"
+                android:text="Modifier location"
+                android:theme="@style/FlatButton" />
     </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

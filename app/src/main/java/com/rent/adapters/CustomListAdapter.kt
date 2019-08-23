@@ -158,7 +158,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
             datePickerDialog.show()
         }
 
-        val users = arrayOf("Avance", "Reste")
+        val users = arrayOf("Avance", "Paiment")
         val spinner: Spinner = myDialog.findViewById(com.rent.R.id.types_spinner)
         // Create an ArrayAdapter using the string array and a default spinner layout
         val adapter = ArrayAdapter(myContext, com.rent.R.layout.drop_down_list_types , users)
@@ -180,7 +180,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         val spinnerAdap = spinner.adapter as ArrayAdapter<String>
 
         if (payment.type == "payment") {
-            val spinnerPosition = spinnerAdap.getPosition("Reste")
+            val spinnerPosition = spinnerAdap.getPosition("Paiement")
 
             spinner.setSelection(spinnerPosition)
         }

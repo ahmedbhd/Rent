@@ -2,7 +2,6 @@ package com.rent.adapters.util
 
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
-import android.view.Window.FEATURE_NO_TITLE
 import android.app.Activity
 import android.app.Dialog
 import android.view.Window
@@ -12,7 +11,7 @@ import com.rent.R
 
 class ViewDialog//..we need the context else we can not create the dialog so get context in constructor
     (internal var activity: Activity) {
-    internal lateinit var dialog: Dialog
+    private lateinit var dialog: Dialog
 
     fun showDialog() {
 

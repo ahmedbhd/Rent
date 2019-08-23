@@ -33,7 +33,7 @@
     <string name="_00_00_00">00:00</string>
     <string-array name="types_array">
         <item>Avance</item>
-        <item>Reste</item>
+        <item>Paiement</item>
     </string-array>
     <string name="title_activity_splash">Splash</string>
 </resources>

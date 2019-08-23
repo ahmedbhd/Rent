@@ -183,7 +183,7 @@ class AddLocActivity : AppCompatActivity()  {
                 (background as GradientDrawable).setColor(mDefaultColor)
                 newStringColor = String.format("#%06X", 0xFFFFFF and mDefaultColor)
                 newLocation.color = newStringColor
-                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
+//                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
             }
         }
         val colorPicker = AmbilWarnaDialog(this, mDefaultColor,onAmbilWarnaListener)

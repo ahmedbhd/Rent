@@ -23,4 +23,19 @@
 
     <style name="subtitetextstyle" parent="TextAppearance.AppCompat.Caption"></style>
 
+    <style parent="Theme.AppCompat.Light" name="FlatButton">
+
+        <item name="android:textColor">@color/myPeach</item>
+
+        <item name="colorControlHighlight">@color/myRed</item>
+
+    </style>
+
+    <style parent="Theme.AppCompat.Light" name="FlatButton2">
+
+        <item name="android:textColor">@color/teal_700</item>
+
+        <item name="colorControlHighlight">@color/blue_800</item>
+
+    </style>
 </resources>

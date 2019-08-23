@@ -71,7 +71,7 @@ class LocDetailActivity : AppCompatActivity() {
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
 
-    private var stringTel:String =""
+    private var stringTel:String ="-"
 
     lateinit var myDialog: Dialog
 
@@ -262,7 +262,7 @@ class LocDetailActivity : AppCompatActivity() {
                 val background = markDet.background
                 (background as GradientDrawable).setColor(mDefaultColor)
                 newStringColor = String.format("#%06X", 0xFFFFFF and mDefaultColor)
-                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
+//                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
             }
         }
         val colorPicker = AmbilWarnaDialog(this, mDefaultColor,onAmbilWarnaListener)
@@ -424,7 +424,7 @@ class LocDetailActivity : AppCompatActivity() {
 
 
         var selectedType = "Avance"
-        val users = arrayOf("Avance", "Reste")
+        val users = arrayOf("Avance", "Paiement")
         val spinner: Spinner = myDialog.findViewById(R.id.types_spinner)
         val adapter = ArrayAdapter(this,R.layout.drop_down_list_types , users)
         spinner.adapter = adapter
@@ -505,7 +505,8 @@ class LocDetailActivity : AppCompatActivity() {
         btn.setOnClickListener {
             stringTel= addTel1.text.toString()
             telArray.forEach{
-                stringTel = stringTel+","+it.text.toString()
+                if (it.text.toString().isNotEmpty())
+                    stringTel = stringTel+","+it.text.toString()
             }
             println(stringTel)
             locationOld.locataire.num_tel = stringTel

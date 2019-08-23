@@ -57,12 +57,17 @@
         </LinearLayout>
     </LinearLayout>
 
+
     <Button
             android:id="@+id/saveTel"
-            android:layout_width="match_parent"
+
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="5dp"
+            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            android:padding="8dp"
+            android:theme="@style/FlatButton2"
             android:text="@string/enregistrer" />
 
 </LinearLayout>

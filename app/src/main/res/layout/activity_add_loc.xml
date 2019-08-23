@@ -276,12 +276,19 @@
                     app:srcCompat="@drawable/clockicon" />
         </LinearLayout>
 
+
         <Button
                 android:id="@+id/addLocation"
+
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="12dp"
+                android:padding="8dp"
+                android:theme="@style/FlatButton"
                 android:text="Ajouter Location" />
+
     </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
