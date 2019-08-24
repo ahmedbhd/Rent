@@ -1,18 +1,23 @@
 package com.rent
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth
 import com.kizitonwose.calendarview.model.DayOwner
@@ -46,9 +51,12 @@ data class Flight(val time: LocalDateTime, val departure: Airport, val destinati
     data class Airport(val city: String, val code: String)
 }
 
-class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHolder>() {
+class HomeItemsAdapter (
+//    val onClick: (Flight) -> Unit,
+    private val mContext: Context , private val manager: FragmentActivity?) : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHolder>() {
 
     val flights = mutableListOf<Flight>()
+    var locations : ArrayList<Model.location> = ArrayList()
 
     private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm" , Locale.FRANCE)
 
@@ -57,7 +65,18 @@ class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHold
     }
 
     override fun onBindViewHolder(viewHolder: HomeItemsViewHolder, position: Int) {
+        val layout = viewHolder.itemView.findViewById<LinearLayout>(R.id.itemFlightDepartureLayout)
+//        layout.setOnClickListener{
+//            println("position "+position)
+//            val intent = Intent(mContext, LocDetailActivity().javaClass)
+//            val res: Model.location? = locations[position]
+//            println("res ${res.toString()}")
+//            intent.putExtra("myObject2", Gson().toJson(res))
+//            manager!!.startActivity(intent)
+//        }
+
         viewHolder.bind(flights[position])
+
     }
 
     override fun getItemCount(): Int = flights.size
@@ -65,6 +84,11 @@ class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHold
     inner class HomeItemsViewHolder(override val containerView: View) :
         RecyclerView.ViewHolder(containerView), LayoutContainer {
 
+//        init {
+//            itemView.setOnClickListener {
+//                onClick(flights[adapterPosition])
+//            }
+//        }
         fun bind(loc: Flight) {
             val itemflighttext = containerView.findViewById<TextView>(R.id.itemFlightDateText)
 
@@ -74,6 +98,7 @@ class HomeItemsAdapter : RecyclerView.Adapter<HomeItemsAdapter.HomeItemsViewHold
             containerView.findViewById<TextView>(R.id.itemDepartureAirportCodeText).text = loc.departure.code
             containerView.findViewById<TextView>(R.id.itemDepartureAirportCityText).text = loc.departure.city
 
+            println("index of "+ flights.indexOf(loc))
         }
     }
 }
@@ -104,7 +129,6 @@ class HomeFragment : Fragment() {
         setHasOptionsMenu(true)
         viewDialog = ViewDialog(activity!!)
 
-        selectLocations()
 
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
@@ -112,19 +136,15 @@ class HomeFragment : Fragment() {
     private var selectedDate: LocalDate? = null
     private val monthTitleFormatter = DateTimeFormatter.ofPattern("MMMM")
 
-    private val flightsAdapter = HomeItemsAdapter()
+    private lateinit var flightsAdapter : HomeItemsAdapter
     private  var  flights :Map<LocalDate,List<Flight>>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        flightsAdapter = HomeItemsAdapter(context!!, activity!!)
+        selectLocations()
         exFiveRv.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         exFiveRv.adapter = flightsAdapter
-
-
-
-
-
 
     }
 
@@ -141,6 +161,7 @@ class HomeFragment : Fragment() {
     private fun updateAdapterForDate(date: LocalDate?) {
         flightsAdapter.flights.clear()
         flightsAdapter.flights.addAll(flights!![date].orEmpty())
+        flightsAdapter.locations = locations!!
         flightsAdapter.notifyDataSetChanged()
     }
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<com.daimajia.swipe.SwipeLayout xmlns:swipe="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:swipe="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe"
@@ -9,52 +10,6 @@
     swipe:rightEdgeSwipeOffset="0dp"
     android:layout_margin="5dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="#F89802"
-        android:gravity="center"
-        android:tag="Bottom3"
-        android:weightSum="10"
-        android:layout_margin="5dp">
-
-        <ImageView
-            android:id="@+id/eye"
-            android:layout_width="27dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/telephone" />
-
-        <Button
-            android:id="@+id/open"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="4"
-            android:background="@drawable/white"
-            android:text="Appeler"
-            android:textColor="#F89802" />
-
-        <Button
-            android:id="@+id/delete"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="4"
-            android:background="@drawable/white"
-            android:text="Supprimer"
-            android:textColor="#F89802" />
-        <ImageView
-            android:id="@+id/trash"
-            android:layout_width="27dp"
-            android:layout_height="30dp"
-            android:layout_weight="1"
-            android:src="@drawable/trash" />
-    </LinearLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/item_selector">
 
 
         <LinearLayout
@@ -77,7 +32,7 @@
 
                     android:layout_weight="1"
                     android:drawableStart="@drawable/avatar"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="10dp"
                     android:text="full name"
                     android:textAlignment="center"
                     android:textColor="#686868"
@@ -156,5 +111,4 @@
         </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.daimajia.swipe.SwipeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

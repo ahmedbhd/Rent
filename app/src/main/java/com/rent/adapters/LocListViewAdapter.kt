@@ -33,9 +33,10 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 // Online Favourite list Adapter
-class LocListViewAdapter(private val mContext: Context,private val activity: Activity,private var locations: MutableList<Model.location>, private val manager: FragmentActivity?) : BaseSwipeAdapter() {
+class LocListViewAdapter(private val mContext: Context,private val activity: Activity,private var locations: ArrayList<Model.location>, private val manager: FragmentActivity?) : BaseSwipeAdapter() {
 
 
     private lateinit var viewDialog: ViewDialog
@@ -54,40 +55,41 @@ class LocListViewAdapter(private val mContext: Context,private val activity: Act
     override fun generateView(position: Int, parent: ViewGroup): View {
         val v = LayoutInflater.from(mContext).inflate(R.layout.listview_item, null)
         val swipeLayout = v.findViewById(getSwipeLayoutResourceId(position)) as SwipeLayout
-        swipeLayout.addSwipeListener(object : SimpleSwipeListener() {
-            override fun onOpen(layout: SwipeLayout) {
-                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash))
-                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.eye))
-            }
-        })
+//        swipeLayout.addSwipeListener(object : SimpleSwipeListener() {
+//            override fun onOpen(layout: SwipeLayout) {
+//                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.trash))
+//                YoYo.with(Techniques.Tada).duration(500).delay(100).playOn(layout.findViewById(R.id.eye))
+//            }
+//        })
 
-
-        Log.d("position", locations.toString())
 
 
 
         swipeLayout.setOnDoubleClickListener { _, _ ->
             run {
-                val intent = Intent(mContext, LocDetailActivity().javaClass)
-                val res: Model.location? = locations[position]
-                println("res ${res.toString()}")
-                intent.putExtra("myObject2", Gson().toJson(res))
-                manager!!.startActivity(intent)
+//                val intent = Intent(mContext, LocDetailActivity().javaClass)
+//                val res: Model.location? = locations[position]
+//                println("res ${res.toString()}")
+//                intent.putExtra("myObject2", Gson().toJson(res))
+//                manager!!.startActivity(intent)
+                println("position$position")
+
             }
         }
 
         // delete action
-        v.findViewById<Button>(R.id.delete).setOnClickListener {
-            delLocation(locations[position].id, position)
-        }
+//        v.findViewById<Button>(R.id.delete).setOnClickListener {
+//            delLocation(locations[position].id, position)
+//        }
+//        v.findViewById<Button>(R.id.open).setOnClickListener {
+//            ShowPopupTel(locations[position].locataire.num_tel)
+//        }
 
          //display the details in detail activity
         myDialog =  Dialog(mContext)
         viewDialog = ViewDialog(activity)
 
-        v.findViewById<Button>(R.id.open).setOnClickListener {
-            ShowPopupTel(locations[position].locataire.num_tel)
-        }
+
         return v
     }
 
@@ -150,7 +152,7 @@ class LocListViewAdapter(private val mContext: Context,private val activity: Act
     //====================================== delete this restaurant from favourite in data base ======================================
     private fun delLocation(id: Int, position: Int) {
         viewDialog.showDialog()
-println("id "+id)
+        println("id "+id)
         disposable =
             locationServices.deleteLocation( id )
                         .subscribeOn(Schedulers.io())
@@ -207,7 +209,7 @@ println("id "+id)
         myDialog.setContentView(R.layout.custompopupcall)
 
 //        myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        val txt: TextView = myDialog.findViewById(R.id.txtcloseCall) as TextView
+//        val txt: TextView = myDialog.findViewById(R.id.txtcloseCall) as TextView
         val addTel1: TextView = myDialog.findViewById(R.id.callnumberCall) as TextView
 
         val myLayout: LinearLayout = myDialog.findViewById(R.id.listcalls) as LinearLayout
@@ -244,7 +246,7 @@ println("id "+id)
             addTel1.visibility = View.GONE
         }
 
-        txt.setOnClickListener { myDialog.dismiss() }
+//        txt.setOnClickListener { myDialog.dismiss() }
 
 
     }

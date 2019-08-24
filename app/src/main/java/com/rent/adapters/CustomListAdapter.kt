@@ -77,7 +77,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         viewDialog = ViewDialog(activity)
 
         viewHolder.itemView.setOnClickListener {
-            println("item clicked")
+            println("item clicked $position")
             ShowPopup(viewHolder.itemView,list[position])
         }
     }
@@ -89,7 +89,7 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         list.removeAt(position)
         notifyItemRemoved(position)
 
-        Snackbar.make(viewHolder.itemView, "Payment Supprimé", Snackbar.LENGTH_LONG).setAction("UNDO") {
+        Snackbar.make(viewHolder.itemView, "Payment Supprimé", Snackbar.LENGTH_LONG).setAction("ANNULER") {
             addPayment(removedItem!!)
             list.add(removedPosition, removedItem!!)
             notifyItemInserted(removedPosition)

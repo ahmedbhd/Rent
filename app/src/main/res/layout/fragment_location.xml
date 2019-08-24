@@ -4,15 +4,17 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".LocationFragment">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_containerLoc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="2dp">
 
-    <ListView
-            android:id="@+id/flistfav"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/flistfav"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -12,9 +12,9 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
-import android.text.format.DateFormat
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -27,20 +27,16 @@ import com.applikeysolutions.cosmocalendar.view.CalendarView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.rent.adapters.CustomListAdapter
-import com.rent.adapters.util.TimePickerFragment.Companion.time
 import com.rent.adapters.util.ViewDialog
 import com.rent.data.LocataireServices
 import com.rent.data.LocationServices
 import com.rent.data.Model
 import com.rent.data.PaymentServices
 import com.rent.tools.PhoneGrantings
-import com.rent.tools.getColorCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_add_loc.*
 import kotlinx.android.synthetic.main.activity_loc_detail.*
-import kotlinx.android.synthetic.main.activity_loc_detail.imageDateAdd
 import kotlinx.android.synthetic.main.add_cal_bottomsheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import yuku.ambilwarna.AmbilWarnaDialog
@@ -270,7 +266,7 @@ class LocDetailActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        calendarView = findViewById<CalendarView>(R.id.calendar_view)
+        calendarView = findViewById(R.id.calendar_view)
         calendarView!!.calendarOrientation = OrientationHelper.HORIZONTAL
         calendarView!!.selectionType = SelectionType.RANGE
         if (calendarView!!.selectionManager is RangeSelectionManager) {
@@ -454,7 +450,7 @@ class LocDetailActivity : AppCompatActivity() {
 
     }
 
-    fun ShowPopupTel() {
+    private fun ShowPopupTel() {
         myDialog.setCanceledOnTouchOutside(false)
 
         myDialog.show()
@@ -527,7 +523,7 @@ class LocDetailActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { result ->
+                    {
                         viewDialog.hideDialog()
 
                             Toast.makeText(this, "Payment Ajouté", Toast.LENGTH_LONG).show()
@@ -612,5 +608,50 @@ class LocDetailActivity : AppCompatActivity() {
                         viewDialog.hideDialog()
                     }
                 )
+    }
+
+
+    private fun delLocation() {
+        viewDialog.showDialog()
+        disposable =
+            locationService.deleteLocation( locationOld.id )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { result ->
+
+                        println("msg  $result")
+                        if (result.message=="location was deleted.") {
+
+                            Toast.makeText(this, "Supprimé avec succée", Toast.LENGTH_SHORT).show()
+                            val nextScreen = Intent(this, MainActivity::class.java)
+                            startActivity(nextScreen)
+                            viewDialog.hideDialog()
+
+                        }
+                    },
+                    { error ->
+                        viewDialog.hideDialog()
+                        Toast.makeText(this,"Opération échouée!",Toast.LENGTH_LONG).show()
+                        println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                    }
+                )
+    }
+
+    override fun  onCreateOptionsMenu( menu :Menu) : Boolean {
+        menuInflater.inflate(R.menu.menu_det, menu)
+        super.onCreateOptionsMenu(menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.del_loc -> {
+               println("this")
+                delLocation()
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
