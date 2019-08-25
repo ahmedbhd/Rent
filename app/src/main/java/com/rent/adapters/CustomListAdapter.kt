@@ -24,7 +24,9 @@ import io.reactivex.schedulers.Schedulers
 import android.text.method.TextKeyListener.clear
 import android.R
 import android.app.Activity
+import com.rent.adapters.util.TimePickerFragment.Companion.time
 import com.rent.adapters.util.ViewDialog
+import com.rent.tools.PhoneGrantings
 
 
 /**
@@ -83,18 +85,21 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
     }
 
     fun removeItem(position: Int, viewHolder: RecyclerView.ViewHolder) {
-        removedItem = list[position]
-        removedPosition = position
-        deletePayment(removedItem!!)
-        list.removeAt(position)
-        notifyItemRemoved(position)
+        if (PhoneGrantings.isNetworkAvailable(activity)) {
+            removedItem = list[position]
+            removedPosition = position
+            deletePayment(removedItem!!)
+            list.removeAt(position)
+            notifyItemRemoved(position)
 
-        Snackbar.make(viewHolder.itemView, "Payment Supprimé", Snackbar.LENGTH_LONG).setAction("ANNULER") {
-            addPayment(removedItem!!)
-            list.add(removedPosition, removedItem!!)
-            notifyItemInserted(removedPosition)
+            Snackbar.make(viewHolder.itemView, "Payment Supprimé", Snackbar.LENGTH_LONG).setAction("ANNULER") {
+                addPayment(removedItem!!)
+                list.add(removedPosition, removedItem!!)
+                notifyItemInserted(removedPosition)
 
-        }.show()
+            }.show()
+        } else
+            Toast.makeText(myContext, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
     }
 
     override fun getItemCount() = list.size
@@ -186,9 +191,13 @@ class CustomListAdapter(var list: MutableList<Model.payment>, var myContext: Con
         }
         txt.setOnClickListener { myDialog.dismiss() }
         btn.setOnClickListener {
+            if (PhoneGrantings.isNetworkAvailable(activity)) {
+                updatePayment(payment.id,Integer.parseInt(amount.text.toString()),dateText.text.toString()+" "+time.text.toString()+":00",typePaiement , payment.location)
+                myDialog.dismiss()            }
+            else
+                Toast.makeText(myContext, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
 
-            updatePayment(payment.id,Integer.parseInt(amount.text.toString()),dateText.text.toString()+" "+time.text.toString()+":00",typePaiement , payment.location)
-            myDialog.dismiss()
+
         }
 
     }

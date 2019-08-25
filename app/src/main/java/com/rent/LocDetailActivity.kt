@@ -101,11 +101,15 @@ class LocDetailActivity : AppCompatActivity() {
             println("location $locationOld")
             stringTel = locationOld.locataire.num_tel
         }
+        mDefaultColor = Color.parseColor(locationOld.color)
+
+
+
+
         val format =  SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault())
         edate = format.parse(locationOld.date_fin)
         sdate = format.parse(locationOld.date_debut)
 
-        initViews()
         det_cin.setText(locationOld.locataire.cin)
         det_text.setText( locationOld.locataire.full_name)
 //        val format = SimpleDateFormat("yyyy-mm-dd mm:ss", Locale.getDefault())
@@ -143,6 +147,9 @@ class LocDetailActivity : AppCompatActivity() {
 
         add_time_det.text = "$mHour:$mMinute"
 
+        initCalendar()
+
+
         imageTimeDet.setOnClickListener {
 
             val timePickerDialog = TimePickerDialog(
@@ -155,12 +162,11 @@ class LocDetailActivity : AppCompatActivity() {
             timePickerDialog.show()
         }
 
-        mDefaultColor = Color.parseColor(locationOld.color)
         val background = markDet.background
         (background as GradientDrawable).setColor(mDefaultColor)
 
         markDet.setOnClickListener {
-            openColorPicker(this)
+            openColorPicker()
         }
 
         val bottomSheetListBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet)
@@ -233,22 +239,34 @@ class LocDetailActivity : AppCompatActivity() {
         }
 
         updateLoc.setOnClickListener {
-            locationOld.date_fin = det_date_fin.text.toString()+" "+add_time_det.text.toString()
-            locationOld.date_debut = det_date_debu.text.toString()+" "+add_time_det.text.toString()
-            locationOld.color = newStringColor
-            updateLocation()
+            if (PhoneGrantings.isNetworkAvailable(applicationContext)) {
+
+                locationOld.date_fin = det_date_fin.text.toString()+" "+add_time_det.text.toString()
+                locationOld.date_debut = det_date_debu.text.toString()+" "+add_time_det.text.toString()
+                locationOld.color = newStringColor
+                updateLocation()
+            }
+            else
+                Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
+
         }
 
 
         updateLoca.setOnClickListener {
-            locationOld.locataire.cin = det_cin.text.toString()
-            locationOld.locataire.full_name = det_text.text.toString()
-            updateLocataire()
+            if (PhoneGrantings.isNetworkAvailable(applicationContext)) {
+
+                locationOld.locataire.cin = det_cin.text.toString()
+                locationOld.locataire.full_name = det_text.text.toString()
+                updateLocataire()
+            }
+            else
+            Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
+
         }
     }
 
 
-    private fun openColorPicker(mContext: Context){
+    private fun openColorPicker(){
         val onAmbilWarnaListener = object: AmbilWarnaDialog.OnAmbilWarnaListener {
             override fun  onCancel (dialog : AmbilWarnaDialog){
 
@@ -258,17 +276,19 @@ class LocDetailActivity : AppCompatActivity() {
                 val background = markDet.background
                 (background as GradientDrawable).setColor(mDefaultColor)
                 newStringColor = String.format("#%06X", 0xFFFFFF and mDefaultColor)
-//                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
+                initCalendar()
             }
         }
         val colorPicker = AmbilWarnaDialog(this, mDefaultColor,onAmbilWarnaListener)
         colorPicker.show()
     }
 
-    private fun initViews() {
+    private fun initCalendar() {
         calendarView = findViewById(R.id.calendar_view)
         calendarView!!.calendarOrientation = OrientationHelper.HORIZONTAL
         calendarView!!.selectionType = SelectionType.RANGE
+        calendarView!!.selectedDayBackgroundColor = mDefaultColor
+
         if (calendarView!!.selectionManager is RangeSelectionManager) {
             val rangeSelectionManager = calendarView!!.selectionManager as RangeSelectionManager
 
@@ -440,11 +460,14 @@ class LocDetailActivity : AppCompatActivity() {
         txt.setOnClickListener { myDialog.dismiss() }
         btn.setOnClickListener {
             println(amount.text.toString())
+            if (PhoneGrantings.isNetworkAvailable(this))
 
-            if (amount.text.isEmpty() )
-                Toast.makeText(this,"Manque d'information",Toast.LENGTH_LONG).show()
+                if (amount.text.isEmpty() )
+                    Toast.makeText(this,"Manque d'information",Toast.LENGTH_LONG).show()
+                else
+                    addPayment(Integer.parseInt(amount.text.toString()),dateText.text.toString()+" "+time.text.toString()+":00" ,selectedType)
             else
-                addPayment(Integer.parseInt(amount.text.toString()),dateText.text.toString()+" "+time.text.toString()+":00" ,selectedType)
+                Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
 
         }
 
@@ -647,8 +670,10 @@ class LocDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.del_loc -> {
-               println("this")
-                delLocation()
+                if (PhoneGrantings.isNetworkAvailable(applicationContext))
+                    delLocation()
+                else
+                    Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
             }
 
         }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#6200ee</color>
+    <color name="colorPrimaryDark">#3700b3</color>
     <color name="colorAccent">#D81B60</color>
     <color name="backgroundColor">#E8E8E0</color>
     <color name="backgroundColorPress">#DBDBD3</color>
@@ -11,7 +11,7 @@
     <color name="Description">#A9A9A9</color>
     <color name="orange">#eaad43</color>
     <color name="bluelight">#49acd5</color>
-    <color name="dollar">#79F856</color>
+    <color name="dollar">#018786</color>
 
 
     <color name="calendar_header">@color/colorPrimary</color>
@@ -35,7 +35,7 @@
     <color name="pink_700">#C2185B</color>
     <color name="red_800">#c62828</color>
     <color name="blue_800">#1565C0</color>
-    <color name="cyan_700">#0097A7</color>
+        <color name="cyan_700">#0097A7</color>
     <color name="greencircle">#9FE554</color>
 
     <color name="myPeach">#f8a055</color>

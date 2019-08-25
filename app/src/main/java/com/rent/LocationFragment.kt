@@ -94,7 +94,6 @@ class LocationFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
 
-        selectLocations()
         return root
     }
 
@@ -121,7 +120,7 @@ class LocationFragment : Fragment(), SearchView.OnQueryTextListener {
                     { error ->
                         Toast.makeText(context,"Opération échouée!",Toast.LENGTH_LONG).show()
                         println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-                        viewDialog.hideDialog()
+//                        viewDialog.hideDialog()
                     }
                 )
     }

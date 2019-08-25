@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.InputType
@@ -18,6 +19,7 @@ import com.rent.adapters.util.ViewDialog
 import com.rent.data.LocataireServices
 import com.rent.data.LocationServices
 import com.rent.data.Model
+import com.rent.tools.PhoneGrantings
 import com.rent.tools.getColorCompat
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -61,8 +63,10 @@ class AddLocActivity : AppCompatActivity()  {
         actionBar!!.title = "Nouveau Location"
         myDialog =  Dialog(this)
         viewDialog = ViewDialog(this)
+        mDefaultColor = this.getColorCompat(R.color.greencircle)
+        newLocation.color = "#9FE554"
 
-        initViews()
+        initCalendar()
         loadLocataires()
 
         val bottomSheetBehavior : BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheetCal )
@@ -108,11 +112,10 @@ class AddLocActivity : AppCompatActivity()  {
             )
             timePickerDialog.show()
         }
-        mDefaultColor = this.getColorCompat(R.color.greencircle)
-        newLocation.color = "#9FE554"
+
 
         mark.setOnClickListener {
-            openColorPicker(this)
+            openColorPicker()
         }
 
 
@@ -122,11 +125,16 @@ class AddLocActivity : AppCompatActivity()  {
         locataires.add("-")
 
         addLocation.setOnClickListener{
-            newLocation.date_debut = add_date_start.text.toString()+" "+add_time_add.text+":00"
-            newLocation.date_fin = add_date_end.text.toString()+" "+add_time_add.text+":00"
-            println(newLocation)
-
-            checkInputs()
+            if (PhoneGrantings.isNetworkAvailable(this)) {
+                newLocation.date_debut =
+                    add_date_start.text.toString() + " " + add_time_add.text + ":00"
+                newLocation.date_fin =
+                    add_date_end.text.toString() + " " + add_time_add.text + ":00"
+                println(newLocation)
+                checkInputs()
+            }
+            else
+                Toast.makeText(this, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
         }
 
 
@@ -134,9 +142,8 @@ class AddLocActivity : AppCompatActivity()  {
 
     private fun checkInputs() {
         if ((selectedLocatair != "-") &&  add_date_start.text != "00-00-00")
-        {
-            println("here")
-            addLocation()
+        {   addLocation()
+
             return
         }
 
@@ -172,7 +179,7 @@ class AddLocActivity : AppCompatActivity()  {
     }
 
 
-    private fun openColorPicker(mContext:Context){
+    private fun openColorPicker(){
         val onAmbilWarnaListener = object: OnAmbilWarnaListener {
             override fun  onCancel (dialog : AmbilWarnaDialog){
 
@@ -183,17 +190,17 @@ class AddLocActivity : AppCompatActivity()  {
                 (background as GradientDrawable).setColor(mDefaultColor)
                 newStringColor = String.format("#%06X", 0xFFFFFF and mDefaultColor)
                 newLocation.color = newStringColor
-//                Toast.makeText(mContext,newStringColor,Toast.LENGTH_LONG).show()
-            }
+                initCalendar()            }
         }
         val colorPicker = AmbilWarnaDialog(this, mDefaultColor,onAmbilWarnaListener)
         colorPicker.show()
     }
 
-    private fun initViews() {
+    private fun initCalendar() {
         calendarView = findViewById<CalendarView>(R.id.calendar_view)
         calendarView!!.calendarOrientation = OrientationHelper.HORIZONTAL
         calendarView!!.selectionType = SelectionType.RANGE
+        calendarView!!.selectedDayBackgroundColor = mDefaultColor
     }
 
     fun ShowPopupTel() {

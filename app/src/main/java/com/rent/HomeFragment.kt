@@ -142,7 +142,12 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         flightsAdapter = HomeItemsAdapter(context!!, activity!!)
-        selectLocations()
+        if (PhoneGrantings.isNetworkAvailable(activity!!)) // online actions
+            selectLocations()
+        else {
+            Toast.makeText(context, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
+        }
+
         exFiveRv.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         exFiveRv.adapter = flightsAdapter
 

@@ -26,6 +26,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rent.adapters.util.ViewDialog
+import com.rent.tools.PhoneGrantings
 import kotlinx.android.synthetic.main.fragment_payment.*
 
 
@@ -77,8 +78,11 @@ class PaymentFragment : Fragment() {
         }
         viewDialog = ViewDialog(activity!!)
 
+        if (PhoneGrantings.isNetworkAvailable(activity!!)) // online actions
+            selectLocPayments()
+        else
+            Toast.makeText(context, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
 
-        selectLocPayments()
         return root
     }
 
