@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:res="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/search"
+            android:title="@string/trouver_location"
+            android:icon="@drawable/finder"
+            res:showAsAction="collapseActionView|ifRoom"
+            res:actionViewClass="android.widget.SearchView" />
+</menu>

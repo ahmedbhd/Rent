@@ -36,4 +36,5 @@
         <item>Paiement</item>
     </string-array>
     <string name="title_activity_splash">Splash</string>
+    <string name="trouver_location">Trouver location</string>
 </resources>

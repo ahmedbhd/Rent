@@ -11,6 +11,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,18 +22,19 @@ import com.rent.adapters.util.ViewDialog
 import com.rent.data.Model
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
  * Created by Sanjeev k Saroj on 28/2/17.
  */
 
-class CustomListLocAdapter(var list: MutableList<Model.location>, var myContext: Context, var activity:Activity)
-    : RecyclerView.Adapter<CustomListLocAdapter.MainViewHolder>(){
+class CustomListLocAdapter( var list: MutableList<Model.location>, var myContext: Context, var activity:Activity)
+    : RecyclerView.Adapter<CustomListLocAdapter.MainViewHolder>() , Filterable {
 
 
     private lateinit var viewDialog: ViewDialog
-
+    var locationFilteredList: MutableList<Model.location> = ArrayList()
     private lateinit var myDialog: Dialog
 
 
@@ -148,5 +151,43 @@ class CustomListLocAdapter(var list: MutableList<Model.location>, var myContext:
     private fun phoneCall(tel:String){
         val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$tel"))
         activity.startActivity(intent)
+    }
+
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+                val charString = charSequence.toString()
+                if (charString.isEmpty()) {
+                    locationFilteredList = list
+                } else {
+                    val filteredList : MutableList<Model.location> = ArrayList( )
+                    for (row in list) {
+
+                        // name match condition. this might differ depending on your requirement
+                        // here we are looking for name or phone number match
+                        if (row.locataire.full_name.toLowerCase().contains(charString.toLowerCase()) || row.locataire.num_tel.contains(
+                                charSequence
+                            )
+                        ) {
+                            filteredList.add(row)
+                        }
+                    }
+
+                    locationFilteredList = filteredList
+                }
+
+                val filterResults = FilterResults()
+                filterResults.values = locationFilteredList
+                return filterResults
+            }
+
+             override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
+                 locationFilteredList = filterResults.values as MutableList<Model.location>
+
+                // refresh the list with filtered data
+                notifyDataSetChanged()
+            }
+        }
     }
 }

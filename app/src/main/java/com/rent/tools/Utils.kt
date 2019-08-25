@@ -97,7 +97,7 @@ fun generateFlights(locations :ArrayList<Model.location>): List<Flight> {
 
             val currentMonth16 = currentMonth.atDay(mDay.toString().toInt())
             list.add(Flight(currentMonth16.atTime(mHour.toString().toInt(), mMinute.toString().toInt()),
-                Airport(loc.locataire.cin, loc.locataire.full_name), Airport("Abuja", "ABV"), Color.parseColor(loc.color)))
+                Airport(loc.locataire.num_tel, loc.locataire.full_name), Airport("Abuja", "ABV"), Color.parseColor(loc.color)))
         })
 
     })

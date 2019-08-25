@@ -1,19 +1,22 @@
 package com.rent
 
 
+import android.app.SearchManager
+import android.content.Context
+import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ListView
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,22 +34,24 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.rent.adapters.CustomListAdapter
 import com.rent.adapters.CustomListLocAdapter
 import com.rent.adapters.util.ViewDialog
-import java.util.ArrayList
+import java.util.*
 
 
-class LocationFragment : Fragment() {
+class LocationFragment : Fragment(), SearchView.OnQueryTextListener {
+
+
     private lateinit var viewDialog: ViewDialog
     private var disposable: Disposable? = null
     private val locationService by lazy {
         LocationServices.create()
     }
     private var locations: MutableList<Model.location>? = ArrayList()
-    private var mAdapter: LocListViewAdapter? = null
+    private var backUpLocations: MutableList<Model.location>? = ArrayList()
+
     var list: RecyclerView? = null
-    lateinit var swipeLayout: SwipeRefreshLayout
 
 
-    private lateinit var customListAdapter: RecyclerView.Adapter<*>
+    private lateinit var customListAdapter: CustomListLocAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var colorDrawableBackground: ColorDrawable
     private lateinit var deleteIcon: Drawable
@@ -65,6 +70,7 @@ class LocationFragment : Fragment() {
 
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar!!.title = "Locations"
+        setHasOptionsMenu(true)
 
         viewDialog = ViewDialog(activity!!)
 
@@ -106,9 +112,11 @@ class LocationFragment : Fragment() {
 //                        mAdapter!!.mode = Attributes.Mode.Single
 //                        list!!.adapter = mAdapter
                         locations = result as MutableList<Model.location>?
+//                        viewDialog.hideDialog()
+                        backUpLocations = locations
                         prepareRecyclerView()
                         customListAdapter.notifyDataSetChanged()
-//                        viewDialog.hideDialog()
+
                     },
                     { error ->
                         Toast.makeText(context,"Opération échouée!",Toast.LENGTH_LONG).show()
@@ -140,7 +148,7 @@ class LocationFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
-                (customListAdapter as CustomListLocAdapter).ShowPopupTel(viewHolder.adapterPosition, viewHolder)
+                customListAdapter.ShowPopupTel(viewHolder.adapterPosition, viewHolder)
                 customListAdapter.notifyItemChanged(viewHolder.adapterPosition)
             }
 
@@ -188,4 +196,53 @@ class LocationFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(list)
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu? , inflater: MenuInflater?) {
+        inflater!!.inflate(R.menu.menu_location, menu)
+
+        // Associate searchable configuration with the SearchView
+        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchMenuItem = menu!!.findItem(R.id.search)
+        val searchView =  searchMenuItem.actionView as SearchView
+
+        searchView.setSearchableInfo(searchManager.
+                                getSearchableInfo(activity!!.componentName))
+        searchView.isSubmitButtonEnabled = false
+        searchView.setOnQueryTextListener(this)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.add_loc -> {
+                val intent = Intent(context!!, AddLocActivity().javaClass)
+
+                activity!!.startActivity(intent)
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onQueryTextChange(p0: String): Boolean {
+        if (p0.isNotEmpty()){
+            println(p0)
+            locations = backUpLocations !!.filter { row ->
+                row.locataire.full_name.toLowerCase(Locale.getDefault()).contains(p0.toLowerCase(Locale.getDefault())) || row.locataire.num_tel.contains(p0) }
+                    as MutableList<Model.location>
+            println(locations)
+            prepareRecyclerView()
+            customListAdapter.notifyDataSetChanged()
+        }else {
+            locations = backUpLocations
+            prepareRecyclerView()
+            customListAdapter.notifyDataSetChanged()
+        }
+        return false
+    }
+
+    override fun onQueryTextSubmit(p0: String): Boolean {
+
+        return false
+     }
 }
