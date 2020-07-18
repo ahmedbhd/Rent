@@ -72,11 +72,11 @@ class LocationFragment : Fragment(), SearchView.OnQueryTextListener {
         actionBar!!.title = "Locations"
         setHasOptionsMenu(true)
 
-        viewDialog = ViewDialog(activity!!)
+        viewDialog = ViewDialog(requireActivity())
 
         list = root.findViewById(R.id.flistfav) as RecyclerView
 
-        if (PhoneGrantings.isNetworkAvailable(activity!!)) // online actions
+        if (PhoneGrantings.isNetworkAvailable(requireActivity())) // online actions
             selectLocations()
         else
             Toast.makeText(context, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
@@ -127,12 +127,12 @@ class LocationFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun prepareRecyclerView(){
 
-        customListAdapter = CustomListLocAdapter(locations!!,context!!,activity!!)
+        customListAdapter = CustomListLocAdapter(locations!!,requireContext(),requireActivity())
 
-        viewManager = LinearLayoutManager(context!!)
+        viewManager = LinearLayoutManager(requireContext())
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#0097A7"))
-        deleteIcon = ContextCompat.getDrawable(context!!, R.drawable.phonecall)!!
+        deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.phonecall)!!
 
         list!!.apply {
             setHasFixedSize(true)
@@ -197,26 +197,26 @@ class LocationFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu? , inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu_location, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_location, menu)
 
         // Associate searchable configuration with the SearchView
-        val searchManager = activity!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchMenuItem = menu!!.findItem(R.id.search)
+        val searchManager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchMenuItem = menu.findItem(R.id.search)
         val searchView =  searchMenuItem.actionView as SearchView
 
         searchView.setSearchableInfo(searchManager.
-                                getSearchableInfo(activity!!.componentName))
+                                getSearchableInfo(requireActivity().componentName))
         searchView.isSubmitButtonEnabled = false
         searchView.setOnQueryTextListener(this)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.add_loc -> {
-                val intent = Intent(context!!, AddLocActivity().javaClass)
+                val intent = Intent(requireContext(), AddLocActivity().javaClass)
 
-                activity!!.startActivity(intent)
+                requireActivity().startActivity(intent)
             }
 
         }

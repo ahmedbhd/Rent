@@ -10,7 +10,8 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.request.target.DrawableImageViewTarget
 
 
 class Splash : AppCompatActivity() {
@@ -23,7 +24,7 @@ class Splash : AppCompatActivity() {
         val context = this
         gifImageView = findViewById(R.id.imageView2) // Declare an imageView to show the animation.
 
-        val imageViewTarget = GlideDrawableImageViewTarget(gifImageView)
+        val imageViewTarget = DrawableImageViewTarget(gifImageView)
 
         //...now load that gif which we put inside the drawble folder here with the help of Glide
 
@@ -31,7 +32,7 @@ class Splash : AppCompatActivity() {
             .load(R.drawable.thankyouanimation)
             .placeholder(R.drawable.thankyouanimation)
             .centerCrop()
-            .crossFade()
+            .transition(withCrossFade())
             .into(imageViewTarget)
 
         layoutView = findViewById(R.id.activity_splash)

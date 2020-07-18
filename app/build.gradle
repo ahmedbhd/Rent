@@ -4,72 +4,225 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: "androidx.navigation.safeargs"
+
+apply plugin: 'kotlin-kapt'
+
+// Create a variable called keystorePropertiesFile, and initialize it to your
+// keystore.properties file, in the rootProject folder.
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+// Initialize a new Properties() object called keystoreProperties.
+def keystoreProperties = new Properties()
+// Load your keystore.properties file into the keystoreProperties object.
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    buildFeatures {
+        dataBinding = true
+    }
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    kapt { generateStubs = true }
+
     defaultConfig {
         applicationId "com.rent"
-        minSdkVersion 26
-        targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.versionCode
+        versionName versions.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        config {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file('../keystore/keystore.jks')
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    compileOptions {
-        sourceCompatibility '1.8'
-        targetCompatibility '1.8'
-    }
-    buildToolsVersion = '28.0.3'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
+    implementation "androidx.appcompat:appcompat:$versions.appcompat"
+    implementation "androidx.core:core-ktx:$versions.core_ktx"
+    implementation "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
+    implementation "androidx.fragment:fragment-ktx:$versions.fragment_ktx"
+    implementation group: 'com.google.android.material', name: 'material', version: "$versions.material"
+    implementation "androidx.legacy:legacy-support-v4:$versions.legacy_support_version"
+    implementation "androidx.work:work-runtime-ktx:$versions.work_ktx"
+
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
+
+    // Dagger core
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    implementation "com.google.dagger:dagger-android-support:$versions.dagger"
+    implementation "com.google.dagger:dagger-android:$versions.dagger"
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle_livedata_ktx"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle_viewmodel_ktx"
+    implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle_extensions"
+
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$versions.retrofit_moshi"
+
+    // Okhttp3
+    implementation "com.squareup.okhttp3:okhttp:$versions.okhttp3"
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp3"
+
+    //Moshi
+    implementation "com.squareup.moshi:moshi:$versions.kotlin_moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$versions.kotlin_moshi"
+
+    //jetpack
+    implementation "android.arch.navigation:navigation-fragment-ktx:$versions.navigation"
+    implementation "android.arch.navigation:navigation-ui-ktx:$versions.navigation"
+
+    //secure-preferences
+    implementation "com.scottyab:secure-preferences-lib:$versions.secure_preferences"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+    implementation("com.github.bumptech.glide:okhttp3-integration:$versions.glide") {
+        exclude group: 'glide-parent'
+    }
+
+    // Leakcanary
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leak_canary"
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
-    implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
 
+    //rent
+    implementation "com.github.applikeysolutions:cosmocalendar:$versions.cosmocalendar"
 
-    implementation "com.squareup.retrofit2:retrofit:2.3.0"
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-scalars:2.3.0'
+    implementation "com.squareup.retrofit2:converter-gson:2.3.0"
+    implementation "com.squareup.retrofit2:converter-scalars:2.3.0"
     implementation "com.squareup.retrofit2:converter-gson:2.3.0"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.2"
 
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation "com.daimajia.swipelayout:library:$versions.swipelayout"
+    implementation "com.daimajia.androidanimations:library:$versions.androidanimations"
+    implementation "jp.wasabeef:recyclerview-animators:$versions.animators"
+    implementation "com.nineoldandroids:library:$versions.nineoldandroids"
 
-    implementation "com.daimajia.swipelayout:library:1.2.0@aar"
-    implementation 'com.daimajia.androidanimations:library:1.1.2@aar'
-    implementation 'jp.wasabeef:recyclerview-animators:1.0.3@aar'
-    implementation 'com.nineoldandroids:library:2.4.0'
+    implementation "com.github.kizitonwose:CalendarView:$versions.calendar_view"
+    implementation "com.jakewharton.threetenabp:threetenabp:$versions.threetenabp"
 
+    implementation "com.github.yukuku:ambilwarna:$versions.ambilwarna"
 
-    implementation 'com.google.android.material:material:1.0.0'
-
-
-    implementation 'com.github.kizitonwose:CalendarView:0.2.5'
-    implementation "androidx.core:core-ktx:1.2.0-alpha03"
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
-
-    implementation 'com.github.yukuku:ambilwarna:2.0.1'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$versions.swiperefreshlayout"
 
 
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
+    kapt "androidx.lifecycle:lifecycle-livedata-ktx:$versions.lifecycle_livedata_ktx"
+    kapt "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle_viewmodel_ktx"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+    kapt "com.google.dagger:dagger-android-processor:$versions.dagger"
+    kapt "com.android.databinding:compiler:$versions.databinding"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.kotlin_moshi"
+    kapt "com.github.bumptech.glide:compiler:$versions.glide"
 
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    // Test
+    testImplementation "junit:junit:$versions.junit"
+    testImplementation "androidx.arch.core:core-testing:$versions.arch_testing"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutine_test"
+    testImplementation "io.mockk:mockk:$versions.mockk"
+    testImplementation "com.google.truth:truth:$versions.truth"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$versions.mock_webserver"
+    testImplementation "org.robolectric:robolectric:$versions.roboelectric"
+    testImplementation "androidx.test:core:$versions.core"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$versions.mockito_kotlin"
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation "androidx.test.ext:junit:$versions.ext_junit"
+    androidTestImplementation "androidx.test:runner:$versions.runner"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso_core"
+    androidTestImplementation "androidx.annotation:annotation-experimental:$versions.test_annotation"
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$versions.coroutine_test"
+    androidTestImplementation "org.mockito:mockito-android:$versions.mockito"
+    androidTestImplementation "androidx.arch.core:core-testing:$versions.arch_testing"
+    androidTestImplementation "com.google.truth:truth:$versions.truth"
+
+
+}
+
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion support_library_version
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    bundleRelease.doLast {
+        android.applicationVariants.all { variant ->
+            if (variant.buildType.name == 'release') {
+                println("....................  mapping rename start  ..............................")
+
+                def flavor = variant.flavorName
+                def flavorRelease = "${flavor}Release"
+
+                def inPath = "${buildDir}/outputs/mapping/${flavor}/release/mapping.txt"
+                def outPath = "${buildDir}/outputs/mapping/${flavor}/release/${flavor}-mapping.txt"
+
+                def inFile = file(inPath)
+                def exist = inFile.exists()
+
+                if (!exist) {
+                    inPath = "${buildDir}/outputs/mapping/${flavorRelease}/mapping.txt"
+                    outPath = "${buildDir}/outputs/mapping/${flavorRelease}/${flavor}-mapping.txt"
+                }
+
+                inFile = file(inPath)
+                exist = inFile.exists()
+
+                if (exist) {
+                    inFile.renameTo(outPath)
+                    inFile.delete()
+                }
+            }
+        }
+        println "mapping rename build finished"
+    }
 }

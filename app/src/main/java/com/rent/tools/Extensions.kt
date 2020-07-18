@@ -12,8 +12,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import com.rent.adapters.util.LocaleHelper
-import org.threeten.bp.DayOfWeek
-import org.threeten.bp.temporal.WeekFields
+import java.time.DayOfWeek
+import java.time.temporal.WeekFields
 import java.util.*
 
 

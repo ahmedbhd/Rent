@@ -5,14 +5,11 @@ import android.graphics.Color
 import android.text.format.DateFormat
 import com.rent.Flight
 import com.rent.data.Model
-import org.threeten.bp.YearMonth
 import java.text.SimpleDateFormat
+import java.time.YearMonth
 import java.util.*
 import java.util.function.Consumer
 import kotlin.collections.ArrayList
-
-
-
 
 
 private typealias Airport = Flight.Airport

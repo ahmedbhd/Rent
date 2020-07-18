@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".AddLocActivity">
@@ -286,22 +285,20 @@
                 android:layout_gravity="center"
                 android:layout_margin="12dp"
                 android:padding="8dp"
-                android:theme="@style/FlatButton"
-                android:text="Ajouter Location" />
+                android:text="Ajouter Location"
+                android:theme="@style/FlatButton" />
 
     </LinearLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayoutCal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/coordinatorLayoutCal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <include
-                layout="@layout/add_cal_bottomsheet"
-                />
+        <include layout="@layout/add_cal_bottomsheet" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

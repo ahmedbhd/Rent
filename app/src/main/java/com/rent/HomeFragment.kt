@@ -36,15 +36,13 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.calendar_day_legend.view.*
 import kotlinx.android.synthetic.main.example_5_calendar_day.view.*
 import kotlinx.android.synthetic.main.fragment_home.*
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.YearMonth
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 import com.rent.adapters.util.ViewDialog
-
-
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 
 data class Flight(val time: LocalDateTime, val departure: Airport, val destination: Airport,  val color: Int) {
@@ -127,7 +125,7 @@ class HomeFragment : Fragment() {
         val actionBar = (activity as AppCompatActivity).supportActionBar
         actionBar!!.title = "Calendrier"
         setHasOptionsMenu(true)
-        viewDialog = ViewDialog(activity!!)
+        viewDialog = ViewDialog(requireActivity())
 
 
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -141,8 +139,8 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        flightsAdapter = HomeItemsAdapter(context!!, activity!!)
-        if (PhoneGrantings.isNetworkAvailable(activity!!)) // online actions
+        flightsAdapter = HomeItemsAdapter(requireContext(), requireActivity())
+        if (PhoneGrantings.isNetworkAvailable(requireActivity())) // online actions
             selectLocations()
         else {
             Toast.makeText(context, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
@@ -171,17 +169,17 @@ class HomeFragment : Fragment() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater!!.inflate(R.menu.menu,menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu,menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
                  R.id.add_loc -> {
-                 val intent = Intent(context!!, AddLocActivity().javaClass)
+                 val intent = Intent(requireContext(), AddLocActivity().javaClass)
 
-                 activity!!.startActivity(intent)
+                 requireActivity().startActivity(intent)
              }
 
         }
