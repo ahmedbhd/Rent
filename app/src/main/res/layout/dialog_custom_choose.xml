@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="message"
+            type="String" />
+
+        <variable
+            name="okBtnText"
+            type="String" />
+
+        <variable
+            name="cancelBtnText"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_basic">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgChooseCustomDialogClose"
+            android:layout_width="18dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_global_8dp"
+            android:layout_marginEnd="@dimen/margin_global_8dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_close"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textChooseCustomDialogTitle"
+            style="@style/TextView.dialogTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_global_30dp"
+            android:layout_marginEnd="@dimen/margin_global_30dp"
+            android:text="@{title}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgChooseCustomDialogClose"
+            tools:text="Title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textChooseCustomDialogMessage"
+            style="@style/TextView.dialogMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_global_30dp"
+            android:layout_marginTop="@dimen/margin_global_30dp"
+            android:layout_marginEnd="@dimen/margin_global_30dp"
+            android:text="@{message}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textChooseCustomDialogTitle"
+            tools:text="Message" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnChooseCustomDialogCancel"
+            style="@style/Button.dialogCancelButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_global_24dp"
+            android:text="@{cancelBtnText}"
+            app:layout_constraintEnd_toStartOf="@+id/btnChooseCustomDialogOk"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textChooseCustomDialogMessage"
+            tools:text="Annuler" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnChooseCustomDialogOk"
+            style="@style/Button.dialogOkButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_global_24dp"
+            android:text="@{okBtnText}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnChooseCustomDialogCancel"
+            app:layout_constraintTop_toBottomOf="@+id/textChooseCustomDialogMessage"
+            tools:text="Confirmer" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

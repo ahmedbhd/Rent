@@ -5,7 +5,7 @@
         android:id="@+id/det_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".LocDetailActivity">
+        tools:context=".ui.rental.detail.RentalDetailActivity">
 
     <LinearLayout
             android:id="@+id/addLocContainer"

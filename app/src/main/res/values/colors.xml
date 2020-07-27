@@ -13,6 +13,9 @@
     <color name="bluelight">#49acd5</color>
     <color name="dollar">#018786</color>
 
+    <color name="white_basic">@android:color/white</color>
+    <color name="black_basic">@android:color/black</color>
+    <color name="transparent">@android:color/transparent</color>
 
     <color name="calendar_header">@color/colorPrimary</color>
     <color name="calendar_header_title">#FFF</color>
@@ -41,4 +44,8 @@
     <color name="myPeach">#f8a055</color>
 
     <color name="myRed">#ff5f70</color>
+
+    <color name="vivid_violet">#7A299E</color>
+    <color name="dark_gray">#AEAEAE</color>
+
 </resources>

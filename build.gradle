@@ -43,6 +43,7 @@ buildscript {
     versions.animators = "1.0.3@aar"
     versions.nineoldandroids = "2.4.0"
     versions.cosmocalendar = "1.0.4"
+    versions.room = '2.2.5'
 
     versions.junit = "4.12"
     versions.ext_junit = "1.1.1"

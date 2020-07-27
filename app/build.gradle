@@ -128,6 +128,9 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
+    //room
+    implementation "androidx.room:room-runtime:$versions.room"
+    implementation "androidx.room:room-ktx:$versions.room"
 
     //rent
     implementation "com.github.applikeysolutions:cosmocalendar:$versions.cosmocalendar"
@@ -158,6 +161,8 @@ dependencies {
     kapt "com.android.databinding:compiler:$versions.databinding"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.kotlin_moshi"
     kapt "com.github.bumptech.glide:compiler:$versions.glide"
+
+    kapt "androidx.room:room-compiler:$versions.room"
 
     // Test
     testImplementation "junit:junit:$versions.junit"

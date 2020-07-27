@@ -37,4 +37,22 @@
     </string-array>
     <string name="title_activity_splash">Splash</string>
     <string name="trouver_location">Trouver location</string>
+
+
+    <string name="global_date_format">yyyy-MM-dd</string>
+    <string name="global_slash_date_format">dd/MM/yyyy</string>
+    <string name="last_connection_date_format">dd MMM yyyy</string>
+    <string name="global_ok">OK</string>
+    <string name="global_yes">OUI</string>
+    <string name="global_no">NON</string>
+    <string name="global_cancel">Annuler</string>
+    <string name="global_delete">Supprimer</string>
+    <string name="global_error">Erreur</string>
+
+    <!--global error-->
+    <string name="global_error_server">Une erreur est survenue. Merci de réessayer plus tard.</string>
+    <string name="global_error_unavailable_network">Merci de vérifier votre connexion.</string>
+    <string name="global_error_file_not_found">Le fichier sélectionné n\'existe pas.</string>
+    <string name="global_unauthorized_error">Session expirée.</string>
+    <string name="global_update_settings_error">Modification des paramètres échoué.</string>
 </resources>

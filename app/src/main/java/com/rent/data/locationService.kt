@@ -1,5 +1,6 @@
 package com.rent.data
 
+import com.rent.data.model.rental.Rental
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,17 +28,17 @@ interface LocationServices {
 
 
     @GET("read.php")
-    fun selectLocations(): Observable<List<Model.location>>
+    fun selectLocations(): Observable<List<Rental>>
 
     @POST("create.php")
-    fun ajouterLocation(@Body loc: Model.location):Observable<Model.location>
+    fun ajouterLocation(@Body loc: Rental):Observable<Rental>
 
     @GET("read.php")
-    fun selectLocationById(@Query ("id") id:Int): Observable<Model.location>
+    fun selectLocationById(@Query ("id") id:Int): Observable<Rental>
 
     @DELETE("delete.php")
     fun deleteLocation(@Query ("id") id:Int): Observable<Model.msgResult>
 
     @PUT("update.php")
-    fun updateLocation(@Body loc: Model.location):Observable<Model.location>
+    fun updateLocation(@Body loc: Rental):Observable<Rental>
 }

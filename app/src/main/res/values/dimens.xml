@@ -5,4 +5,10 @@
     <dimen name="drawablePudding">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!-- global -->
+    <dimen name="height_global_snack_bar">50dp</dimen>
+    <dimen name="height_custom_toolbar">62dp</dimen>
+    <dimen name="global_circle_image_width">100dp</dimen>
+    <dimen name="global_circle_image_height">100dp</dimen>
+    <dimen name="global_radius_button">5dp</dimen>
 </resources>

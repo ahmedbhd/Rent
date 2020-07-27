@@ -8,7 +8,7 @@
               android:clickable="true"
               android:focusable="true"
               android:orientation="vertical"
-              tools:context=".HomeFragment">
+              tools:context=".ui.main.home.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/exFiveAppBarLayout"

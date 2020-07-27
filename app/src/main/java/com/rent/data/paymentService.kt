@@ -1,6 +1,7 @@
 package com.rent.data
 
 
+import com.rent.data.model.payment.Payment
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -28,22 +29,22 @@ interface PaymentServices {
 
 
     @GET("read.php")
-    fun selectPayments(): Observable<List<Model.payment>>
+    fun selectPayments(): Observable<List<Payment>>
 
 
     @GET("read_one.php")
-    fun selectPaymentById(@Query ("id") id:Int): Observable<Model.payment>
+    fun selectPaymentById(@Query ("id") id:Int): Observable<Payment>
 
     @DELETE("delete.php")
     fun deletePayment(@Query ("id") id:Int): Observable<Model.msgResult>
 
     @GET("readbyLocationId.php")
-    fun selectLocPayments(@Query ("locationid") locationKey:Int): Observable<List<Model.payment>>
+    fun selectLocPayments(@Query ("locationid") locationKey:Int): Observable<List<Payment>>
 
     @POST("create.php")
-    fun addPayment(@Body paiement:Model.payment): Observable<Model.msgResult>
+    fun addPayment(@Body paiement:Payment): Observable<Model.msgResult>
 
 
     @PUT("update.php")
-    fun updatePayment(@Body paiement:Model.payment): Observable<Model.payment>
+    fun updatePayment(@Body paiement:Payment): Observable<Payment>
 }

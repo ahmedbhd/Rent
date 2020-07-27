@@ -19,9 +19,9 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 
-    <style name="titetextstyle" parent="TextAppearance.AppCompat.Medium"></style>
+    <style name="titetextstyle" parent="TextAppearance.AppCompat.Medium" />
 
-    <style name="subtitetextstyle" parent="TextAppearance.AppCompat.Caption"></style>
+    <style name="subtitetextstyle" parent="TextAppearance.AppCompat.Caption" />
 
     <style parent="Theme.AppCompat.Light" name="FlatButton">
 
@@ -37,5 +37,76 @@
 
         <item name="colorControlHighlight">@color/blue_800</item>
 
+    </style>
+
+
+
+
+    <style name="CustomSimpleDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="TextView.GlobalWhite" parent="android:Widget.TextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/font_15sp</item>
+    </style>
+
+    <style name="TextView.toolbarTitle" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/font_18sp</item>
+        <item name="android:textColor">@color/white_basic</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+    <style name="TextView.dialogTitle" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/font_19sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+    <style name="TextView.dialogMessage" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/font_16sp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColorHint">@color/dark_gray</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+    <style name="Button.dialogOkButton" parent="android:Widget.Button">
+        <item name="android:textSize">@dimen/font_13sp</item>
+        <item name="android:textColor">@color/white_basic</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Button.dialogCancelButton" parent="android:Widget.Button">
+        <item name="android:textSize">@dimen/font_13sp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/white_basic</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="ProgressDialogStyle" parent="android:Theme.Holo.Dialog">
+        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="CustomAlertDialogStyle">
+        <item name="android:bottomBright">@android:color/transparent</item>
+        <item name="android:bottomDark">@android:color/transparent</item>
+        <item name="android:bottomMedium">@android:color/transparent</item>
+        <item name="android:centerBright">@android:color/transparent</item>
+        <item name="android:centerDark">@android:color/transparent</item>
+        <item name="android:centerMedium">@android:color/transparent</item>
+        <item name="android:fullBright">@android:color/transparent</item>
+        <item name="android:fullDark">@android:color/transparent</item>
+        <item name="android:topBright">@android:color/transparent</item>
+        <item name="android:topDark">@android:color/transparent</item>
     </style>
 </resources>

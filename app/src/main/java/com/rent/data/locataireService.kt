@@ -1,5 +1,6 @@
 package com.rent.data
 
+import com.rent.data.model.locataire.Locataire
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -29,11 +30,11 @@ interface LocataireServices {
 
 
     @GET ("read.php")
-    fun selectLocataires(): Observable<List<Model.locataire>>
+    fun selectLocataires(): Observable<List<Locataire>>
 
     @POST("create.php")
-    fun addLocataire(@Body loc : Model.locataire):Observable<Model.locataire>
+    fun addLocataire(@Body loc : Locataire):Observable<Locataire>
 
     @PUT("update.php")
-    fun updateLocataire(@Body loc: Model.locataire):Observable<Model.locataire>
+    fun updateLocataire(@Body loc: Locataire):Observable<Locataire>
 }

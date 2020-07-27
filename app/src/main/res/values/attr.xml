@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomToolbar">
+        <attr name="backgroundDrawable" format="integer" />
+        <attr name="hasStartActionButton" format="boolean" />
+        <attr name="hasEndActionButton" format="boolean" />
+        <attr name="hasCenterTitle" format="boolean" />
+        <attr name="startActionButtonDrawable" format="integer" />
+        <attr name="endActionButtonDrawable" format="integer" />
+        <attr name="centerTitleText" format="string" />
+    </declare-styleable>
+
+</resources>
