@@ -17,16 +17,14 @@
             android:layout_height="match_parent">
 
 
-        <LinearLayout
-                paddingTopSystemWindowInsets="@{true}"
-
+        <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/addLocContainer"
+                paddingTopSystemWindowInsets="@{true}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -37,7 +35,6 @@
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginBottom="10dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -55,16 +52,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_toLeftOf="@id/tvText"
+                        android:layout_marginStart="16dp"
+                        android:layout_toStartOf="@id/tvText"
                         android:background="#FF0000" />
 
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        android:layout_toRightOf="@id/tvText"
+                        android:layout_marginEnd="16dp"
+                        android:layout_toEndOf="@id/tvText"
                         android:background="#FF0000" />
 
             </RelativeLayout>
@@ -76,6 +73,7 @@
                     android:layout_margin="5dp"
                     android:hint="Carte identitée"
                     android:inputType="number"
+                    android:text="@={viewModel.cin}"
                     android:textAlignment="center" />
 
             <androidx.appcompat.widget.AppCompatEditText
@@ -84,10 +82,12 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:hint="Nom et prénom"
+                    android:text="@={viewModel.name}"
                     android:textAlignment="center" />
 
             <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/add_tel"
+                    onClickWithDebounce="@{() -> viewModel.showPhoneDialog()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -103,7 +103,6 @@
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp">
 
@@ -122,22 +121,22 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="16dp"
-                        android:layout_toLeftOf="@id/tvText2"
+                        android:layout_marginStart="16dp"
+                        android:layout_toStartOf="@id/tvText2"
                         android:background="#FF0000" />
 
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="16dp"
-                        android:layout_toRightOf="@id/tvText2"
+                        android:layout_marginEnd="16dp"
+                        android:layout_toEndOf="@id/tvText2"
                         android:background="#FF0000" />
 
             </RelativeLayout>
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/AddlayoutDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -148,7 +147,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/addLocContainer">
 
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -169,12 +168,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        app:data="@{viewModel.locataires}"
-                        app:onItemSelectedListener="@{viewModel}" />
+                        app:items="@{viewModel.locataires}"
+                        app:onItemSelected="@{viewModel}" />
 
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/colorFrame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -199,7 +198,7 @@
                         android:background="@drawable/circle"
                         android:gravity="center"
                         android:textColor="@android:color/white" />
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageDateAdd"
@@ -209,7 +208,7 @@
                     android:layout_weight="1"
                     app:srcCompat="@drawable/calendaricon" />
 
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/AddDateLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -224,7 +223,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_marginStart="5dp"
-
                         android:text="De: " />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -232,9 +230,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-
                         android:layout_weight="1"
-                        android:text="@string/date"
+                        android:text="@={viewModel.startDate}"
                         android:textAlignment="center"
                         android:textSize="18sp"
                         android:textStyle="italic" />
@@ -245,7 +242,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
                         android:text="A: " />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -253,17 +249,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-
                         android:layout_weight="1"
-                        android:text="@string/date"
+                        android:text="@={viewModel.endDate}"
                         android:textAlignment="center"
                         android:textSize="18sp"
                         android:textStyle="italic" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-            </LinearLayout>
-
-            <LinearLayout
+            <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -273,11 +266,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-
                         android:layout_weight="1"
-                        android:text="@string/_00_00_00"
+                        android:text="@={viewModel.addTime}"
                         android:textAlignment="center"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/font_18sp"
                         android:textStyle="italic" />
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -287,13 +279,13 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         app:srcCompat="@drawable/clockicon" />
-            </LinearLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
 
             <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/addLocation"
-
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    onClickWithDebounce="@{() -> viewModel.onAddRentalClicked()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -302,7 +294,7 @@
                     android:text="Ajouter Location"
                     android:theme="@style/FlatButton" />
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/coordinatorLayoutCal"

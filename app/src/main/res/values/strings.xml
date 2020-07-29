@@ -5,6 +5,9 @@
     <string name="title_notifications">Paiements</string>
     <string name="title_activity_main2">Main2Activity</string>
 
+    <string name="global_operation_failed">Opération échouée!</string>
+    <string name="global_add_succeeded">Ajout avec succée</string>
+
     <!-- MAIN -->
     <string name="default_calendar">Default calendar</string>
     <string name="open_calendar_dialog">Open calendar dialog</string>
@@ -29,7 +32,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enregistrer">Enregistrer</string>
-    <string name="date">00-00-00</string>
+    <string name="date">00–00–00</string>
     <string name="_00_00_00">00:00</string>
     <string-array name="types_array">
         <item>Avance</item>
@@ -37,6 +40,8 @@
     </string-array>
     <string name="title_activity_splash">Splash</string>
     <string name="trouver_location">Trouver location</string>
+    <string name="add_rental_empty_locataire"> - </string>
+    <string name="add_rental_incorrect_information">Information Incorrectes</string>
 
 
     <string name="global_date_format">yyyy-MM-dd</string>

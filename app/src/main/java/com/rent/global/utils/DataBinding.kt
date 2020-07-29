@@ -1,17 +1,12 @@
 package com.rent.global.utils
 
-import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatSpinner
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
 import com.rent.R
-import kotlinx.android.synthetic.main.activity_add_rental.*
 
 
 @BindingAdapter("onClickWithDebounce")
@@ -75,7 +70,7 @@ fun setSelectedValue(
     spinner.setSelection(position, false)
 }
 
-@BindingAdapter("data")
+@BindingAdapter("items")
 fun setSpinnerEntries(
     spinner: AppCompatSpinner,
     data: ArrayList<String>?
@@ -89,7 +84,7 @@ fun setSpinnerEntries(
     }
 }
 
-@BindingAdapter("onItemSelectedListener")
+@BindingAdapter("onItemSelected")
 fun setOnItemSelectedListener(
     spinner: AppCompatSpinner,
     listener: AdapterView.OnItemSelectedListener

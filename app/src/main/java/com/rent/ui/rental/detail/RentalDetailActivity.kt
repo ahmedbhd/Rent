@@ -38,7 +38,6 @@ import com.rent.data.model.rental.Rental
 import com.rent.global.helper.ViewModelFactory
 import com.rent.tools.PhoneGrantings
 import com.rent.ui.main.MainActivity
-import com.rent.ui.splash.SplashViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -541,7 +540,7 @@ class RentalDetailActivity : BaseActivity() {
 
         myDialog.show()
 
-        myDialog.setContentView(R.layout.custompopup)
+        myDialog.setContentView(R.layout.dialog_custom_phone)
 
 //        myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val txt: TextView = myDialog.findViewById(R.id.txtcloseTel) as TextView

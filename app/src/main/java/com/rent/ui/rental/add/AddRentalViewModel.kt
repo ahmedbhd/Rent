@@ -5,11 +5,14 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.rent.R
 import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.locataire.Locataire
 import com.rent.data.model.rental.Rental
 import com.rent.data.repository.locataire.LocataireRepository
 import com.rent.data.repository.rental.RentalRepository
+import com.rent.global.helper.dialog.PhoneDialog
+import com.rent.global.listener.PhoneDialogListener
 import com.rent.global.listener.SchedulerProvider
 import com.rent.global.listener.ToolbarListener
 import com.rent.global.utils.DebugLog
@@ -19,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+
 class AddRentalViewModel @Inject constructor(
     application: Application,
     schedulerProvider: SchedulerProvider,
@@ -27,20 +31,42 @@ class AddRentalViewModel @Inject constructor(
 ) : BaseAndroidViewModel(
     application,
     schedulerProvider
-), ToolbarListener, AdapterView.OnItemSelectedListener {
+), ToolbarListener, AdapterView.OnItemSelectedListener, PhoneDialogListener {
 
     var newRental: Rental = Rental()
-    var newLocataire: Locataire?= null
+    var newLocataire: Locataire? = null
     var locataires = MutableLiveData<ArrayList<String>>()
     var resultloc: ArrayList<Locataire>? = ArrayList()
-    var selectedLocatair: String = "-"
+    var selectedLocataire: String =
+        applicationContext.getString(R.string.add_rental_empty_locataire)
+    var phoneDialog = MutableLiveData<PhoneDialog>()
+    var cin = MutableLiveData<String>()
+    var name = MutableLiveData<String>()
+    var startDate = MutableLiveData<String>(applicationContext.getString(R.string.date))
+    var endDate = MutableLiveData<String>(applicationContext.getString(R.string.date))
+    var addTime = MutableLiveData<String>(applicationContext.getString(R.string._00_00_00))
+    var stringTel = ""
+
 
     init {
-        locataires.value?.add("-")
         loadLocataires()
+        loadRentals()
     }
 
-    fun addRental() {
+    fun showPhoneDialog() {
+        phoneDialog.value = PhoneDialog.build(
+            dismissPhoneBuild(null)
+        )
+    }
+
+    private fun dismissPhoneBuild(dismissActionBlock: (() -> Unit)? = null): () -> Unit {
+        return {
+            dismissActionBlock?.invoke()
+            phoneDialog.value = null
+        }
+    }
+
+    private fun addRental() {
         showBlockingProgressBar()
         viewModelScope.launch {
             tryCatch({
@@ -57,16 +83,17 @@ class AddRentalViewModel @Inject constructor(
     private fun onAddRentalFail(throwable: Throwable) {
         hideBlockingProgressBar()
         DebugLog.e(TAG, throwable.toString())
-        showToast("Opération échouée!")
+        showToast(applicationContext.getString(R.string.global_operation_failed))
     }
 
     private fun onAddRentalSuccess() {
         hideBlockingProgressBar()
-        showToast("Ajout avec succée")
+        showToast(applicationContext.getString(R.string.global_add_succeeded))
     }
 
-    fun addLocataire() {
+    private fun addLocataire() {
         showBlockingProgressBar()
+        newLocataire = Locataire(0, cin.value!!, name.value!!, stringTel)
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
@@ -85,38 +112,101 @@ class AddRentalViewModel @Inject constructor(
         addRental()
     }
 
-    fun loadLocataires() {
+    private fun loadLocataires() {
         showBlockingProgressBar()
         viewModelScope.launch {
-            tryCatch( {
+            tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
                     locataireRepository.selectLocataire()
                 }
                 onGetLocatairesSuccess(response)
             }, {
-
+                onLoadLocataireFail(it)
             })
         }
+    }
+
+    private fun onLoadLocataireFail(throwable: Throwable) {
+        hideBlockingProgressBar()
+        DebugLog.e(TAG, throwable.toString())
     }
 
     private fun onGetLocatairesSuccess(response: List<Locataire>) {
         hideBlockingProgressBar()
         resultloc = ArrayList(response)
+        val array = ArrayList<String>()
+        array.add(" - ")
         response.forEach {
-            locataires.value?.add(it.fullName + " - " + it.cin)
+            array.add(it.fullName + applicationContext.getString(R.string.add_rental_empty_locataire) + it.cin)
         }
+        locataires.value = array
+        DebugLog.e(TAG, "locataires  ${locataires.value}")
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
+        DebugLog.d(TAG, "onNothingSelected")
     }
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         // An item was selected. You can retrieve the selected item using
-        selectedLocatair = parent.getItemAtPosition(position) as String
+        selectedLocataire = parent.getItemAtPosition(position) as String
         if (position > 0)
             newRental.locataire = resultloc!![position - 1]
         else
             newRental.locataire = resultloc!![position]
+    }
+
+    override fun onSaveClicked(tel: String) {
+        stringTel = tel
+    }
+
+    fun onAddRentalClicked() {
+        newRental.dateDebut =
+            startDate.value + " " + addTime.value + ":00"
+        newRental.dateFin =
+            endDate.value + " " + addTime.value + ":00"
+        checkInputs()
+    }
+
+    private fun checkInputs() {
+        if (!cin.value.isNullOrEmpty() && !name.value.isNullOrEmpty() && startDate.value != applicationContext.getString(
+                R.string.date
+            )
+        ) {
+            println("here2")
+
+            addLocataire()
+            return
+        }
+
+        if ((selectedLocataire != applicationContext.getString(R.string.add_rental_empty_locataire)) && startDate.value != applicationContext.getString(
+                R.string.date
+            )
+        ) {
+            addRental()
+
+            return
+        }
+
+        showToast(applicationContext.getString(R.string.add_rental_incorrect_information))
+    }
+
+    private fun loadRentals() {
+        showBlockingProgressBar()
+        viewModelScope.launch {
+            tryCatch({
+                val response = withContext(schedulerProvider.dispatchersIO()) {
+                    rentalRepository.selectRental()
+                }
+                onGetRentalsSuccess(response)
+            }, {
+                hideBlockingProgressBar()
+            })
+        }
+    }
+
+    private fun onGetRentalsSuccess(response: List<Rental>) {
+        hideBlockingProgressBar()
+        DebugLog.e(TAG, "rentals  $response")
     }
 }

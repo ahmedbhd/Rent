@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+                name="message"
+                type="String" />
+    </data>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/rootView"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtcloseTel"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/cerclebackground"
+                android:gravity="center"
+                android:text="X"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/listnumbers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/addtel"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Telephone"
+                        android:inputType="phone" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/addTelimg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@android:drawable/ic_input_add" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/saveTel"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="12dp"
+                android:padding="8dp"
+                android:text="@string/enregistrer"
+                android:theme="@style/FlatButton2" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>
