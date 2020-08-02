@@ -3,7 +3,8 @@ package com.rent.global.utils
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.text.format.DateFormat
-import com.rent.ui.main.home.Flight
+import com.rent.data.model.flight.Airport
+import com.rent.data.model.flight.Flight
 import com.rent.data.model.rental.Rental
 import java.text.SimpleDateFormat
 import java.time.YearMonth
@@ -11,8 +12,6 @@ import java.util.*
 import java.util.function.Consumer
 import kotlin.collections.ArrayList
 
-
-private typealias Airport = Flight.Airport
 
 @SuppressLint("Range")
 fun generateFlights(locations: ArrayList<Rental>): List<Flight> {

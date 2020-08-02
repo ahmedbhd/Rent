@@ -9,7 +9,7 @@ interface PaymentRepository {
     suspend fun selectPayments(): List<Payment>
 
     @WorkerThread
-    suspend fun ajouterPayment(payment: Payment)
+    suspend fun ajouterPayment(payment: Payment): Payment
 
     @WorkerThread
     suspend fun selectPaymentById(id: Int): Payment

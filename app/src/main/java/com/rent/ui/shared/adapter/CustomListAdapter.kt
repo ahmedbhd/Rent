@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.rent.data.Model
 import java.util.*
 import android.widget.ArrayAdapter
 import com.rent.data.PaymentServices
@@ -23,7 +22,7 @@ import io.reactivex.schedulers.Schedulers
 import android.app.Activity
 import com.rent.data.model.payment.Payment
 import com.rent.data.model.rental.Rental
-import com.rent.ui.shared.adapter.util.ViewDialog
+import com.rent.ui.shared.view.ViewDialog
 import com.rent.tools.PhoneGrantings
 
 

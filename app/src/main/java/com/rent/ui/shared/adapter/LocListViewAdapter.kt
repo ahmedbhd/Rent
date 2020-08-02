@@ -18,9 +18,8 @@ import androidx.fragment.app.FragmentActivity
 import com.daimajia.swipe.SwipeLayout
 import com.daimajia.swipe.adapters.BaseSwipeAdapter
 import com.rent.R
-import com.rent.ui.shared.adapter.util.ViewDialog
+import com.rent.ui.shared.view.ViewDialog
 import com.rent.data.LocationServices
-import com.rent.data.Model
 import com.rent.data.model.rental.Rental
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

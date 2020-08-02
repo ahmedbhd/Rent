@@ -21,4 +21,6 @@ interface RentalDao {
     @Query("SELECT * from rental where idRental=:id LIMIT 1")
     suspend fun getRentalById(id: Int): Rental
 
+    @Query("SELECT * from rental where idRental = (SELECT MAX (idRental) from rental) LIMIT 1")
+    suspend fun getLastRental(): Rental
 }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="code"
+                type="String" />
+
+        <variable
+                name="city"
+                type="String" />
+
+        <variable
+                name="time"
+                type="String" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/example_5_item_view_bg_color">
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/itemFlightDateText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="#5D4037"
+                android:gravity="center"
+                android:lineSpacingExtra="2.5dp"
+                android:text="@{time}"
+                android:textAllCaps="true"
+                android:textColor="@color/example_5_text_grey"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.143"
+                tools:text="THU\nJUN 30\n14:00" />
+
+        <!--Colored view dividers-->
+        <View
+                android:layout_width="1.3dp"
+                android:layout_height="0dp"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/itemFlightDateText"
+                app:layout_constraintStart_toEndOf="@+id/itemFlightDateText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+                android:id="@+id/v2"
+                android:layout_width="0.7dp"
+                android:layout_height="0dp"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/itemFlightDateText"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/itemFlightDepartureLayout"
+                android:layout_width="291dp"
+                android:layout_height="46dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,2:1"
+                app:layout_constraintEnd_toStartOf="@+id/view"
+                app:layout_constraintStart_toEndOf="@+id/v2"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/itemDepartureAirportCodeText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:gravity="center"
+                    android:text="@{code}"
+                    android:textColor="@color/example_5_text_grey"
+                    android:textSize="16sp"
+                    tools:text="LOS" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/itemDepartureAirportCityText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:gravity="center"
+                    android:text="@{city}"
+                    android:textColor="@color/example_5_text_grey"
+                    android:textSize="16sp"
+                    tools:text="Lagos" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--Departure/Destination dividers-->
+        <View
+                android:layout_width="1.3dp"
+                android:layout_height="0dp"
+                android:background="@color/example_5_page_bg_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/itemFlightDepartureLayout"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <!--Edge dividers-->
+        <View
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/example_5_page_bg_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+                android:id="@+id/view"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/example_5_page_bg_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

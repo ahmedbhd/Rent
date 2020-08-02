@@ -5,10 +5,10 @@ import com.rent.data.model.rental.Rental
 
 interface RentalRepository {
     @WorkerThread
-    suspend fun selectRental(): List<Rental>
+    suspend fun selectRentals(): List<Rental>
 
     @WorkerThread
-    suspend fun addRental(rental: Rental)
+    suspend fun addRental(rental: Rental): Rental
 
     @WorkerThread
     suspend fun selectRentalById(id: Int): Rental

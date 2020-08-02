@@ -2,75 +2,47 @@ package com.rent.ui.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.rent.R
 import com.rent.base.BaseActivity
-import com.rent.ui.shared.adapter.util.LocaleHelper
-import com.rent.data.LocationServices
-import com.rent.data.model.rental.Rental
+import com.rent.databinding.ActivityMainBinding
 import com.rent.global.helper.ViewModelFactory
-import com.rent.tools.PhoneGrantings
-import com.rent.ui.main.home.HomeFragment
-import com.rent.ui.main.payment.PaymentFragment
-import com.rent.ui.main.rental.RentalFragment
-import com.rent.ui.splash.SplashViewModel
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.rent.global.helper.LocaleHelper
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), HasAndroidInjector {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel: MainViewModel by viewModels { viewModelFactory }
 
-    private var disposable: Disposable? = null
-    private val locationService by lazy {
-        LocationServices.create()
-    }
-
-    private var locations: ArrayList<Rental>? = ArrayList()
-    private var location: Rental? = null
-
-
-    private inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
-        beginTransaction().func().commit()
-    }
-
-    private fun AppCompatActivity.addFragment(fragment: Fragment, frameId: Int) {
-        supportFragmentManager.inTransaction { add(frameId, fragment) }
-    }
-
-    private fun AppCompatActivity.replaceFragment(fragment: Fragment, frameId: Int) {
-        supportFragmentManager.inTransaction { replace(frameId, fragment) }
-    }
+    lateinit var binding: ActivityMainBinding
+    private lateinit var navController: NavController
 
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> {
-                    replaceFragment(HomeFragment.newInstance(), R.id.page)
+                R.id.navigation_calendar -> {
+                    navController.navigate(R.id.calendarFragment)
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_dashboard -> {
-                    replaceFragment(
-                        RentalFragment.newInstance(),
-                        R.id.page
-                    )
+                R.id.navigation_rentals -> {
+                    navController.navigate(R.id.rentalFragment)
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_notifications -> {
-                    replaceFragment(
-                        PaymentFragment.newInstance(),
-                        R.id.page
-                    )
+                R.id.navigation_payments -> {
+                    navController.navigate(R.id.paymentFragment)
                     return@OnNavigationItemSelectedListener true
                 }
             }
@@ -79,49 +51,23 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        println("in main activity")
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        navController = Navigation.findNavController(this, R.id.page)
+        navController.setGraph(R.navigation.nav_graph, intent.extras)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+        registerBaseObservers(viewModel)
+
         AndroidThreeTen.init(this)
         LocaleHelper.setLocale(applicationContext, "fr")
 
-        if (PhoneGrantings.isNetworkAvailable(this))
-            selectLocationById()
-        addFragment(HomeFragment.newInstance(), R.id.page)
-        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        binding.navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
-
-    private fun selectLocations() {
-
-        disposable =
-            locationService.selectLocations()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { result ->
-                        locations = result as ArrayList<Rental>?
-                        println("hhhhhhhhhhhh $locations")
-                    },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
-                )
+    override fun onBackPressed() {
+        finish()
     }
 
-
-    private fun selectLocationById() {
-
-        disposable =
-            locationService.selectLocationById(1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    { result ->
-                        location = result
-                        println("hhhhhhhhhhhh $location")
-                    },
-                    { error -> println(error.message + "aaaaaaaaaaaaaaaaaaaaaaaaaaaa") }
-                )
-    }
-
-
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 }

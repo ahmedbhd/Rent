@@ -18,7 +18,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.rent.ui.rental.detail.RentalDetailActivity
-import com.rent.ui.shared.adapter.util.ViewDialog
+import com.rent.ui.shared.view.ViewDialog
 import com.rent.data.model.rental.Rental
 import java.text.SimpleDateFormat
 import java.util.*

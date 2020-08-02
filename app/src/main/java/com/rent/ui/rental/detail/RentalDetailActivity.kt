@@ -19,6 +19,7 @@ import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.*
 import com.applikeysolutions.cosmocalendar.model.Day
 import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager
@@ -29,19 +30,20 @@ import com.google.gson.Gson
 import com.rent.R
 import com.rent.base.BaseActivity
 import com.rent.ui.shared.adapter.CustomListAdapter
-import com.rent.ui.shared.adapter.util.ViewDialog
+import com.rent.ui.shared.view.ViewDialog
 import com.rent.data.LocataireServices
 import com.rent.data.LocationServices
 import com.rent.data.PaymentServices
 import com.rent.data.model.payment.Payment
 import com.rent.data.model.rental.Rental
+import com.rent.databinding.ActivityRentalDetailBinding
 import com.rent.global.helper.ViewModelFactory
 import com.rent.tools.PhoneGrantings
 import com.rent.ui.main.MainActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_loc_detail.*
+import kotlinx.android.synthetic.main.activity_rental_detail.*
 import kotlinx.android.synthetic.main.add_cal_bottomsheet.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import yuku.ambilwarna.AmbilWarnaDialog
@@ -51,6 +53,7 @@ import javax.inject.Inject
 
 
 class RentalDetailActivity : BaseActivity() {
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val viewModel: RentalDetailViewModel by viewModels { viewModelFactory }
@@ -93,10 +96,13 @@ class RentalDetailActivity : BaseActivity() {
     private lateinit var edate: Date
     private var calendarView: CalendarView? = null
 
+    private lateinit var binding:ActivityRentalDetailBinding
+
     @SuppressLint("SetTextI18n", "Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_loc_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_rental_detail)
+
         val actionBar = (this as AppCompatActivity).supportActionBar
         actionBar!!.title = "Detail Location"
 

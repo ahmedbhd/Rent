@@ -1,4 +1,4 @@
-package com.rent.ui.shared.adapter.util
+package com.rent.ui.shared.view
 
 import android.app.Dialog
 import android.app.TimePickerDialog

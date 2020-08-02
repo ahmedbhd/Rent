@@ -6,7 +6,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
 import com.rent.R
+import com.rent.data.model.flight.Flight
+import com.rent.ui.main.calendar.CalendarAdapter
 
 
 @BindingAdapter("onClickWithDebounce")
@@ -90,4 +94,15 @@ fun setOnItemSelectedListener(
     listener: AdapterView.OnItemSelectedListener
 ) {
     spinner.onItemSelectedListener = listener
+}
+
+@BindingAdapter("data")
+fun setCalendarItems(
+    recyclerView: RecyclerView,
+    data: ArrayList<Flight>?
+) {
+    data?.let {
+        (recyclerView.adapter as CalendarAdapter).setData(it)
+        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, RecyclerView.VERTICAL))
+    }
 }

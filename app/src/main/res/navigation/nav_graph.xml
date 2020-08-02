@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/calendarFragment">
+
+    <fragment
+            android:id="@+id/calendarFragment"
+            android:name="com.rent.ui.main.calendar.CalendarFragment"
+            android:label="fragment_calendar"
+            tools:layout="@layout/fragment_calendar" />
+    <fragment
+            android:id="@+id/rentalFragment"
+            android:name="com.rent.ui.main.rental.RentalFragment"
+            android:label="fragment_location"
+            tools:layout="@layout/fragment_location" />
+    <fragment
+            android:id="@+id/paymentFragment"
+            android:name="com.rent.ui.main.payment.PaymentFragment"
+            android:label="fragment_payment"
+            tools:layout="@layout/fragment_payment" />
+</navigation>

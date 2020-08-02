@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -27,11 +26,10 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rent.R
-import com.rent.ui.shared.adapter.util.ViewDialog
+import com.rent.ui.shared.view.ViewDialog
 import com.rent.data.model.payment.Payment
 import com.rent.global.helper.ViewModelFactory
 import com.rent.tools.PhoneGrantings
-import com.rent.ui.splash.SplashViewModel
 import javax.inject.Inject
 
 

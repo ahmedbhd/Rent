@@ -1,4 +1,4 @@
-package com.rent.ui.shared.adapter.util
+package com.rent.global.helper
 
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
@@ -14,26 +14,52 @@ class LocaleHelper {
     companion object {
         private val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
         fun onAttach(context: Context): Context {
-            val lang = getPersistedData(context, Locale.getDefault().language)
-            return setLocale(context, lang)
+            val lang =
+                getPersistedData(
+                    context,
+                    Locale.getDefault().language
+                )
+            return setLocale(
+                context,
+                lang
+            )
         }
 
         fun onAttach(context: Context, defaultLanguage: String): Context {
-            val lang = getPersistedData(context, defaultLanguage)
-            return setLocale(context, lang)
+            val lang =
+                getPersistedData(
+                    context,
+                    defaultLanguage
+                )
+            return setLocale(
+                context,
+                lang
+            )
         }
 
         fun getLanguage(context: Context): String? {
-            return getPersistedData(context, Locale.getDefault().language)
+            return getPersistedData(
+                context,
+                Locale.getDefault().language
+            )
         }
 
         @SuppressLint("ObsoleteSdkInt")
         fun setLocale(context: Context, language: String?): Context {
-            persist(context, language)
+            persist(
+                context,
+                language
+            )
 
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                updateResources(context, language)
-            } else updateResourcesLegacy(context, language)
+                updateResources(
+                    context,
+                    language
+                )
+            } else updateResourcesLegacy(
+                context,
+                language
+            )
 
         }
 

@@ -23,6 +23,6 @@ abstract class ContributeActivityModule {
     @ContributesAndroidInjector(modules = [AddRentalModule::class])
     abstract fun contributeAddRentalActivity(): AddRentalActivity
 
-    @ContributesAndroidInjector(modules = [MainModule::class])
+    @ContributesAndroidInjector(modules = [MainModule::class, ContributeFragmentModule::class])
     abstract fun contributeMainActivity(): MainActivity
 }

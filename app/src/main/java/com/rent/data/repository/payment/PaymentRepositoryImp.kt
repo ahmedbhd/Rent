@@ -13,8 +13,10 @@ class PaymentRepositoryImp
 ) : BaseRepository(sharedPreferences, database), PaymentRepository {
     override suspend fun selectPayments() = database.paymentDao().getPayments()
 
-    override suspend fun ajouterPayment(payment: Payment) =
+    override suspend fun ajouterPayment(payment: Payment): Payment {
         database.paymentDao().addPayment(payment)
+        return database.paymentDao().getLastPayment()
+    }
 
     override suspend fun selectPaymentById(id: Int) = database.paymentDao().getPaymentById(id)
 

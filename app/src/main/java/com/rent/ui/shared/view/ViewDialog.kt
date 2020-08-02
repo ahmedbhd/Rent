@@ -1,4 +1,4 @@
-package com.rent.ui.shared.adapter.util
+package com.rent.ui.shared.view
 
 import com.bumptech.glide.Glide
 import android.app.Activity

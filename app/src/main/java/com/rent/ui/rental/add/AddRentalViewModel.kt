@@ -36,7 +36,7 @@ class AddRentalViewModel @Inject constructor(
     var newRental: Rental = Rental()
     var newLocataire: Locataire? = null
     var locataires = MutableLiveData<ArrayList<String>>()
-    var resultloc: ArrayList<Locataire>? = ArrayList()
+    var resultRentals: ArrayList<Locataire>? = ArrayList()
     var selectedLocataire: String =
         applicationContext.getString(R.string.add_rental_empty_locataire)
     var phoneDialog = MutableLiveData<PhoneDialog>()
@@ -133,9 +133,9 @@ class AddRentalViewModel @Inject constructor(
 
     private fun onGetLocatairesSuccess(response: List<Locataire>) {
         hideBlockingProgressBar()
-        resultloc = ArrayList(response)
+        resultRentals = ArrayList(response)
         val array = ArrayList<String>()
-        array.add(" - ")
+//        array.add(applicationContext.getString(R.string.add_rental_empty_locataire))
         response.forEach {
             array.add(it.fullName + applicationContext.getString(R.string.add_rental_empty_locataire) + it.cin)
         }
@@ -151,9 +151,9 @@ class AddRentalViewModel @Inject constructor(
         // An item was selected. You can retrieve the selected item using
         selectedLocataire = parent.getItemAtPosition(position) as String
         if (position > 0)
-            newRental.locataire = resultloc!![position - 1]
+            newRental.locataire = resultRentals!![position - 1]
         else
-            newRental.locataire = resultloc!![position]
+            newRental.locataire = resultRentals!![position]
     }
 
     override fun onSaveClicked(tel: String) {
@@ -196,7 +196,7 @@ class AddRentalViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
-                    rentalRepository.selectRental()
+                    rentalRepository.selectRentals()
                 }
                 onGetRentalsSuccess(response)
             }, {

@@ -20,4 +20,7 @@ interface PaymentDao {
 
     @Query("SELECT * from payment where idPayment=:id LIMIT 1")
     suspend fun getPaymentById(id: Int): Payment
+
+    @Query("SELECT * from payment where idPayment = (SELECT MAX (idPayment) from payment) LIMIT 1")
+    suspend fun getLastPayment(): Payment
 }
