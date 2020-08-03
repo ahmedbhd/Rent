@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<androidx.constraintlayout.widget.ConstraintLayout
-xmlns:swipe="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    swipe:leftEdgeSwipeOffset="0dp"
-    swipe:rightEdgeSwipeOffset="0dp"
-    android:layout_margin="5dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:swipe="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
 
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/swipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            swipe:leftEdgeSwipeOffset="0dp"
+            swipe:rightEdgeSwipeOffset="0dp">
 
-        <LinearLayout
+
+        <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -24,7 +29,7 @@ xmlns:swipe="http://schemas.android.com/apk/res-auto"
                 swipe:layout_constraintStart_toStartOf="parent"
                 swipe:layout_constraintTop_toTopOf="parent">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/loc_cin"
                     style="@style/titetextstyle"
                     android:layout_width="wrap_content"
@@ -38,77 +43,77 @@ xmlns:swipe="http://schemas.android.com/apk/res-auto"
                     android:textColor="#686868"
                     android:textSize="23sp"
                     android:textStyle="bold" />
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
-                android:orientation="horizontal"
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/vend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                swipe:layout_constraintEnd_toEndOf="parent"
-                android:id="@+id/vend"
+                android:orientation="horizontal"
                 swipe:layout_constraintBottom_toBottomOf="parent"
-                >
+                swipe:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/loc_end"
                     style="@style/subtitetextstyle"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:layout_marginEnd="5dp"
+
+
                     android:layout_marginBottom="8dp"
-
-
                     android:gravity="right|center_vertical|end"
+                    android:inputType="datetime"
                     android:text="2019-08-02"
                     android:textAlignment="center"
                     android:textAppearance="@style/subtitetextstyle"
-                    android:inputType="datetime"
-                    android:textSize="18sp"
-                    android:layout_marginEnd="5dp"/>
+                    android:textSize="18sp" />
 
-            <TextView
-                    android:text="13:54"
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/etime"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:id="@+id/etime"
-                    android:drawablePadding="2dp"
-                    android:drawableEnd="@drawable/hourglassend"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="10dp"
-                    android:gravity="center"/>
-        </LinearLayout>
+                    android:layout_marginBottom="8dp"
+                    android:drawableEnd="@drawable/hourglassend"
+                    android:drawablePadding="2dp"
+                    android:gravity="center"
+                    android:text="13:54" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <LinearLayout
-                android:orientation="horizontal"
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/vstart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 swipe:layout_constraintBottom_toBottomOf="parent"
-                swipe:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/vstart">
+                swipe:layout_constraintStart_toStartOf="parent">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/loc_start"
                     style="@style/subtitetextstyle"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_marginBottom="8dp"
-                    android:drawableStart="@drawable/hourglassstart"
 
+                    android:drawableStart="@drawable/hourglassstart"
                     android:gravity="start|center_vertical"
+                    android:inputType="datetime"
                     android:text="2019-07-17"
                     android:textAlignment="center"
                     android:textAppearance="@style/subtitetextstyle"
-                    android:inputType="datetime"
-                    android:textSize="18sp"
-                    android:layout_marginEnd="5dp"/>
+                    android:textSize="18sp" />
 
-            <TextView
-                    android:text="00:00"
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/stime"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:id="@+id/stime"
                     android:layout_marginBottom="8dp"
-                    android:gravity="center"/>
-        </LinearLayout>
+                    android:gravity="center"
+                    android:text="00:00" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

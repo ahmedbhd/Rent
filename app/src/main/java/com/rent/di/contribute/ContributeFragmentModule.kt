@@ -4,6 +4,8 @@ package com.rent.di.contribute
 import com.rent.di.FragmentScope
 import com.rent.ui.main.calendar.CalendarFragment
 import com.rent.ui.main.calendar.CalendarModule
+import com.rent.ui.main.rental.RentalFragment
+import com.rent.ui.main.rental.RentalModule
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -12,6 +14,9 @@ abstract class ContributeFragmentModule {
 
     @FragmentScope
     @ContributesAndroidInjector(modules = [CalendarModule::class])
-    abstract fun contributeCounterFragment(): CalendarFragment
+    abstract fun contributeCalendarFragment(): CalendarFragment
 
+    @FragmentScope
+    @ContributesAndroidInjector(modules = [RentalModule::class])
+    abstract fun contributeRentalFragment(): RentalFragment
 }

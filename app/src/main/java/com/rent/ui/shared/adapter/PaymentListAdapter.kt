@@ -30,11 +30,11 @@ import com.rent.tools.PhoneGrantings
  * Created by Sanjeev k Saroj on 28/2/17.
  */
 
-class CustomListAdapter(
+class PaymentListAdapter(
     var list: MutableList<Payment>,
     var myContext: Context,
     var activity: Activity
-) : RecyclerView.Adapter<CustomListAdapter.MainViewHolder>() {
+) : RecyclerView.Adapter<PaymentListAdapter.MainViewHolder>() {
 
 
     private lateinit var viewDialog: ViewDialog

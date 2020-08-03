@@ -12,13 +12,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.rent.ui.shared.adapter.CustomListAdapter
+import com.rent.ui.shared.adapter.PaymentListAdapter
 import com.rent.data.PaymentServices
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -26,6 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.*
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rent.R
+import com.rent.base.BaseFragment
 import com.rent.ui.shared.view.ViewDialog
 import com.rent.data.model.payment.Payment
 import com.rent.global.helper.ViewModelFactory
@@ -33,7 +33,7 @@ import com.rent.tools.PhoneGrantings
 import javax.inject.Inject
 
 
-class PaymentFragment : Fragment() {
+class PaymentFragment : BaseFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -44,7 +44,7 @@ class PaymentFragment : Fragment() {
             return PaymentFragment()
         }
     }
-    //private var customListAdapter: CustomListAdapter? = null
+//    private var customListAdapter: CustomListAdapter? = null
 
     private lateinit var viewDialog: ViewDialog
     private val paymentService by lazy {
@@ -121,7 +121,7 @@ class PaymentFragment : Fragment() {
 
     private fun prepareRecyclerView() {
 
-        customListAdapter = CustomListAdapter(payments!!, requireContext(), requireActivity())
+        customListAdapter = PaymentListAdapter(payments!!, requireContext(), requireActivity())
 
         viewManager = LinearLayoutManager(requireContext())
 
@@ -149,7 +149,7 @@ class PaymentFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
-                (customListAdapter as CustomListAdapter).removeItem(
+                (customListAdapter as PaymentListAdapter).removeItem(
                     viewHolder.adapterPosition,
                     viewHolder
                 )

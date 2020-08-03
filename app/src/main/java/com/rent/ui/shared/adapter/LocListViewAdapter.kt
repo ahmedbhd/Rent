@@ -51,7 +51,7 @@ class LocListViewAdapter(
 
     @SuppressLint("InflateParams")
     override fun generateView(position: Int, parent: ViewGroup): View {
-        val v = LayoutInflater.from(mContext).inflate(R.layout.listview_item, null)
+        val v = LayoutInflater.from(mContext).inflate(R.layout.rental_list_item, null)
         val swipeLayout = v.findViewById(getSwipeLayoutResourceId(position)) as SwipeLayout
 //        swipeLayout.addSwipeListener(object : SimpleSwipeListener() {
 //            override fun onOpen(layout: SwipeLayout) {
@@ -199,7 +199,7 @@ class LocListViewAdapter(
 
         myDialog.show()
 
-        myDialog.setContentView(R.layout.custompopupcall)
+        myDialog.setContentView(R.layout.dialog_custom_call)
 
 //        myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 //        val txt: TextView = myDialog.findViewById(R.id.txtcloseCall) as TextView

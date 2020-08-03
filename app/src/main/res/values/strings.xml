@@ -7,6 +7,8 @@
 
     <string name="global_operation_failed">Opération échouée!</string>
     <string name="global_add_succeeded">Ajout avec succée</string>
+    <string name="global_empty_data_msg">Pas de données à afficher.</string>
+    <string name="global_retry">Ressayer</string>
 
     <!-- MAIN -->
     <string name="default_calendar">Default calendar</string>

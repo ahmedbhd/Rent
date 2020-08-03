@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".ui.main.rental.RentalFragment">
+
+    <data>
+
+        <variable
+                name="viewModel"
+                type="com.rent.ui.main.rental.RentalViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_containerLoc"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="2dp"
+                android:enabled="@{!viewModel.isEmptyLoading}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:onRefreshListener="@{() -> viewModel.onRefresh()}"
+                app:refreshing="@{viewModel.isRefreshing}"
+                app:swipeColorScheme="@{true}">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/flistfav"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:data="@{viewModel.locations}"
+                    app:isGone="@{viewModel.isEmptyData}" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textReservationsEmptyData"
+                style="@style/TextView.emptyDataMsg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_global_8dp"
+                android:layout_marginEnd="@dimen/padding_global_8dp"
+                android:text="@string/global_empty_data_msg"
+                app:isGone="@{!viewModel.isEmptyData}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textReservationsError"
+                style="@style/TextView.emptyDataMsg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_global_8dp"
+                android:layout_marginEnd="@dimen/padding_global_8dp"
+                android:text="@{viewModel.errorText}"
+                app:isGone="@{!viewModel.isError}"
+                app:layout_constraintBottom_toTopOf="@id/buttonReservationsRetry"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonReservationsRetry"
+                onClickWithDebounce="@{()-> viewModel.onRefresh()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_global_20dp"
+                android:padding="@dimen/margin_global_5dp"
+                android:paddingLeft="@dimen/padding_global_5dp"
+                android:paddingRight="@dimen/padding_global_5dp"
+                android:text="@string/global_retry"
+                android:textAllCaps="false"
+                app:isGone="@{!viewModel.isError}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textReservationsError" />
+
+        <com.rent.ui.shared.view.CustomProgressBar
+                android:id="@+id/progressReservations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:isGone="@{!viewModel.isEmptyLoading}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

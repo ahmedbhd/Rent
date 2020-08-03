@@ -14,7 +14,7 @@
             android:id="@+id/rentalFragment"
             android:name="com.rent.ui.main.rental.RentalFragment"
             android:label="fragment_location"
-            tools:layout="@layout/fragment_location" />
+            tools:layout="@layout/fragment_rental" />
     <fragment
             android:id="@+id/paymentFragment"
             android:name="com.rent.ui.main.payment.PaymentFragment"

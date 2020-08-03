@@ -109,4 +109,10 @@
         <item name="android:topBright">@android:color/transparent</item>
         <item name="android:topDark">@android:color/transparent</item>
     </style>
+
+    <style name="TextView.emptyDataMsg" parent="android:Widget.TextView">
+        <item name="android:textSize">@dimen/font_14sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
 </resources>
