@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="vertical"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:padding="5dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtclose"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:textColor="@color/backgroundColor"
+                android:text="X"
+                android:textStyle="bold"
+                android:layout_gravity="end"
+                android:gravity="center"
+                android:background="@drawable/cerclebackground"
+                android:layout_margin="2dp"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+
+                    android:textColor="@color/backgroundColor"
+                    android:layout_gravity="center|center_horizontal"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:layout_margin="5dp"
+                    android:textColorHint="#9FE7E0E0"
+                    android:text="Type :"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/types_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+
+                    android:textColor="@color/backgroundColor"
+                    android:layout_gravity="center|center_horizontal"
+                    android:textAlignment="center"
+                    android:backgroundTint="#F0EEEEEE"
+                    android:foregroundTint="#E9F1E5E5"
+                    android:contextClickable="false"
+                    android:background="#FFFEFE"
+                    android:entries="@array/types_array"
+                    android:gravity="center"
+                    android:layout_margin="5dp"
+                    android:scrollbarSize="10dp"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatEditText
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/backgroundColor"
+                android:layout_gravity="center_horizontal"
+                android:textSize="18sp"
+
+                android:id="@+id/add_amount"
+                android:inputType="numberSigned"
+                android:textAlignment="center"
+                android:hint="Montant"
+                android:gravity="end"
+                android:layout_margin="5dp"
+                android:textColorHint="#99EBDDDD"/>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/backgroundColor"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:textSize="18sp"
+
+                    android:id="@+id/add_date"
+                    android:textAlignment="center"
+                    android:text="@string/_00_00_00"
+                    android:layout_weight="1"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/calendaricon"
+                    android:id="@+id/imageDate"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/backgroundColor"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:layout_marginTop="5dp"
+                    android:textSize="18sp"
+
+                    android:id="@+id/add_time"
+                    android:textAlignment="center"
+                    android:text="@string/_00_00_00"
+                    android:layout_weight="1"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/clockicon"
+                    android:id="@+id/imageTime"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnfollow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enregistrer"
+                android:layout_marginTop="25dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/buttonstyle"
+                android:textColor="@color/backgroundColor"
+                android:layout_marginBottom="15dp"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

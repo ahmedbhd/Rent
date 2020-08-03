@@ -29,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.rent.R
 import com.rent.base.BaseActivity
-import com.rent.ui.shared.adapter.PaymentListAdapter
+import com.rent.ui.main.payment.PaymentListAdapter
 import com.rent.ui.shared.view.ViewDialog
 import com.rent.data.LocataireServices
 import com.rent.data.LocationServices
@@ -325,8 +325,9 @@ class RentalDetailActivity : BaseActivity() {
 
     private fun prepareRecyclerView() {
 
-        customListAdapter = PaymentListAdapter(payments!!, this, this)
-        viewManager = LinearLayoutManager(this)
+//        customListAdapter =
+//            PaymentListAdapter(payments!!, this, this)
+//        viewManager = LinearLayoutManager(this)
 
         colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
         deleteIcon = ContextCompat.getDrawable(
@@ -352,10 +353,10 @@ class RentalDetailActivity : BaseActivity() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
-                (customListAdapter as PaymentListAdapter).removeItem(
-                    viewHolder.adapterPosition,
-                    viewHolder
-                )
+//                (customListAdapter as PaymentListAdapter).removeItem(
+//                    viewHolder.adapterPosition,
+//                    viewHolder
+//                )
             }
 
             override fun onChildDraw(
@@ -443,7 +444,7 @@ class RentalDetailActivity : BaseActivity() {
 
         myDialog.show()
 
-        myDialog.setContentView(R.layout.custompopup2)
+        myDialog.setContentView(R.layout.dialog_custom_payment)
 
         myDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val txt: TextView = myDialog.findViewById(R.id.txtclose) as TextView

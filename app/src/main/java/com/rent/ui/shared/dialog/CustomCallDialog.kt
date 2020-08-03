@@ -37,9 +37,9 @@ class CustomCallDialog(
             dismiss()
         }
 
-        val addTel1: TextView = binding.callnumberCall
+        val addTel1 = binding.callnumberCall
 
-        val myLayout: LinearLayout = binding.listcalls
+        val myLayout = binding.listcalls
 
         if (stringTel != "") {
             val tab = stringTel.split(",")
@@ -52,7 +52,7 @@ class CustomCallDialog(
                 myTextView.text = tab[i]
 
                 myTextView.setCompoundDrawablesWithIntrinsicBounds(
-                    com.rent.R.drawable.phonesettings,
+                    R.drawable.phonesettings,
                     0,
                     0,
                     0

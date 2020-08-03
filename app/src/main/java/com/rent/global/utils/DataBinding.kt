@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.rent.R
 import com.rent.data.model.flight.Flight
+import com.rent.data.model.payment.Payment
 import com.rent.data.model.rental.Rental
 import com.rent.ui.main.calendar.CalendarAdapter
+import com.rent.ui.main.payment.PaymentListAdapter
 import com.rent.ui.main.rental.RentalListAdapter
 
 
@@ -133,11 +135,11 @@ fun setRentalItems(
                 DividerItemDecoration.VERTICAL
             )
         )
-        prepareRecyclerView(recyclerView)
+        prepareRentalRecyclerView(recyclerView)
     }
 }
 
-private fun prepareRecyclerView(recyclerView: RecyclerView) {
+private fun prepareRentalRecyclerView(recyclerView: RecyclerView) {
 
     val colorDrawableBackground = ColorDrawable(Color.parseColor("#0097A7"))
     val deleteIcon = ContextCompat.getDrawable(
@@ -156,8 +158,8 @@ private fun prepareRecyclerView(recyclerView: RecyclerView) {
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
-            (recyclerView.adapter as RentalListAdapter).showPopupTel(viewHolder.adapterPosition)
-            (recyclerView.adapter as RentalListAdapter).notifyItemChanged(viewHolder.adapterPosition)
+            (recyclerView.adapter as RentalListAdapter).showPopupTel(viewHolder.absoluteAdapterPosition)
+            (recyclerView.adapter as RentalListAdapter).notifyItemChanged(viewHolder.absoluteAdapterPosition)
         }
 
         override fun onChildDraw(
@@ -247,4 +249,123 @@ fun setupSwipeColors(swipe: SwipeRefreshLayout, isColored: Boolean) {
             ), ContextCompat.getColor(swipe.context, R.color.colorPrimaryDark)
         )
     }
+}
+
+@BindingAdapter("data")
+fun setPaymentItems(
+    recyclerView: RecyclerView,
+    data: ArrayList<Payment>?
+) {
+    data?.let {
+        (recyclerView.adapter as PaymentListAdapter).setData(it)
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                recyclerView.context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+        preparePaymentRecyclerView(recyclerView)
+    }
+}
+
+private fun preparePaymentRecyclerView(recyclerView: RecyclerView) {
+
+
+    val colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
+    val deleteIcon = ContextCompat.getDrawable(
+        recyclerView.context,
+        R.drawable.ic_delete_white_24dp
+    )!!
+
+    val itemTouchHelperCallback = object :
+        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            viewHolder2: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
+            (recyclerView.adapter as PaymentListAdapter).removeItem(
+                viewHolder.absoluteAdapterPosition
+            )
+        }
+
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+            val itemView = viewHolder.itemView
+            val iconMarginVertical =
+                (viewHolder.itemView.height - deleteIcon.intrinsicHeight) / 2
+
+            if (dX > 0) {
+                colorDrawableBackground.setBounds(
+                    itemView.left,
+                    itemView.top,
+                    dX.toInt(),
+                    itemView.bottom
+                )
+                deleteIcon.setBounds(
+                    itemView.left + iconMarginVertical,
+                    itemView.top + iconMarginVertical,
+                    itemView.left + iconMarginVertical + deleteIcon.intrinsicWidth,
+                    itemView.bottom - iconMarginVertical
+                )
+            } else {
+                colorDrawableBackground.setBounds(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
+                deleteIcon.setBounds(
+                    itemView.right - iconMarginVertical - deleteIcon.intrinsicWidth,
+                    itemView.top + iconMarginVertical,
+                    itemView.right - iconMarginVertical,
+                    itemView.bottom - iconMarginVertical
+                )
+                deleteIcon.level = 0
+            }
+
+            colorDrawableBackground.draw(c)
+
+            c.save()
+
+            if (dX > 0)
+                c.clipRect(itemView.left, itemView.top, dX.toInt(), itemView.bottom)
+            else
+                c.clipRect(
+                    itemView.right + dX.toInt(),
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
+                )
+
+            deleteIcon.draw(c)
+
+            c.restore()
+
+            super.onChildDraw(
+                c,
+                recyclerView,
+                viewHolder,
+                dX,
+                dY,
+                actionState,
+                isCurrentlyActive
+            )
+        }
+
+    }
+
+    val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+    itemTouchHelper.attachToRecyclerView(recyclerView)
 }

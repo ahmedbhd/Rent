@@ -29,7 +29,6 @@ class RentalListAdapter : RecyclerView.Adapter<RentalViewHolder>() {
 
     private var rentals: MutableList<Rental> = ArrayList()
 
-    var locationFilteredList: MutableList<Rental>? = null
     private var rentalItemClickListener: RentalItemClickListener? = null
     private var rentalItemSwipeListener: RentalItemSwipeListener? = null
 
@@ -48,7 +47,6 @@ class RentalListAdapter : RecyclerView.Adapter<RentalViewHolder>() {
 
     fun setData(list :ArrayList<Rental>) {
         rentals = list
-        if (locationFilteredList == null) locationFilteredList = list
         notifyDataSetChanged()
     }
 
