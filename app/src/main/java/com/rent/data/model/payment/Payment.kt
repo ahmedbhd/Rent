@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "Payment")
 @JsonClass(generateAdapter = true)
 data class Payment(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val idPayment: Int,
     val paymentDate: String,
     val amount: Int,

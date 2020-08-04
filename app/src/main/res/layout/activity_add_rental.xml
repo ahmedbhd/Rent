@@ -304,7 +304,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-            <include layout="@layout/add_cal_bottomsheet" />
+            <include layout="@layout/bottom_sheet_calendar" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

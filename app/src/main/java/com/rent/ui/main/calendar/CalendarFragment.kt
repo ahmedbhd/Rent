@@ -1,6 +1,7 @@
 package com.rent.ui.main.calendar
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
@@ -19,13 +20,17 @@ import com.kizitonwose.calendarview.utils.next
 import com.kizitonwose.calendarview.utils.previous
 import com.rent.R
 import com.rent.data.model.flight.Flight
+import com.rent.data.model.rental.Rental
 import com.rent.databinding.FragmentCalendarBinding
+import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
+import com.rent.global.utils.ExtraKeys
 import com.rent.global.utils.daysOfWeekFromLocale
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.global.utils.setTextColorRes
 import com.rent.tools.BaseFragment
 import com.rent.ui.rental.add.AddRentalActivity
+import com.rent.ui.rental.detail.RentalDetailActivity
 import kotlinx.android.synthetic.main.calendar_day_legend.view.*
 import kotlinx.android.synthetic.main.example_5_calendar_day.view.*
 import java.time.LocalDate
@@ -70,20 +75,6 @@ class CalendarFragment : BaseFragment() {
         return view
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        if (PhoneGrantings.isNetworkAvailable(requireActivity())) // online actions
-//            selectLocations()
-//        else {
-//            Toast.makeText(context, "Internet Non Disponible", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        exFiveRv.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-//        exFiveRv.adapter = flightsAdapter
-//
-//    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         registerBaseObserver(viewModel)
@@ -92,7 +83,7 @@ class CalendarFragment : BaseFragment() {
     }
 
     private fun registerCalendarObservers() {
-        viewModel.flights.observeOnlyNotNull(viewLifecycleOwner) {
+        viewModel.rentalItems.observeOnlyNotNull(viewLifecycleOwner) {
             prepareView(it)
         }
     }
@@ -117,7 +108,9 @@ class CalendarFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.add_loc -> {
-                navigateToClass(AddRentalActivity::class)
+                Intent(requireContext(), AddRentalActivity::class.java).also {
+                    startActivityForResult(it, REQUEST_CODE)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -228,4 +221,25 @@ class CalendarFragment : BaseFragment() {
             }
         }
     }
+
+    override fun navigate(navigationTo: Navigation) {
+        super.navigate(navigationTo)
+        when (navigationTo) {
+            is Navigation.RentalDetailActivityNavigation -> navigateToRentalDetail(navigationTo.rental)
+        }
+    }
+
+    private fun navigateToRentalDetail(rental: Rental) {
+        Intent(requireActivity(), RentalDetailActivity::class.java).also {
+            it.putExtra(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_EXTRA_RENTAL, rental)
+            startActivityForResult(it, REQUEST_CODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.loadRentals()
+    }
 }
+
+const val REQUEST_CODE = 101

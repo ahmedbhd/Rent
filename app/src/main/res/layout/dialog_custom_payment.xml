@@ -60,9 +60,8 @@
                     android:layout_gravity="center|center_horizontal"
                     android:textAlignment="center"
                     android:backgroundTint="#F0EEEEEE"
-                    android:foregroundTint="#E9F1E5E5"
                     android:contextClickable="false"
-                    android:background="#FFFEFE"
+                    android:background="@android:color/black"
                     android:entries="@array/types_array"
                     android:gravity="center"
                     android:layout_margin="5dp"
@@ -142,7 +141,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnfollow"
+                android:id="@+id/savePayment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/enregistrer"

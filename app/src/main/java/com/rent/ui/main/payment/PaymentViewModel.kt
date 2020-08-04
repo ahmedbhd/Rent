@@ -84,7 +84,7 @@ class PaymentViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()){
-                    paymentRepository.selectPayments()
+                    paymentRepository.getPayments()
                 }
                 onLoadPaymentSuccess(response)
             }, {

@@ -13,12 +13,13 @@ import com.rent.R
 import com.rent.data.model.payment.Payment
 import com.rent.databinding.DialogCustomPaymentBinding
 import com.rent.global.listener.PaymentDialogListener
+import com.rent.global.utils.hideKeyboard
 import java.util.*
 
 
 class CustomPaymentDialog(
     context: Context,
-    private var payment: Payment? = null,
+    private var payment: Payment,
     private var paymentDialogListener: PaymentDialogListener,
     private var dismissActionBlock: (() -> Unit)? = null
 ) : Dialog(context, R.style.CustomSimpleDialog) {
@@ -41,17 +42,7 @@ class CustomPaymentDialog(
             dismiss()
         }
 
-        val txt: TextView = binding.txtclose
-        val btn: Button = binding.btnfollow
-
-        val amount: EditText = binding.addAmount
-        val dateBtn: ImageView = binding.imageDate
-        val timeBtn: ImageView = binding.imageTime
-        val dateText: TextView = binding.addDate
-
-        val time = binding.addTime
-
-        amount.setText(payment?.amount.toString(), TextView.BufferType.EDITABLE)
+        binding.addAmount.setText(payment.amount.toString(), TextView.BufferType.EDITABLE)
 
         val c = Calendar.getInstance(Locale.FRANCE)
         val mHour = c.get(Calendar.HOUR_OF_DAY)
@@ -60,31 +51,32 @@ class CustomPaymentDialog(
         val mMonth = c.get(Calendar.MONTH)
         val mDay = c.get(Calendar.DAY_OF_MONTH)
 
-        time.text = "$mHour:$mMinute"
-        dateText.text = mYear.toString() + "-" + (mMonth + 1) + "-" + (mDay)
+        binding.addTime.text = "$mHour:$mMinute"
+        binding.addDate.text = mYear.toString() + "-" + (mMonth + 1) + "-" + (mDay)
 
 
 
-        timeBtn.setOnClickListener {
+        binding.imageTime.setOnClickListener {
 
             val timePickerDialog = TimePickerDialog(
                 context,
                 TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay: Int, minute: Int
                     ->
-                    time.text = "$hourOfDay:$minute"
+                    binding.addTime.text = "$hourOfDay:$minute"
                 },
                 mHour, mMinute, true
             )
             timePickerDialog.show()
         }
 
-        dateBtn.setOnClickListener {
+        binding.imageDate.setOnClickListener {
 
             val datePickerDialog = DatePickerDialog(
                 context,
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth
                     ->
-                    dateText.text = year.toString() + "-" + (monthOfYear + 1) + "-" + dayOfMonth
+                    binding.addDate.text =
+                        "${year.toString()}  -  ${(monthOfYear + 1)} -  $dayOfMonth"
                 },
                 mYear, // Initial year selection
                 mMonth, // Initial month selection
@@ -114,22 +106,26 @@ class CustomPaymentDialog(
 
         val spinnerAdap = spinner.adapter as ArrayAdapter<String>
 
-        if (payment?.type == "payment") {
+        if (payment.type == "payment") {
             val spinnerPosition = spinnerAdap.getPosition("Paiement")
 
             spinner.setSelection(spinnerPosition)
         }
-        txt.setOnClickListener { dismiss() }
-        btn.setOnClickListener {
+        binding.txtclose.setOnClickListener {
+            binding.root.hideKeyboard()
+            dismiss()
+        }
+        binding.savePayment.setOnClickListener {
             paymentDialogListener.onSavePaymentButtonClicked(
                 Payment(
-                    payment?.idPayment ?: 0,
-                    dateText.text.toString() + " " + time.text.toString() + ":00",
-                    Integer.parseInt(amount.text.toString()),
+                    payment.idPayment,
+                    binding.addDate.text.toString() + " " + binding.addTime.text.toString() + ":00",
+                    Integer.parseInt(binding.addAmount.text.toString()),
                     typePayment,
-                    payment!!.rental
+                    payment.rental
                 )
             )
+            binding.root.hideKeyboard()
             dismiss()
         }
     }

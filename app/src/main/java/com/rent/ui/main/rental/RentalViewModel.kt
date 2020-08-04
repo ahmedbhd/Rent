@@ -13,6 +13,7 @@ import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.rental.Rental
 import com.rent.data.repository.rental.RentalRepository
 import com.rent.global.helper.FetchState
+import com.rent.global.helper.Navigation
 import com.rent.global.helper.dialog.CallDialog
 import com.rent.global.listener.*
 import com.rent.global.utils.tryCatch
@@ -93,7 +94,7 @@ class RentalViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
-                    rentalRepository.selectRentals()
+                    rentalRepository.getRentals()
                 }
                 onLoadRentalsSuccess(response)
             }, {
@@ -114,7 +115,7 @@ class RentalViewModel @Inject constructor(
     }
 
     override fun onRentalItemClicked(rental: Rental) {
-        showToast("Clicked")
+        navigate(Navigation.RentalDetailActivityNavigation(rental))
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {

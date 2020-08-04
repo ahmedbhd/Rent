@@ -11,14 +11,14 @@ class LocataireRepositoryImp
     sharedPreferences: SharedPreferences,
     database: Database
 ) : BaseRepository(sharedPreferences, database), LocataireRepository {
-    override suspend fun selectLocataire() = database.locataireDao().getLocataires()
+    override suspend fun getLocataire() = database.locataireDao().getLocataires()
 
     override suspend fun addLocataire(locataire: Locataire): Locataire {
         database.locataireDao().addLocataire(locataire)
         return database.locataireDao().getLastLocataire()
     }
 
-    override suspend fun selectLocataireById(id: Int) = database.locataireDao().getLocataireById(id)
+    override suspend fun getLocataireById(id: Int) = database.locataireDao().getLocataireById(id)
 
     override suspend fun deleteLocataire(locataire: Locataire) =
         database.locataireDao().deleteLocataire(locataire)

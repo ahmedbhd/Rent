@@ -3,17 +3,24 @@ package com.rent.global.utils
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.applikeysolutions.cosmocalendar.model.Day
+import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager
+import com.applikeysolutions.cosmocalendar.utils.SelectionType
+import com.applikeysolutions.cosmocalendar.view.CalendarView
 import com.rent.R
 import com.rent.data.model.flight.Flight
 import com.rent.data.model.payment.Payment
@@ -21,6 +28,9 @@ import com.rent.data.model.rental.Rental
 import com.rent.ui.main.calendar.CalendarAdapter
 import com.rent.ui.main.payment.PaymentListAdapter
 import com.rent.ui.main.rental.RentalListAdapter
+import kotlinx.android.synthetic.main.activity_rental_detail.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @BindingAdapter("onClickWithDebounce")
@@ -369,3 +379,42 @@ private fun preparePaymentRecyclerView(recyclerView: RecyclerView) {
     val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
     itemTouchHelper.attachToRecyclerView(recyclerView)
 }
+
+@BindingAdapter("backgroundColor")
+fun setBackgroundColor(
+    textView: AppCompatTextView,
+    color: Int?
+) {
+    color?.let {
+        val background = textView.background
+        (background as GradientDrawable).setColor(it)
+    }
+}
+
+//@BindingAdapter(value = ["color", "dateRange"], requireAll = true)
+//fun setupCalendar(
+//    calendarView: CalendarView,
+//    color: Int?,
+//    dateRange: Pair<Date, Date>?
+//) {
+//    calendarView.calendarOrientation = OrientationHelper.HORIZONTAL
+//    calendarView.selectionType = SelectionType.RANGE
+//    calendarView.selectedDayBackgroundColor =
+//        color ?: R.color.colorPrimary
+//
+//    dateRange?.let {
+//        if (calendarView.selectionManager is RangeSelectionManager) {
+//            val rangeSelectionManager = calendarView.selectionManager as RangeSelectionManager
+//
+//
+//            val sCalendar = Calendar.getInstance()
+//            sCalendar.time = dateRange.first
+//            val eCalendar = Calendar.getInstance()
+//            eCalendar.time = dateRange.second
+//
+//            rangeSelectionManager.toggleDay(Day(sCalendar))
+//            rangeSelectionManager.toggleDay(Day(eCalendar))
+//            calendarView.update()
+//        }
+//    }
+//}

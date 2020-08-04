@@ -5,13 +5,13 @@ import com.rent.data.model.rental.Rental
 
 interface RentalRepository {
     @WorkerThread
-    suspend fun selectRentals(): List<Rental>
+    suspend fun getRentals(): List<Rental>
 
     @WorkerThread
     suspend fun addRental(rental: Rental): Rental
 
     @WorkerThread
-    suspend fun selectRentalById(id: Int): Rental
+    suspend fun getRentalById(id: Int): Rental
 
     @WorkerThread
     suspend fun deleteRental(rental: Rental)

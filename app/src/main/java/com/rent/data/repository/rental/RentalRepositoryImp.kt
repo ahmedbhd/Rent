@@ -12,14 +12,14 @@ class RentalRepositoryImp
     database: Database
 ) : BaseRepository(sharedPreferences, database), RentalRepository {
 
-    override suspend fun selectRentals() = database.rentalDao().getRentals()
+    override suspend fun getRentals() = database.rentalDao().getRentals()
 
     override suspend fun addRental(rental: Rental): Rental {
         database.rentalDao().addRental(rental)
         return database.rentalDao().getLastRental()
     }
 
-    override suspend fun selectRentalById(id: Int) = database.rentalDao().getRentalById(id)
+    override suspend fun getRentalById(id: Int) = database.rentalDao().getRentalById(id)
 
     override suspend fun deleteRental(rental: Rental) {
         database.rentalDao().deleteRental(rental)

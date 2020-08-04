@@ -17,6 +17,7 @@ import com.rent.global.utils.hideKeyboard
 
 class CustomPhoneDialog(
     context: Context,
+    private var stringTel:String = "",
     private var phoneDialogListener: PhoneDialogListener,
     private var dismissActionBlock: (() -> Unit)? = null
 ) : Dialog(context, R.style.CustomSimpleDialog) {
@@ -44,7 +45,6 @@ class CustomPhoneDialog(
 
         val telArray = ArrayList<EditText>()
 
-        var stringTel = ""
         if (stringTel != "") {
             val tab = stringTel.split(",")
             addTel1.setText(tab[0])

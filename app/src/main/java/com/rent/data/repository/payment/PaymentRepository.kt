@@ -6,13 +6,13 @@ import com.rent.data.model.payment.Payment
 interface PaymentRepository {
 
     @WorkerThread
-    suspend fun selectPayments(): List<Payment>
+    suspend fun getPayments(): List<Payment>
 
     @WorkerThread
-    suspend fun ajouterPayment(payment: Payment): Payment
+    suspend fun addPayment(payment: Payment): Payment
 
     @WorkerThread
-    suspend fun selectPaymentById(id: Int): Payment
+    suspend fun getPaymentById(id: Int): Payment
 
     @WorkerThread
     suspend fun deletePayment(payment: Payment)
@@ -20,4 +20,6 @@ interface PaymentRepository {
     @WorkerThread
     suspend fun updatePayment(payment: Payment)
 
+    @WorkerThread
+    suspend fun getPaymentByRentalId(id: Int): List<Payment>
 }

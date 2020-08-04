@@ -12,7 +12,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "Rental")
 @JsonClass(generateAdapter = true)
 data class Rental(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val idRental: Int = 0,
     var dateDebut: String = "",
     var dateFin: String = "",

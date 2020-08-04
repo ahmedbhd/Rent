@@ -15,12 +15,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.rent.R
 import com.rent.base.BaseActivity
 import com.rent.databinding.ActivityAddRentalBinding
+import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
 import com.rent.global.utils.getColorCompat
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.shared.dialog.CustomPhoneDialog
 import kotlinx.android.synthetic.main.activity_add_rental.*
-import kotlinx.android.synthetic.main.add_cal_bottomsheet.*
+import kotlinx.android.synthetic.main.bottom_sheet_calendar.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
 import java.text.SimpleDateFormat
@@ -154,9 +155,17 @@ class AddRentalActivity : BaseActivity() {
         if (!isFinishing) {
             CustomPhoneDialog(
                 this,
+                "",
                 viewModel,
                 dismissActionBlock
             ).show()
+        }
+    }
+
+    override fun navigate(navigationTo: Navigation) {
+        super.navigate(navigationTo)
+        when (navigationTo) {
+            is Navigation.Back -> finish()
         }
     }
 }

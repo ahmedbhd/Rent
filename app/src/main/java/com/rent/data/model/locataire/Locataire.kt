@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "Locataire")
 @JsonClass(generateAdapter = true)
 data class Locataire(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val idLocataire: Int = 0,
     var cin: String = "",
     var fullName: String = "",

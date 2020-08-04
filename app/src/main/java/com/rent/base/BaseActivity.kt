@@ -11,6 +11,7 @@ import android.widget.EditText
 import androidx.annotation.CallSuper
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.observe
 import com.bumptech.glide.RequestManager
@@ -344,6 +345,15 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     @CallSuper
     open fun navigate(navigationTo: Navigation) {
+    }
+
+    open fun getVisibleFragment(): Fragment? {
+        val fragmentManager = supportFragmentManager
+        val fragments = fragmentManager.fragments
+        for (fragment in fragments) {
+            if (fragment != null && fragment.isVisible) return fragment
+        }
+        return null
     }
 
     override fun onBackPressed() {

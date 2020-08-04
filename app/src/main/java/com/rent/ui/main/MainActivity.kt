@@ -1,10 +1,13 @@
 package com.rent.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.rent.R
@@ -12,6 +15,8 @@ import com.rent.base.BaseActivity
 import com.rent.databinding.ActivityMainBinding
 import com.rent.global.helper.ViewModelFactory
 import com.rent.global.helper.LocaleHelper
+import com.rent.ui.main.calendar.CalendarFragment
+import com.rent.ui.main.calendar.REQUEST_CODE
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -67,6 +72,15 @@ class MainActivity : BaseActivity(), HasAndroidInjector {
 
     override fun onBackPressed() {
         finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE && resultCode == REQUEST_CODE) {
+            if (getVisibleFragment() is CalendarFragment) {
+                getVisibleFragment()?.onActivityResult(requestCode, resultCode, data)
+            }
+        }
     }
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector

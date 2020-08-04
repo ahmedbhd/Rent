@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rent.data.model.flight.Flight
 import com.rent.databinding.ItemCalendarBinding
 import com.rent.global.listener.CalendarItemClickListener
+import com.rent.global.utils.setClickWithDebounce
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -23,6 +24,10 @@ class CalendarViewHolder(
 
         binding.code = flight.departure.code
         binding.city = flight.departure.city
+
+        binding.root.setClickWithDebounce {
+            onItemClickListener?.onCalendarItemClicked(position)
+        }
     }
 
     companion object {

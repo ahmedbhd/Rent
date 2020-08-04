@@ -13,11 +13,15 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rent.R
 import com.rent.base.BaseFragment
+import com.rent.data.model.rental.Rental
 import com.rent.databinding.FragmentRentalBinding
+import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
 import com.rent.global.listener.DialogCustomCallListener
+import com.rent.global.utils.ExtraKeys
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.rental.add.AddRentalActivity
+import com.rent.ui.rental.detail.RentalDetailActivity
 import com.rent.ui.shared.dialog.CustomCallDialog
 import javax.inject.Inject
 
@@ -130,5 +134,19 @@ class RentalFragment : BaseFragment() {
 
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun navigate(navigationTo: Navigation) {
+        super.navigate(navigationTo)
+        when (navigationTo) {
+            is Navigation.RentalDetailActivityNavigation -> navigateToRentalDetail(navigationTo.rental)
+        }
+    }
+
+    private fun navigateToRentalDetail(rental: Rental) {
+        Intent(requireActivity(), RentalDetailActivity::class.java).also {
+            it.putExtra(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_EXTRA_RENTAL, rental)
+            startActivity(it)
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.flight.Flight
 import com.rent.data.model.rental.Rental
 import com.rent.data.repository.rental.RentalRepository
+import com.rent.global.helper.Navigation
 import com.rent.global.listener.CalendarItemClickListener
 import com.rent.global.listener.SchedulerProvider
 import com.rent.global.listener.ToolbarListener
@@ -28,14 +29,14 @@ class CalendarViewModel @Inject constructor(
     schedulerProvider
 ), ToolbarListener, CalendarItemClickListener {
 
-    var locations = MutableLiveData<ArrayList<Rental>>()
-    var flights = MutableLiveData<Map<LocalDate, List<Flight>>>()
+    var rentals = MutableLiveData<ArrayList<Rental>>()
+    var rentalItems = MutableLiveData<Map<LocalDate, List<Flight>>>()
     var selectDate = MutableLiveData<LocalDate>()
     var calendarItemsList = MediatorLiveData<ArrayList<Flight>>()
 
     init {
         calendarItemsList.addSource(selectDate) {
-            flights.value?.let { flightsList ->
+            rentalItems.value?.let { flightsList ->
                 calendarItemsList.value = ArrayList(flightsList[it].orEmpty())
             }
         }
@@ -46,12 +47,12 @@ class CalendarViewModel @Inject constructor(
         selectDate.value = date
     }
 
-    private fun loadRentals() {
+    fun loadRentals() {
         showBlockingProgressBar()
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
-                    rentalRepository.selectRentals()
+                    rentalRepository.getRentals()
                 }
                 onLoadRentalsSuccess(response)
             }, {
@@ -68,14 +69,14 @@ class CalendarViewModel @Inject constructor(
 
     private fun onLoadRentalsSuccess(response: List<Rental>) {
         hideBlockingProgressBar()
-        locations.value = ArrayList(response)
-        flights.value = generateFlights(locations.value!!)
+        rentals.value = ArrayList(response)
+        rentalItems.value = generateFlights(rentals.value!!)
             .groupBy {
                 it.time.toLocalDate()
             }
     }
 
     override fun onCalendarItemClicked(position: Int) {
-        showToast("selected")
+        navigate(Navigation.RentalDetailActivityNavigation(rentals.value!![position]))
     }
 }

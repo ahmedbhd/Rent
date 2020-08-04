@@ -11,6 +11,7 @@ import com.rent.data.model.locataire.Locataire
 import com.rent.data.model.rental.Rental
 import com.rent.data.repository.locataire.LocataireRepository
 import com.rent.data.repository.rental.RentalRepository
+import com.rent.global.helper.Navigation
 import com.rent.global.helper.dialog.PhoneDialog
 import com.rent.global.listener.PhoneDialogListener
 import com.rent.global.listener.SchedulerProvider
@@ -55,6 +56,7 @@ class AddRentalViewModel @Inject constructor(
 
     fun showPhoneDialog() {
         phoneDialog.value = PhoneDialog.build(
+            "",
             dismissPhoneBuild(null)
         )
     }
@@ -89,6 +91,7 @@ class AddRentalViewModel @Inject constructor(
     private fun onAddRentalSuccess() {
         hideBlockingProgressBar()
         showToast(applicationContext.getString(R.string.global_add_succeeded))
+        navigate(Navigation.Back)
     }
 
     private fun addLocataire() {
@@ -117,7 +120,7 @@ class AddRentalViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
-                    locataireRepository.selectLocataire()
+                    locataireRepository.getLocataire()
                 }
                 onGetLocatairesSuccess(response)
             }, {
@@ -196,7 +199,7 @@ class AddRentalViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
-                    rentalRepository.selectRentals()
+                    rentalRepository.getRentals()
                 }
                 onGetRentalsSuccess(response)
             }, {
