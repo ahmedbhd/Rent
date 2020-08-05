@@ -16,7 +16,7 @@ class CalendarAdapter : RecyclerView.Adapter<CalendarViewHolder>() {
     }
 
     override fun onBindViewHolder(viewHolder: CalendarViewHolder, position: Int) {
-        viewHolder.bind(flights[position], position)
+        viewHolder.bind(flights[position])
     }
 
     fun setListener(listener: CalendarItemClickListener) {

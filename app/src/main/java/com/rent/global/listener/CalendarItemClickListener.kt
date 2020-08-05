@@ -1,6 +1,8 @@
 package com.rent.global.listener
 
+import com.rent.data.model.flight.Flight
+
 
 interface CalendarItemClickListener {
-    fun onCalendarItemClicked(position: Int)
+    fun onCalendarItemClicked(flight: Flight)
 }

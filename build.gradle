@@ -16,7 +16,7 @@ buildscript {
     versions.work_ktx = '2.4.0'
     versions.appcompat = '1.1.0'
     versions.legacy_support_version = '1.0.0'
-    versions.constraintlayout = '2.0.0-beta6'
+    versions.constraintlayout = '2.0.0-rc1'
     versions.fragment_ktx = '1.2.5'
     versions.material = '1.3.0-alpha01'
     versions.glide = '4.10.0'
@@ -44,6 +44,11 @@ buildscript {
     versions.nineoldandroids = "2.4.0"
     versions.cosmocalendar = "1.0.4"
     versions.room = '2.2.5'
+    versions.google_gms = '4.3.3'
+    versions.firebase_crashlytics_gradle = '2.2.0'
+    versions.firebase_crashlytics = '17.1.0'
+    versions.analytics_ktx = '17.4.4'
+    versions.analytics = '17.1.1'
 
     versions.junit = "4.12"
     versions.ext_junit = "1.1.1"
@@ -68,6 +73,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
         classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$versions.navigation"
 
+        classpath "com.google.gms:google-services:$versions.google_gms"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$versions.firebase_crashlytics_gradle"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

@@ -74,7 +74,6 @@
                 android:textColor="@color/backgroundColor"
                 android:layout_gravity="center_horizontal"
                 android:textSize="18sp"
-
                 android:id="@+id/add_amount"
                 android:inputType="numberSigned"
                 android:textAlignment="center"

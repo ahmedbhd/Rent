@@ -12,6 +12,8 @@ import com.rent.data.repository.payment.PaymentRepository
 import com.rent.global.helper.FetchState
 import com.rent.global.helper.dialog.PaymentDialog
 import com.rent.global.listener.*
+import com.rent.global.utils.DebugLog
+import com.rent.global.utils.TAG
 import com.rent.global.utils.tryCatch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,7 +30,7 @@ class PaymentViewModel @Inject constructor(
     schedulerProvider
 ), ToolbarListener, PaymentDialogListener, PaymentItemClickListener, PaymentItemSwipeListener {
 
-    var paymentDialog = MutableLiveData<PaymentDialog> ()
+    var paymentDialog = MutableLiveData<PaymentDialog>()
     private var fetch: MutableLiveData<FetchState> = MutableLiveData()
     var payments = MutableLiveData<ArrayList<Payment>>()
 
@@ -83,7 +85,7 @@ class PaymentViewModel @Inject constructor(
         fetch.value = FetchState.Fetching
         viewModelScope.launch {
             tryCatch({
-                val response = withContext(schedulerProvider.dispatchersIO()){
+                val response = withContext(schedulerProvider.dispatchersIO()) {
                     paymentRepository.getPayments()
                 }
                 onLoadPaymentSuccess(response)
@@ -103,14 +105,67 @@ class PaymentViewModel @Inject constructor(
     }
 
     override fun onSavePaymentButtonClicked(payment: Payment) {
-        TODO("Not yet implemented")
+        showBlockingProgressBar()
+        viewModelScope.launch {
+            tryCatch({
+                withContext(schedulerProvider.dispatchersIO()) {
+                    if (payment.idPayment == 0) {
+                        paymentRepository.addPayment(payment)
+                    } else {
+                        paymentRepository.updatePayment(payment)
+                    }
+                }
+                onAddPaymentSuccess()
+            }, {
+                onOperationFails(it)
+            })
+        }
+    }
+
+    private fun onAddPaymentSuccess() {
+        hideBlockingProgressBar()
+        showToast("Paiement avec succée")
+        loadPayments()
+    }
+
+    private fun onOperationFails(throwable: Throwable) {
+        hideBlockingProgressBar()
+        DebugLog.e(TAG, throwable.toString())
+        showToast(applicationContext.getString(R.string.global_operation_failed))
     }
 
     override fun onPaymentItemClicked(payment: Payment) {
-        TODO("Not yet implemented")
+        paymentDialog.value = PaymentDialog.build(
+            payment,
+            this,
+            dismissPaymentDialog()
+        )
     }
 
-    override fun onPaymentItemSwiped(position:Int) {
-        TODO("Not yet implemented")
+    private fun dismissPaymentDialog(): () -> Unit {
+        return {
+            paymentDialog.value = null
+        }
+    }
+
+    override fun onPaymentItemSwiped(position: Int) {
+        showBlockingProgressBar()
+        viewModelScope.launch {
+            tryCatch({
+                withContext(schedulerProvider.dispatchersIO()) {
+                    payments.value?.get(position)?.let { paymentRepository.deletePayment(it) }
+                }
+                onDeletePaymentSuccess(position)
+            }, {
+                onOperationFails(it)
+            })
+        }
+    }
+
+    private fun onDeletePaymentSuccess(position: Int) {
+        hideBlockingProgressBar()
+        payments.value = payments.value?.apply {
+            removeAt(position)
+        }
     }
 }

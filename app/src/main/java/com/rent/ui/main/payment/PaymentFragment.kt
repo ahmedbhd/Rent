@@ -12,6 +12,8 @@ import com.rent.R
 import com.rent.base.BaseFragment
 import com.rent.databinding.FragmentPaymentBinding
 import com.rent.global.helper.ViewModelFactory
+import com.rent.global.utils.observeOnlyNotNull
+import com.rent.ui.shared.dialog.CustomPaymentDialog
 import javax.inject.Inject
 
 
@@ -55,6 +57,7 @@ class PaymentFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         registerBaseObserver(viewModel)
         registerRecycler()
+        registerPaymentDialog()
     }
 
     private fun registerRecycler() {
@@ -65,4 +68,16 @@ class PaymentFragment : BaseFragment() {
         binding.paymentRecycler.adapter = paymentListAdapter
     }
 
+    private fun registerPaymentDialog() {
+        viewModel.paymentDialog.observeOnlyNotNull(this) { dialog ->
+            activity?.let {
+                CustomPaymentDialog(
+                    requireContext(),
+                    dialog.payment,
+                    dialog.paymentDialogListener,
+                    dialog.dismissActionBlock
+                ).show()
+            }
+        }
+    }
 }

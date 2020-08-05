@@ -1,5 +1,8 @@
 package com.rent.global.utils
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 const val SERIAL = "SERIAL"
 const val SERIAL_LENGTH = 6
@@ -18,3 +21,7 @@ const val SSL = "ssl"
 const val URL_HTTP = "http://"
 const val URL_HTTPS = "https://"
 const val URL_SEPARATOR = "://"
+
+val formatDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.FRANCE)
+val formatDate = SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE)
+val formatTime = SimpleDateFormat("HH:mm", Locale.FRANCE)

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "393327511192",
+    "firebase_url": "https://rent-baf89.firebaseio.com",
+    "project_id": "rent-baf89",
+    "storage_bucket": "rent-baf89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393327511192:android:322cd06df1ee5fb605b2ed",
+        "android_client_info": {
+          "package_name": "com.rent"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393327511192-a6fitmomosk92bom4oiak55fb4qeidmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQH5kcWQGXEZ9lqMMF5jPWFeXZcv1-_Eo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393327511192-a6fitmomosk92bom4oiak55fb4qeidmp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

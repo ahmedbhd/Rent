@@ -17,6 +17,7 @@ import com.rent.base.BaseActivity
 import com.rent.databinding.ActivityAddRentalBinding
 import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
+import com.rent.global.utils.formatDate
 import com.rent.global.utils.getColorCompat
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.shared.dialog.CustomPhoneDialog
@@ -24,8 +25,6 @@ import kotlinx.android.synthetic.main.activity_add_rental.*
 import kotlinx.android.synthetic.main.bottom_sheet_calendar.*
 import yuku.ambilwarna.AmbilWarnaDialog
 import yuku.ambilwarna.AmbilWarnaDialog.OnAmbilWarnaListener
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 
@@ -72,13 +71,12 @@ class AddRentalActivity : BaseActivity() {
             println(calendarView!!.selectedDays[0])
             println(calendarView!!.selectedDays[calendarView!!.selectedDays.size - 1])
 
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val start = format.format(calendarView!!.selectedDays[0].calendar.time)
+            val start = formatDate.format(calendarView!!.selectedDays[0].calendar.time)
             val end =
-                format.format(calendarView!!.selectedDays[calendarView!!.selectedDays.size - 1].calendar.time)
+                formatDate.format(calendarView!!.selectedDays[calendarView!!.selectedDays.size - 1].calendar.time)
 
-            add_date_start.text = start
-            add_date_end.text = end
+            viewModel.startDate.value = start
+            viewModel.endDate.value = end
 
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
@@ -90,7 +88,7 @@ class AddRentalActivity : BaseActivity() {
                 this,
                 TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay: Int, minute: Int
                     ->
-                    add_time_add.text = "$hourOfDay:$minute"
+                    viewModel.addTime.value = "$hourOfDay:$minute"
 
 
                 },

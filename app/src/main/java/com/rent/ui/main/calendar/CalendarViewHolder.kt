@@ -18,7 +18,7 @@ class CalendarViewHolder(
 
     private val formatter = DateTimeFormatter.ofPattern("EEE'\n'dd MMM'\n'HH:mm", Locale.FRANCE)
 
-    fun bind(flight: Flight, position: Int) {
+    fun bind(flight: Flight) {
         binding.itemFlightDateText.setBackgroundColor(flight.color)
         binding.time = formatter.format(flight.time)
 
@@ -26,7 +26,7 @@ class CalendarViewHolder(
         binding.city = flight.departure.city
 
         binding.root.setClickWithDebounce {
-            onItemClickListener?.onCalendarItemClicked(position)
+            onItemClickListener?.onCalendarItemClicked(flight)
         }
     }
 

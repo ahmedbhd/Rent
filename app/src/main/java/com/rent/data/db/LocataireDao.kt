@@ -2,7 +2,6 @@ package com.rent.data.db
 
 import androidx.room.*
 import com.rent.data.model.locataire.Locataire
-import com.rent.data.model.rental.Rental
 
 @Dao
 interface LocataireDao {

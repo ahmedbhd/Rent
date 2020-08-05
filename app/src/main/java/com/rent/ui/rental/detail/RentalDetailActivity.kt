@@ -25,6 +25,7 @@ import com.rent.data.model.payment.Payment
 import com.rent.databinding.ActivityRentalDetailBinding
 import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
+import com.rent.global.utils.formatDate
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.main.calendar.REQUEST_CODE
 import com.rent.ui.main.payment.PaymentListAdapter
@@ -33,7 +34,6 @@ import com.rent.ui.shared.dialog.CustomPhoneDialog
 import kotlinx.android.synthetic.main.bottom_sheet_calendar.*
 import kotlinx.android.synthetic.main.bottom_sheet_payments.*
 import yuku.ambilwarna.AmbilWarnaDialog
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -133,10 +133,9 @@ class RentalDetailActivity : BaseActivity() {
             println(calendarView!!.selectedDays[0])
             println(calendarView!!.selectedDays[calendarView!!.selectedDays.size - 1])
 
-            val format = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val start = format.format(calendarView!!.selectedDays[0].calendar.time)
+            val start = formatDate.format(calendarView!!.selectedDays[0].calendar.time)
             val end =
-                format.format(calendarView!!.selectedDays[calendarView!!.selectedDays.size - 1].calendar.time)
+                formatDate.format(calendarView!!.selectedDays[calendarView!!.selectedDays.size - 1].calendar.time)
 
             viewModel.startDate.value = start
             viewModel.endDate.value = end

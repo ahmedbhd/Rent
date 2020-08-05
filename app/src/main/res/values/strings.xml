@@ -62,4 +62,9 @@
     <string name="global_error_file_not_found">Le fichier sélectionné n\'existe pas.</string>
     <string name="global_unauthorized_error">Session expirée.</string>
     <string name="global_update_settings_error">Modification des paramètres échoué.</string>
+
+
+    <string name="payment_dialog_empty_amount">Montant est vide.</string>
+
+
 </resources>

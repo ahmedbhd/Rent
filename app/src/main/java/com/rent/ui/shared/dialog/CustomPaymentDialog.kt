@@ -42,7 +42,10 @@ class CustomPaymentDialog(
             dismiss()
         }
 
-        binding.addAmount.setText(payment.amount.toString(), TextView.BufferType.EDITABLE)
+        binding.addAmount.setText(
+            if (payment.amount > 0) payment.amount.toString() else "",
+            TextView.BufferType.EDITABLE
+        )
 
         val c = Calendar.getInstance(Locale.FRANCE)
         val mHour = c.get(Calendar.HOUR_OF_DAY)
@@ -76,7 +79,7 @@ class CustomPaymentDialog(
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth
                     ->
                     binding.addDate.text =
-                        "${year.toString()}  -  ${(monthOfYear + 1)} -  $dayOfMonth"
+                        "${year.toString()}-${(monthOfYear + 1)}-$dayOfMonth"
                 },
                 mYear, // Initial year selection
                 mMonth, // Initial month selection
@@ -116,17 +119,25 @@ class CustomPaymentDialog(
             dismiss()
         }
         binding.savePayment.setOnClickListener {
-            paymentDialogListener.onSavePaymentButtonClicked(
-                Payment(
-                    payment.idPayment,
-                    binding.addDate.text.toString() + " " + binding.addTime.text.toString() + ":00",
-                    Integer.parseInt(binding.addAmount.text.toString()),
-                    typePayment,
-                    payment.rental
+            if (binding.addAmount.text.isNullOrEmpty()) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.payment_dialog_empty_amount),
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                paymentDialogListener.onSavePaymentButtonClicked(
+                    Payment(
+                        payment.idPayment,
+                        binding.addDate.text.toString() + " " + binding.addTime.text.toString() + ":00",
+                        Integer.parseInt(binding.addAmount.text.toString()),
+                        typePayment,
+                        payment.rental
+                    )
                 )
-            )
-            binding.root.hideKeyboard()
-            dismiss()
+                binding.root.hideKeyboard()
+                dismiss()
+            }
         }
     }
 }

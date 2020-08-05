@@ -76,7 +76,8 @@ class CalendarViewModel @Inject constructor(
             }
     }
 
-    override fun onCalendarItemClicked(position: Int) {
-        navigate(Navigation.RentalDetailActivityNavigation(rentals.value!![position]))
+    override fun onCalendarItemClicked(flight: Flight) {
+        navigate(Navigation.RentalDetailActivityNavigation(rentals.value!!.filter { it.idRental == flight.idRental }
+            .first()))
     }
 }

@@ -19,6 +19,7 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import com.kizitonwose.calendarview.utils.next
 import com.kizitonwose.calendarview.utils.previous
 import com.rent.R
+import com.rent.base.BaseFragment
 import com.rent.data.model.flight.Flight
 import com.rent.data.model.rental.Rental
 import com.rent.databinding.FragmentCalendarBinding
@@ -28,7 +29,6 @@ import com.rent.global.utils.ExtraKeys
 import com.rent.global.utils.daysOfWeekFromLocale
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.global.utils.setTextColorRes
-import com.rent.tools.BaseFragment
 import com.rent.ui.rental.add.AddRentalActivity
 import com.rent.ui.rental.detail.RentalDetailActivity
 import kotlinx.android.synthetic.main.calendar_day_legend.view.*

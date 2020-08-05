@@ -18,6 +18,7 @@ import com.rent.global.listener.SchedulerProvider
 import com.rent.global.listener.ToolbarListener
 import com.rent.global.utils.DebugLog
 import com.rent.global.utils.TAG
+import com.rent.global.utils.formatDateTime
 import com.rent.global.utils.tryCatch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,6 +34,7 @@ class AddRentalViewModel @Inject constructor(
     application,
     schedulerProvider
 ), ToolbarListener, AdapterView.OnItemSelectedListener, PhoneDialogListener {
+
 
     var newRental: Rental = Rental()
     var newLocataire: Locataire? = null
@@ -51,19 +53,17 @@ class AddRentalViewModel @Inject constructor(
 
     init {
         loadLocataires()
-        loadRentals()
     }
 
     fun showPhoneDialog() {
         phoneDialog.value = PhoneDialog.build(
             "",
-            dismissPhoneBuild(null)
+            dismissPhoneBuild()
         )
     }
 
-    private fun dismissPhoneBuild(dismissActionBlock: (() -> Unit)? = null): () -> Unit {
+    private fun dismissPhoneBuild(): () -> Unit {
         return {
-            dismissActionBlock?.invoke()
             phoneDialog.value = null
         }
     }
@@ -164,10 +164,8 @@ class AddRentalViewModel @Inject constructor(
     }
 
     fun onAddRentalClicked() {
-        newRental.dateDebut =
-            startDate.value + " " + addTime.value + ":00"
-        newRental.dateFin =
-            endDate.value + " " + addTime.value + ":00"
+        newRental.dateDebut = formatDateTime.parse(startDate.value + " " + addTime.value + ":00")!!
+        newRental.dateFin = formatDateTime.parse(endDate.value + " " + addTime.value + ":00")!!
         checkInputs()
     }
 
@@ -192,24 +190,5 @@ class AddRentalViewModel @Inject constructor(
         }
 
         showToast(applicationContext.getString(R.string.add_rental_incorrect_information))
-    }
-
-    private fun loadRentals() {
-        showBlockingProgressBar()
-        viewModelScope.launch {
-            tryCatch({
-                val response = withContext(schedulerProvider.dispatchersIO()) {
-                    rentalRepository.getRentals()
-                }
-                onGetRentalsSuccess(response)
-            }, {
-                hideBlockingProgressBar()
-            })
-        }
-    }
-
-    private fun onGetRentalsSuccess(response: List<Rental>) {
-        hideBlockingProgressBar()
-        DebugLog.e(TAG, "rentals  $response")
     }
 }

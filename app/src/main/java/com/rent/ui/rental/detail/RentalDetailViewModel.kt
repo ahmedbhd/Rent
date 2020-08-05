@@ -15,13 +15,9 @@ import com.rent.global.helper.Navigation
 import com.rent.global.helper.dialog.PaymentDialog
 import com.rent.global.helper.dialog.PhoneDialog
 import com.rent.global.listener.*
-import com.rent.global.utils.DebugLog
-import com.rent.global.utils.ExtraKeys
-import com.rent.global.utils.TAG
-import com.rent.global.utils.tryCatch
+import com.rent.global.utils.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
@@ -41,10 +37,9 @@ class RentalDetailViewModel @Inject constructor(
 ), ToolbarListener, PaymentDialogListener, PhoneDialogListener, CalendarBottomSheetListener,
     PaymentItemSwipeListener, PaymentItemClickListener {
 
-    val formatDate = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault())
 
-    var sdate: Date = formatDate.parseObject(oldRental.dateDebut) as Date
-    var edate: Date = formatDate.parseObject(oldRental.dateFin) as Date
+    var sdate: Date = oldRental.dateDebut
+    var edate: Date = oldRental.dateFin
 
 
     var payments = MutableLiveData<ArrayList<Payment>>()
@@ -53,12 +48,11 @@ class RentalDetailViewModel @Inject constructor(
 
 
     var rentalColor = MutableLiveData(Color.parseColor(oldRental.color))
-    var stringTel = ""
 
     var cin = MutableLiveData(oldRental.locataire.cin)
     var name = MutableLiveData(oldRental.locataire.fullName)
-    var startDate = MutableLiveData(oldRental.dateDebut)
-    var endDate = MutableLiveData(oldRental.dateFin)
+    var startDate = MutableLiveData(oldRental.dateDebut.toString())
+    var endDate = MutableLiveData(oldRental.dateFin.toString())
     var time = MutableLiveData("")
 
 
@@ -146,7 +140,7 @@ class RentalDetailViewModel @Inject constructor(
     }
 
     override fun onSaveClicked(tel: String) {
-        stringTel = tel
+        oldRental.locataire.numTel = tel
     }
 
     fun setRentalColor(color: Int) {
@@ -174,15 +168,21 @@ class RentalDetailViewModel @Inject constructor(
     fun updateRental() {
         showBlockingProgressBar()
         oldRental.dateFin =
-            endDate.value.toString() + " " + time.value.toString()
+            formatDateTime.parse(endDate.value.toString() + " " + time.value.toString() + ":00")!!
         oldRental.dateDebut =
-            startDate.value.toString() + " " + endDate.value.toString()
+            formatDateTime.parse(startDate.value.toString() + " " + time.value.toString() + ":00")!!
         oldRental.color =
             String.format("#%06X", 0xFFFFFF and (rentalColor.value ?: R.color.colorPrimary))
+
+
+        oldRental.locataire.cin = cin.value!!
+        oldRental.locataire.fullName = name.value!!
+
 
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
+                    locataireRepository.updateLocataire(oldRental.locataire)
                     rentalRepository.updateRental(oldRental)
                 }
                 onUpdateRentalSuccess()
@@ -241,7 +241,9 @@ class RentalDetailViewModel @Inject constructor(
 
     private fun onGetPaymentByRentalIdSuccess(response: List<Payment>) {
         hideBlockingProgressBar()
-        payments.value = ArrayList(response)
+        payments.value = ArrayList(response).also {
+            if (it.isEmpty()) showToast("Pas de données à afficher")
+        }
     }
 
     override fun onPaymentItemSwiped(position: Int) {
@@ -251,15 +253,18 @@ class RentalDetailViewModel @Inject constructor(
                 withContext(schedulerProvider.dispatchersIO()) {
                     payments.value?.get(position)?.let { paymentRepository.deletePayment(it) }
                 }
-                onDeletePaymentSuccess()
+                onDeletePaymentSuccess(position)
             }, {
                 onOperationFails(it)
             })
         }
     }
 
-    private fun onDeletePaymentSuccess() {
+    private fun onDeletePaymentSuccess(position: Int) {
         hideBlockingProgressBar()
+        payments.value = payments.value?.apply {
+            removeAt(position)
+        }
     }
 
     override fun onPaymentItemClicked(payment: Payment) {

@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.rent.data.model.locataire.Locataire
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 @Entity(tableName = "Rental")
@@ -14,8 +15,8 @@ import kotlinx.android.parcel.Parcelize
 data class Rental(
     @PrimaryKey(autoGenerate = true)
     val idRental: Int = 0,
-    var dateDebut: String = "",
-    var dateFin: String = "",
+    var dateDebut: Date = Date(),
+    var dateFin: Date = Date(),
     var color: String = "",
     @Embedded
     var locataire: Locataire = Locataire()
