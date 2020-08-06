@@ -1,7 +1,7 @@
 package com.rent.global.listener
 
-import com.rent.data.model.rental.Rental
+import com.rent.data.model.relations.RentalWithLocataire
 
 interface RentalItemClickListener {
-    fun onRentalItemClicked(rental:Rental)
+    fun onRentalItemClicked(rentalAndLocataire: RentalWithLocataire)
 }

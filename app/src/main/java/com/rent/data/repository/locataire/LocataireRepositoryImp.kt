@@ -18,7 +18,7 @@ class LocataireRepositoryImp
         return database.locataireDao().getLastLocataire()
     }
 
-    override suspend fun getLocataireById(id: Int) = database.locataireDao().getLocataireById(id)
+    override suspend fun getLocataireById(id: Long) = database.locataireDao().getLocataireById(id)
 
     override suspend fun deleteLocataire(locataire: Locataire) =
         database.locataireDao().deleteLocataire(locataire)

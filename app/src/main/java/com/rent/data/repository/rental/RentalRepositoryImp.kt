@@ -6,6 +6,7 @@ import com.rent.data.model.rental.Rental
 import com.rent.global.helper.SharedPreferences
 import javax.inject.Inject
 
+
 class RentalRepositoryImp
 @Inject constructor(
     sharedPreferences: SharedPreferences,
@@ -19,7 +20,7 @@ class RentalRepositoryImp
         return database.rentalDao().getLastRental()
     }
 
-    override suspend fun getRentalById(id: Int) = database.rentalDao().getRentalById(id)
+    override suspend fun getRentalById(id: Long) = database.rentalDao().getRentalById(id)
 
     override suspend fun deleteRental(rental: Rental) {
         database.rentalDao().deleteRental(rental)

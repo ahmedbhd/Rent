@@ -21,7 +21,7 @@ import com.applikeysolutions.cosmocalendar.view.CalendarView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.rent.R
 import com.rent.base.BaseActivity
-import com.rent.data.model.payment.Payment
+import com.rent.data.model.relations.LocataireWithPayment
 import com.rent.databinding.ActivityRentalDetailBinding
 import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
@@ -257,7 +257,7 @@ class RentalDetailActivity : BaseActivity() {
     }
 
 
-    private fun prepareRecyclerView(payments: ArrayList<Payment>) {
+    private fun prepareRecyclerView(payments: ArrayList<LocataireWithPayment>) {
 
         customListAdapter.setData(payments)
         customListAdapter.setSwipeListener(viewModel)

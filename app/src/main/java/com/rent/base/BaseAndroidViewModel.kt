@@ -9,6 +9,7 @@ import com.rent.R
 import com.rent.global.helper.Navigation
 import com.rent.global.helper.SingleLiveEvent
 import com.rent.global.helper.dialog.ChooseDialog
+import com.rent.global.helper.dialog.CustomSnackBar
 import com.rent.global.helper.dialog.SimpleDialog
 import com.rent.global.listener.SchedulerProvider
 import com.rent.global.utils.isNetworkAvailable
@@ -37,14 +38,17 @@ abstract class BaseAndroidViewModel(
     val choseDialog: MutableLiveData<ChooseDialog> = MutableLiveData()
 
     //for displaying global snack bar
-    val snackBarMessage: SingleLiveEvent<String> = SingleLiveEvent()
+    val snackBarMessage: SingleLiveEvent<CustomSnackBar> = SingleLiveEvent()
 
-    protected fun showSnackBarMessage(message: String) {
-        snackBarMessage.value = message
+    protected fun showSnackBarMessage(message: String, okActionBlock: (() -> Unit)?) {
+        snackBarMessage.value = CustomSnackBar.build(message, okActionBlock)
     }
 
-    protected fun showSnackBarMessage(@StringRes messageResourceId: Int) {
-        showSnackBarMessage(applicationContext.getString(messageResourceId))
+    protected fun showSnackBarMessage(
+        @StringRes messageResourceId: Int,
+        okActionBlock: (() -> Unit)?
+    ) {
+        showSnackBarMessage(applicationContext.getString(messageResourceId), okActionBlock)
     }
 
     private fun setShowBlockingProgress(show: Boolean) {
@@ -203,7 +207,7 @@ abstract class BaseAndroidViewModel(
     }
 
     fun showToast(message: String) {
-        Toast.makeText(applicationContext, message , Toast.LENGTH_LONG).show()
+        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
     }
 
     /**
@@ -225,7 +229,8 @@ abstract class BaseAndroidViewModel(
                 }
             }
             else -> showServerErrorSimpleDialog()
-        } }
+        }
+    }
 
 
     /**

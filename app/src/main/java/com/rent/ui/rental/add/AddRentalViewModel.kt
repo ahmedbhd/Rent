@@ -111,7 +111,7 @@ class AddRentalViewModel @Inject constructor(
 
     private fun onAddLocataireSuccess(locataire: Locataire) {
         hideBlockingProgressBar()
-        newRental.locataire = locataire
+        newRental.locataireOwnerId = locataire.idLocataire
         addRental()
     }
 
@@ -154,9 +154,9 @@ class AddRentalViewModel @Inject constructor(
         // An item was selected. You can retrieve the selected item using
         selectedLocataire = parent.getItemAtPosition(position) as String
         if (position > 0)
-            newRental.locataire = resultRentals!![position - 1]
+            newRental.locataireOwnerId = resultRentals!![position - 1].idLocataire
         else
-            newRental.locataire = resultRentals!![position]
+            newRental.locataireOwnerId = resultRentals!![position].idLocataire
     }
 
     override fun onSaveClicked(tel: String) {

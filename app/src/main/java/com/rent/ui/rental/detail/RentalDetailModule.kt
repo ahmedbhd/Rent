@@ -1,9 +1,7 @@
 package com.rent.ui.rental.detail
 
 import androidx.lifecycle.ViewModel
-import com.rent.data.model.rental.Rental
-import com.rent.di.ActivityScope
-import com.rent.di.FragmentScope
+import com.rent.data.model.relations.RentalWithLocataire
 import com.rent.di.ViewModelKey
 import com.rent.di.module.RepositoryModule
 import com.rent.di.module.SchedulerModule
@@ -21,11 +19,11 @@ class RentalDetailModule {
     @Provides
     @IntoMap
     @ViewModelKey(RentalDetailViewModel::class)
-    fun bindViewModel(viewModel: RentalDetailViewModel) : ViewModel = viewModel
+    fun bindViewModel(viewModel: RentalDetailViewModel): ViewModel = viewModel
 
     @Provides
     @Named(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_INJECT_RENTAL)
-    fun provideExtraRental(rentalDetailActivity: RentalDetailActivity): Rental {
+    fun provideExtraRental(rentalDetailActivity: RentalDetailActivity): RentalWithLocataire {
         return rentalDetailActivity.intent.getParcelableExtra(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_EXTRA_RENTAL)!!
     }
 

@@ -19,7 +19,7 @@ interface LocataireDao {
     suspend fun deleteLocataire(locataire: Locataire)
 
     @Query("SELECT * from locataire where idLocataire=:id LIMIT 1")
-    suspend fun getLocataireById(id: Int): Locataire
+    suspend fun getLocataireById(id: Long): Locataire
 
     @Query("SELECT * from locataire where idLocataire = (SELECT MAX (idLocataire) from locataire) LIMIT 1")
     suspend fun getLastLocataire(): Locataire

@@ -1,22 +1,28 @@
 package com.rent.data.model.payment
 
 import android.os.Parcelable
-import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.rent.data.model.rental.Rental
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(tableName = "Payment")
+@Entity(tableName = "Payment", foreignKeys = (arrayOf(
+    ForeignKey(
+        entity = Rental::class,
+        onDelete = ForeignKey.CASCADE,
+        parentColumns = arrayOf("idRental"),
+        childColumns = arrayOf("rentalId")
+    )
+)))
 @JsonClass(generateAdapter = true)
 data class Payment(
     @PrimaryKey(autoGenerate = true)
-    val idPayment: Int,
-    val paymentDate: String,
-    val amount: Int,
-    val type: String,
-    @Embedded
-    val rental: Rental = Rental()
+    val idPayment: Long = 0,
+    val paymentDate: String = "",
+    val amount: Int = 0,
+    val type: String = "",
+    val rentalId: Long = 0
 ) : Parcelable

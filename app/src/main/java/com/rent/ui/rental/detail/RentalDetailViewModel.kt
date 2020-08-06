@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.rent.R
 import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.payment.Payment
-import com.rent.data.model.rental.Rental
+import com.rent.data.model.relations.LocataireWithPayment
+import com.rent.data.model.relations.RentalWithLocataire
 import com.rent.data.repository.locataire.LocataireRepository
 import com.rent.data.repository.payment.PaymentRepository
 import com.rent.data.repository.rental.RentalRepository
@@ -21,7 +22,6 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.collections.ArrayList
 
 
 class RentalDetailViewModel @Inject constructor(
@@ -30,7 +30,7 @@ class RentalDetailViewModel @Inject constructor(
     private val rentalRepository: RentalRepository,
     private val paymentRepository: PaymentRepository,
     private val locataireRepository: LocataireRepository,
-    @Named(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_INJECT_RENTAL) var oldRental: Rental
+    @Named(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_INJECT_RENTAL) var rentalWithLocataire: RentalWithLocataire
 ) : BaseAndroidViewModel(
     application,
     schedulerProvider
@@ -38,27 +38,52 @@ class RentalDetailViewModel @Inject constructor(
     PaymentItemSwipeListener, PaymentItemClickListener {
 
 
-    var sdate: Date = oldRental.dateDebut
-    var edate: Date = oldRental.dateFin
+    var sdate: Date = rentalWithLocataire.rental.dateDebut
+    var edate: Date = rentalWithLocataire.rental.dateFin
 
 
-    var payments = MutableLiveData<ArrayList<Payment>>()
+    var payments = MutableLiveData<ArrayList<LocataireWithPayment>>()
     var paymentDialog = MutableLiveData<PaymentDialog>()
     var phoneDialog = MutableLiveData<PhoneDialog>()
 
 
-    var rentalColor = MutableLiveData(Color.parseColor(oldRental.color))
+    var rentalColor = MutableLiveData(Color.parseColor(rentalWithLocataire.rental.color))
 
-    var cin = MutableLiveData(oldRental.locataire.cin)
-    var name = MutableLiveData(oldRental.locataire.fullName)
-    var startDate = MutableLiveData(oldRental.dateDebut.toString())
-    var endDate = MutableLiveData(oldRental.dateFin.toString())
+    var cin = MutableLiveData(rentalWithLocataire.locataire.cin)
+    var name = MutableLiveData(rentalWithLocataire.locataire.fullName)
+    var startDate = MutableLiveData(rentalWithLocataire.rental.dateDebut.toString())
+    var endDate = MutableLiveData(rentalWithLocataire.rental.dateFin.toString())
     var time = MutableLiveData("")
 
 
     init {
+//        loadLocataire()
         prepareDates()
     }
+
+//    private fun loadLocataire() {
+//        showBlockingProgressBar()
+//        viewModelScope.launch {
+//            tryCatch({
+//                val response = withContext(schedulerProvider.dispatchersIO()) {
+//                    locataireRepository.getLocataireById(rentalWithLocataire.locataireOwnerId)
+//                }
+//                onLoadLocataireSuccess(response)
+//            }, {
+//                onLoadLocataireFails(it)
+//            })
+//        }
+//    }
+
+//    private fun onLoadLocataireFails(it: Throwable) {
+//        onOperationFails(it)
+//        navigate(Navigation.Back)
+//    }
+//
+//    private fun onLoadLocataireSuccess(response: Locataire) {
+//        hideBlockingProgressBar()
+//        locataire.value = response
+//    }
 
     private fun prepareDates() {
         val c = Calendar.getInstance()
@@ -87,7 +112,7 @@ class RentalDetailViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    rentalRepository.deleteRental(oldRental)
+                    rentalRepository.deleteRental(rentalWithLocataire.rental)
                 }
                 onDeleteSuccess()
             }, {
@@ -104,7 +129,7 @@ class RentalDetailViewModel @Inject constructor(
 
     fun showPaymentDialog() {
         paymentDialog.value = PaymentDialog.build(
-            Payment(0, "", 0, "", oldRental),
+            Payment(0, "", 0, "", rentalWithLocataire.rental.idRental),
             this,
             dismissPaymentDialog()
         )
@@ -121,7 +146,7 @@ class RentalDetailViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    if (payment.idPayment == 0) {
+                    if (payment.idPayment == 0L) {
                         paymentRepository.addPayment(payment)
                     } else {
                         paymentRepository.updatePayment(payment)
@@ -140,7 +165,7 @@ class RentalDetailViewModel @Inject constructor(
     }
 
     override fun onSaveClicked(tel: String) {
-        oldRental.locataire.numTel = tel
+        rentalWithLocataire.locataire.numTel = tel
     }
 
     fun setRentalColor(color: Int) {
@@ -149,7 +174,7 @@ class RentalDetailViewModel @Inject constructor(
 
     fun showPhoneDialog() {
         phoneDialog.value = PhoneDialog.build(
-            oldRental.locataire.numTel,
+            rentalWithLocataire.locataire.numTel,
             dismissPhoneBuild()
         )
     }
@@ -167,23 +192,17 @@ class RentalDetailViewModel @Inject constructor(
 
     fun updateRental() {
         showBlockingProgressBar()
-        oldRental.dateFin =
+        rentalWithLocataire.rental.dateFin =
             formatDateTime.parse(endDate.value.toString() + " " + time.value.toString() + ":00")!!
-        oldRental.dateDebut =
+        rentalWithLocataire.rental.dateDebut =
             formatDateTime.parse(startDate.value.toString() + " " + time.value.toString() + ":00")!!
-        oldRental.color =
+        rentalWithLocataire.rental.color =
             String.format("#%06X", 0xFFFFFF and (rentalColor.value ?: R.color.colorPrimary))
-
-
-        oldRental.locataire.cin = cin.value!!
-        oldRental.locataire.fullName = name.value!!
-
 
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    locataireRepository.updateLocataire(oldRental.locataire)
-                    rentalRepository.updateRental(oldRental)
+                    rentalRepository.updateRental(rentalWithLocataire.rental)
                 }
                 onUpdateRentalSuccess()
             }, {
@@ -206,12 +225,12 @@ class RentalDetailViewModel @Inject constructor(
 
     fun updateLocataire() {
         showBlockingProgressBar()
-        oldRental.locataire.cin = cin.value!!
-        oldRental.locataire.fullName = name.value!!
+        rentalWithLocataire.locataire.cin = cin.value!!
+        rentalWithLocataire.locataire.fullName = name.value!!
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    locataireRepository.updateLocataire(oldRental.locataire)
+                    locataireRepository.updateLocataire(rentalWithLocataire.locataire)
                 }
                 onUpdateLocataireSuccess()
             }, {
@@ -230,7 +249,7 @@ class RentalDetailViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val response = withContext(schedulerProvider.dispatchersIO()) {
-                    paymentRepository.getPaymentByRentalId(oldRental.idRental)
+                    paymentRepository.getPaymentByRentalId(rentalWithLocataire.rental.idRental)
                 }
                 onGetPaymentByRentalIdSuccess(response)
             }, {
@@ -239,31 +258,53 @@ class RentalDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onGetPaymentByRentalIdSuccess(response: List<Payment>) {
+    private fun onGetPaymentByRentalIdSuccess(response: ArrayList<LocataireWithPayment>) {
         hideBlockingProgressBar()
-        payments.value = ArrayList(response).also {
+        payments.value = response.also {
             if (it.isEmpty()) showToast("Pas de données à afficher")
         }
     }
 
-    override fun onPaymentItemSwiped(position: Int) {
+    override fun onPaymentItemSwiped(locataireWithPayment: LocataireWithPayment, position: Int) {
         showBlockingProgressBar()
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    payments.value?.get(position)?.let { paymentRepository.deletePayment(it) }
+                    paymentRepository.deletePayment(locataireWithPayment.payment)
                 }
-                onDeletePaymentSuccess(position)
+                onDeletePaymentSuccess(locataireWithPayment, position)
             }, {
                 onOperationFails(it)
             })
         }
     }
 
-    private fun onDeletePaymentSuccess(position: Int) {
+    private fun onDeletePaymentSuccess(locataireWithPayment: LocataireWithPayment, position: Int) {
         hideBlockingProgressBar()
         payments.value = payments.value?.apply {
             removeAt(position)
+        }
+        showSnackBarMessage("Paiment Supprimé") {
+            addPayment(locataireWithPayment, position)
+        }
+    }
+
+    private fun addPayment(locataireWithPayment: LocataireWithPayment, position: Int) {
+        viewModelScope.launch {
+            tryCatch({
+                withContext(schedulerProvider.dispatchersIO()) {
+                    paymentRepository.addPayment(locataireWithPayment.payment)
+                }
+                onReAddPaymentSuccess(locataireWithPayment, position)
+            }, {
+                onOperationFails(it)
+            })
+        }
+    }
+
+    private fun onReAddPaymentSuccess(locataireWithPayment: LocataireWithPayment, position: Int) {
+        payments.value = payments.value?.apply {
+            add(position, locataireWithPayment)
         }
     }
 

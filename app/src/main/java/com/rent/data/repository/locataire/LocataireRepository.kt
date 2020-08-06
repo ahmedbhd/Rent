@@ -12,7 +12,7 @@ interface LocataireRepository {
     suspend fun addLocataire(locataire: Locataire): Locataire
 
     @WorkerThread
-    suspend fun getLocataireById(id: Int): Locataire
+    suspend fun getLocataireById(id: Long): Locataire
 
     @WorkerThread
     suspend fun deleteLocataire(locataire: Locataire)

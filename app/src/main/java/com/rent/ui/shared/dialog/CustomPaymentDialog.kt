@@ -132,7 +132,7 @@ class CustomPaymentDialog(
                         binding.addDate.text.toString() + " " + binding.addTime.text.toString() + ":00",
                         Integer.parseInt(binding.addAmount.text.toString()),
                         typePayment,
-                        payment.rental
+                        payment.rentalId
                     )
                 )
                 binding.root.hideKeyboard()

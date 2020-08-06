@@ -1,6 +1,8 @@
 package com.rent.global.listener
 
+import com.rent.data.model.relations.LocataireWithPayment
+
 
 interface PaymentItemSwipeListener {
-    fun onPaymentItemSwiped(position: Int)
+    fun onPaymentItemSwiped(locataireWithPayment: LocataireWithPayment, position: Int)
 }

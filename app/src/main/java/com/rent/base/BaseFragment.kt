@@ -52,7 +52,12 @@ abstract class BaseFragment : Fragment() {
     }
 
     private fun registerSnackBar(viewModel: BaseAndroidViewModel) {
-        viewModel.snackBarMessage.observeOnlyNotNull(viewLifecycleOwner) { showSnackBar(it) }
+        viewModel.snackBarMessage.observeOnlyNotNull(viewLifecycleOwner) {
+            showSnackBar(
+                it.message,
+                it.actionBlock
+            )
+        }
     }
 
     private fun registerSimpleDialog(viewModel: BaseAndroidViewModel) {
@@ -228,8 +233,8 @@ abstract class BaseFragment : Fragment() {
      *
      * @param message message dialog text
      */
-    protected fun showSnackBar(message: String) {
-        activity?.let { (it as BaseActivity).showSnackBar(message) }
+    protected fun showSnackBar(message: String, actionBlock: (() -> Unit)?) {
+        activity?.let { (it as BaseActivity).showSnackBar(message, actionBlock) }
     }
 
     /**
@@ -240,13 +245,6 @@ abstract class BaseFragment : Fragment() {
     fun showSnackBar(@StringRes messageId: Int) {
 
         activity?.let { (it as BaseActivity).showSnackBar(messageId) }
-    }
-
-    /**
-     * hide snackBar if it's on screen
-     */
-    fun hideSnackBar() {
-        activity?.let { (it as BaseActivity).hideSnackBar() }
     }
 
     /**

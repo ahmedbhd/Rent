@@ -10,7 +10,10 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.rent.R
 import com.rent.base.BaseAndroidViewModel
+import com.rent.data.model.locataire.Locataire
+import com.rent.data.model.relations.RentalWithLocataire
 import com.rent.data.model.rental.Rental
+import com.rent.data.repository.locataire.LocataireRepository
 import com.rent.data.repository.rental.RentalRepository
 import com.rent.global.helper.FetchState
 import com.rent.global.helper.Navigation
@@ -29,18 +32,23 @@ import kotlin.collections.ArrayList
 class RentalViewModel @Inject constructor(
     application: Application,
     schedulerProvider: SchedulerProvider,
-    private val rentalRepository: RentalRepository
+    private val rentalRepository: RentalRepository,
+    private val locataireRepository: LocataireRepository
 ) : BaseAndroidViewModel(
     application,
     schedulerProvider
 ), ToolbarListener, RentalItemClickListener, SearchView.OnQueryTextListener,
     RentalItemSwipeListener, DialogCustomCallListener, Filterable {
 
-    var locations = MutableLiveData<ArrayList<Rental>>()
-    private var backUpLocations: ArrayList<Rental>? = ArrayList()
+    var rentals = MutableLiveData<ArrayList<RentalWithLocataire>>()
+    private var backUpLocations: ArrayList<RentalWithLocataire> = ArrayList()
+
+    //    private var backUpLocataires: ArrayList<Locataire> = ArrayList()
     var callDialog = MutableLiveData<CallDialog>()
     var telToBeCalled = MutableLiveData<String>()
     private var fetch: MutableLiveData<FetchState> = MutableLiveData()
+//    private var locataires = ArrayList<Locataire>()
+
 
     init {
         loadRentals()
@@ -109,13 +117,24 @@ class RentalViewModel @Inject constructor(
 
     private fun onLoadRentalsSuccess(response: List<Rental>) {
         fetch.value = FetchState.FetchDone(response.isEmpty())
-        locations.value = ArrayList(response).also {
-            backUpLocations = it
+        viewModelScope.launch {
+            rentals.value = ArrayList<RentalWithLocataire>().apply {
+                response.forEach { rental ->
+                    add(RentalWithLocataire(rental, getLocataireById(rental.locataireOwnerId)))
+                }
+            }
+            backUpLocations = rentals.value!!
         }
     }
 
-    override fun onRentalItemClicked(rental: Rental) {
-        navigate(Navigation.RentalDetailActivityNavigation(rental))
+    private suspend fun getLocataireById(id: Long): Locataire {
+        return withContext(schedulerProvider.dispatchersIO()) {
+            locataireRepository.getLocataireById(id)
+        }
+    }
+
+    override fun onRentalItemClicked(rentalAndLocataire: RentalWithLocataire) {
+        navigate(Navigation.RentalDetailActivityNavigation(rentalAndLocataire))
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
@@ -124,16 +143,14 @@ class RentalViewModel @Inject constructor(
 
     override fun onQueryTextChange(newText: String): Boolean {
         if (newText.isNotEmpty()) {
-            println(newText)
-            locations.value = backUpLocations!!.filter { row ->
+            rentals.value = backUpLocations.filter { row ->
                 row.locataire.fullName.toLowerCase(Locale.getDefault())
                     .contains(newText.toLowerCase(Locale.getDefault())) || row.locataire.numTel.contains(
                     newText
                 )
-            } as ArrayList<Rental>
-            println(locations)
+            } as ArrayList<RentalWithLocataire>
         } else {
-            locations.value = backUpLocations
+            rentals.value = backUpLocations
         }
         return false
     }
@@ -163,31 +180,22 @@ class RentalViewModel @Inject constructor(
 
 
     override fun getFilter(): Filter {
-        var locationFilteredList: MutableList<Rental>
+        var locationFilteredList: MutableList<RentalWithLocataire>
         return object : Filter() {
             override fun performFiltering(charSequence: CharSequence): FilterResults {
                 val charString = charSequence.toString()
-                if (charString.isEmpty()) {
-                    locationFilteredList = locations.value!!
+                locationFilteredList = if (charString.isEmpty()) {
+                    rentals.value!!
                 } else {
-                    val filteredList: MutableList<Rental> = ArrayList()
-                    for (row in locations.value!!) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.locataire.fullName.toLowerCase(Locale.getDefault()).contains(
-                                charString.toLowerCase(
-                                    Locale.getDefault()
-                                )
-                            ) || row.locataire.numTel.contains(
-                                charSequence
+                    rentals.value!!.filter { row ->
+                        row.locataire.fullName.toLowerCase(Locale.getDefault()).contains(
+                            charString.toLowerCase(
+                                Locale.getDefault()
                             )
-                        ) {
-                            filteredList.add(row)
-                        }
-                    }
-
-                    locationFilteredList = filteredList
+                        ) || row.locataire.numTel.contains(
+                            charSequence
+                        )
+                    }.toMutableList()
                 }
 
                 val filterResults = FilterResults()
@@ -196,10 +204,10 @@ class RentalViewModel @Inject constructor(
             }
 
             override fun publishResults(charSequence: CharSequence, filterResults: FilterResults) {
-                locationFilteredList = filterResults.values as MutableList<Rental>
+                locationFilteredList = filterResults.values as MutableList<RentalWithLocataire>
 
                 // refresh the list with filtered data
-                locations.value = ArrayList(locationFilteredList)
+                rentals.value = ArrayList(locationFilteredList)
             }
         }
     }

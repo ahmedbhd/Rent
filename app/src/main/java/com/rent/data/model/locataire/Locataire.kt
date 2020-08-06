@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 @JsonClass(generateAdapter = true)
 data class Locataire(
     @PrimaryKey(autoGenerate = true)
-    val idLocataire: Int = 0,
+    val idLocataire: Long = 0,
     var cin: String = "",
     var fullName: String = "",
     var numTel: String = ""

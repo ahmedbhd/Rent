@@ -5,7 +5,10 @@ import androidx.lifecycle.*
 import com.rent.R
 import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.flight.Flight
+import com.rent.data.model.locataire.Locataire
+import com.rent.data.model.relations.RentalWithLocataire
 import com.rent.data.model.rental.Rental
+import com.rent.data.repository.locataire.LocataireRepository
 import com.rent.data.repository.rental.RentalRepository
 import com.rent.global.helper.Navigation
 import com.rent.global.listener.CalendarItemClickListener
@@ -20,16 +23,18 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import javax.inject.Inject
 
+
 class CalendarViewModel @Inject constructor(
     application: Application,
     schedulerProvider: SchedulerProvider,
-    private val rentalRepository: RentalRepository
+    private val rentalRepository: RentalRepository,
+    private val locataireRepository: LocataireRepository
 ) : BaseAndroidViewModel(
     application,
     schedulerProvider
 ), ToolbarListener, CalendarItemClickListener {
 
-    var rentals = MutableLiveData<ArrayList<Rental>>()
+    var rentals = MutableLiveData<ArrayList<RentalWithLocataire>>()
     var rentalItems = MutableLiveData<Map<LocalDate, List<Flight>>>()
     var selectDate = MutableLiveData<LocalDate>()
     var calendarItemsList = MediatorLiveData<ArrayList<Flight>>()
@@ -69,15 +74,26 @@ class CalendarViewModel @Inject constructor(
 
     private fun onLoadRentalsSuccess(response: List<Rental>) {
         hideBlockingProgressBar()
-        rentals.value = ArrayList(response)
-        rentalItems.value = generateFlights(rentals.value!!)
-            .groupBy {
-                it.time.toLocalDate()
+        viewModelScope.launch {
+            rentals.value = ArrayList<RentalWithLocataire>().apply {
+                response.forEach { rental ->
+                    add(RentalWithLocataire(rental, getLocataireById(rental.locataireOwnerId)))
+                }
             }
+            rentalItems.value = generateFlights(rentals.value!!)
+                .groupBy {
+                    it.time.toLocalDate()
+                }
+        }
+    }
+
+    private suspend fun getLocataireById(id: Long): Locataire {
+        return withContext(schedulerProvider.dispatchersIO()) {
+            locataireRepository.getLocataireById(id)
+        }
     }
 
     override fun onCalendarItemClicked(flight: Flight) {
-        navigate(Navigation.RentalDetailActivityNavigation(rentals.value!!.filter { it.idRental == flight.idRental }
-            .first()))
+        navigate(Navigation.RentalDetailActivityNavigation(rentals.value!!.first { it.rental.idRental == flight.idRental }))
     }
 }

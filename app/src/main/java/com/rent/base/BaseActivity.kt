@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.observe
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import com.rent.R
 import com.rent.global.helper.Navigation
 import com.rent.global.utils.DebugLog
@@ -23,7 +24,6 @@ import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.shared.dialog.CustomChooseDialog
 import com.rent.ui.shared.dialog.CustomProgressDialog
 import com.rent.ui.shared.dialog.CustomSimpleDialog
-import com.rent.ui.shared.view.CustomSnackBar
 import dagger.Lazy
 import dagger.android.AndroidInjection
 import javax.inject.Inject
@@ -35,7 +35,6 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     protected lateinit var glideLazy: Lazy<RequestManager>
 
-    private var customSnackBar: CustomSnackBar? = null
     private var progressDialog: CustomProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +68,12 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun registerSnackBar(viewModel: BaseAndroidViewModel) {
-        viewModel.snackBarMessage.observeOnlyNotNull(this) { showSnackBar(it) }
+        viewModel.snackBarMessage.observeOnlyNotNull(this) {
+            showSnackBar(
+                it.message,
+                it.actionBlock
+            )
+        }
     }
 
     private fun registerSimpleDialog(viewModel: BaseAndroidViewModel) {
@@ -124,26 +128,20 @@ abstract class BaseActivity : AppCompatActivity() {
         showSnackBar(getString(messageId))
     }
 
-    /**
-     * hide snackBar if it's on screen
-     */
-    fun hideSnackBar() {
-        if (!isFinishing) {
-            customSnackBar?.dismiss()
-            customSnackBar = null
-        }
-    }
 
     /**
      * This method show simple SnackBar
      *
      * @param message message dialog text
      */
-    fun showSnackBar(message: String) {
+    fun showSnackBar(message: String, actionBlock: (() -> Unit)? = null) {
         if (!isFinishing) {
             val root = window.decorView.findViewById<ViewGroup>(android.R.id.content)
-            customSnackBar = CustomSnackBar.make(root, CustomSnackBar.DURATION).apply {
+            Snackbar.make(root, message, Snackbar.LENGTH_LONG).apply {
                 setText(message)
+                setAction(application.getString(R.string.global_cancel)) {
+                    actionBlock?.invoke()
+                }
                 show()
             }
         }

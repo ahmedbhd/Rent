@@ -11,7 +11,7 @@ interface RentalRepository {
     suspend fun addRental(rental: Rental): Rental
 
     @WorkerThread
-    suspend fun getRentalById(id: Int): Rental
+    suspend fun getRentalById(id: Long): Rental
 
     @WorkerThread
     suspend fun deleteRental(rental: Rental)

@@ -19,8 +19,9 @@ interface RentalDao {
     suspend fun deleteRental(rental: Rental)
 
     @Query("SELECT * from rental where idRental=:id LIMIT 1")
-    suspend fun getRentalById(id: Int): Rental
+    suspend fun getRentalById(id: Long): Rental
 
     @Query("SELECT * from rental where idRental = (SELECT MAX (idRental) from rental) LIMIT 1")
     suspend fun getLastRental(): Rental
+
 }

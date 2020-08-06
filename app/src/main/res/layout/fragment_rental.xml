@@ -34,7 +34,7 @@
                     android:id="@+id/flistfav"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:data="@{viewModel.locations}"
+                    app:data="@{viewModel.rentals}"
                     app:isGone="@{viewModel.isEmptyData}" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

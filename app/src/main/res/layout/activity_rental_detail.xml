@@ -102,17 +102,16 @@
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
-
-            <!--            <androidx.appcompat.widget.AppCompatButton-->
-            <!--                    android:id="@+id/updateLoca"-->
-            <!--                    style="@style/Widget.AppCompat.Button.Borderless.Colored"-->
-            <!--                    onClickWithDebounce="@{() -> viewModel.updateLocataire()}"-->
-            <!--                    android:layout_width="wrap_content"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:layout_margin="12dp"-->
-            <!--                    android:padding="8dp"-->
-            <!--                    android:text="Modifier Locataire"-->
-            <!--                    android:theme="@style/FlatButton" />-->
+            <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/updateLoca"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    onClickWithDebounce="@{() -> viewModel.updateLocataire()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:padding="8dp"
+                    android:text="Modifier Locataire"
+                    android:theme="@style/FlatButton" />
 
             <RelativeLayout
                     android:layout_width="match_parent"

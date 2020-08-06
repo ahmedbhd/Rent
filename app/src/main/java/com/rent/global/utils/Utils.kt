@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.text.format.DateFormat
 import com.rent.data.model.flight.Airport
 import com.rent.data.model.flight.Flight
-import com.rent.data.model.rental.Rental
+import com.rent.data.model.relations.RentalWithLocataire
 import java.time.YearMonth
 import java.util.*
 import java.util.function.Consumer
@@ -13,12 +13,12 @@ import kotlin.collections.ArrayList
 
 
 @SuppressLint("Range")
-fun generateFlights(locations: ArrayList<Rental>): List<Flight> {
+fun generateFlights(locations: ArrayList<RentalWithLocataire>): List<Flight> {
     val list = mutableListOf<Flight>()
 
     locations.forEach(Consumer { loc ->
-        val localDateStart = loc.dateDebut
-        val localDateEnd = loc.dateFin
+        val localDateStart = loc.rental.dateDebut
+        val localDateEnd = loc.rental.dateFin
 
         val datesInRange = ArrayList<Date>()
         val startCalendar = GregorianCalendar()
@@ -51,14 +51,14 @@ fun generateFlights(locations: ArrayList<Rental>): List<Flight> {
             val currentMonth16 = currentMonth.atDay(mDay.toString().toInt())
             list.add(
                 Flight(
-                    loc.idRental,
+                    loc.rental.idRental,
                     currentMonth16.atTime(mHour.toString().toInt(), mMinute.toString().toInt()),
                     Airport(
                         loc.locataire.numTel,
                         loc.locataire.fullName
                     ),
                     Airport("Abuja", "ABV"),
-                    Color.parseColor(loc.color)
+                    Color.parseColor(loc.rental.color)
                 )
             )
         })

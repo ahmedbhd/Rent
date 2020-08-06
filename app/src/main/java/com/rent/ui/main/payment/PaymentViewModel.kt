@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.rent.R
 import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.payment.Payment
+import com.rent.data.model.relations.LocataireWithPayment
 import com.rent.data.repository.payment.PaymentRepository
 import com.rent.global.helper.FetchState
 import com.rent.global.helper.dialog.PaymentDialog
@@ -32,7 +33,8 @@ class PaymentViewModel @Inject constructor(
 
     var paymentDialog = MutableLiveData<PaymentDialog>()
     private var fetch: MutableLiveData<FetchState> = MutableLiveData()
-    var payments = MutableLiveData<ArrayList<Payment>>()
+    var payments = MutableLiveData<ArrayList<LocataireWithPayment>>()
+
 
     init {
         loadPayments()
@@ -99,9 +101,9 @@ class PaymentViewModel @Inject constructor(
         fetch.value = FetchState.FetchError(throwable)
     }
 
-    private fun onLoadPaymentSuccess(response: List<Payment>) {
+    private fun onLoadPaymentSuccess(response: ArrayList<LocataireWithPayment>) {
         fetch.value = FetchState.FetchDone(response.isEmpty())
-        payments.value = ArrayList(response)
+        payments.value = response
     }
 
     override fun onSavePaymentButtonClicked(payment: Payment) {
@@ -109,7 +111,7 @@ class PaymentViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    if (payment.idPayment == 0) {
+                    if (payment.idPayment == 0L) {
                         paymentRepository.addPayment(payment)
                     } else {
                         paymentRepository.updatePayment(payment)
@@ -148,24 +150,47 @@ class PaymentViewModel @Inject constructor(
         }
     }
 
-    override fun onPaymentItemSwiped(position: Int) {
+    override fun onPaymentItemSwiped(locataireWithPayment: LocataireWithPayment, position: Int) {
         showBlockingProgressBar()
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
-                    payments.value?.get(position)?.let { paymentRepository.deletePayment(it) }
+                    paymentRepository.deletePayment(locataireWithPayment.payment)
                 }
-                onDeletePaymentSuccess(position)
+                onDeletePaymentSuccess(locataireWithPayment, position)
             }, {
                 onOperationFails(it)
             })
         }
     }
 
-    private fun onDeletePaymentSuccess(position: Int) {
+    private fun onDeletePaymentSuccess(locataireWithPayment: LocataireWithPayment, position: Int) {
         hideBlockingProgressBar()
         payments.value = payments.value?.apply {
             removeAt(position)
+        }
+
+        showSnackBarMessage("Paiment Supprimé") {
+            addPayment(locataireWithPayment, position)
+        }
+    }
+
+    private fun addPayment(locataireWithPayment: LocataireWithPayment, position: Int) {
+        viewModelScope.launch {
+            tryCatch({
+                withContext(schedulerProvider.dispatchersIO()) {
+                    paymentRepository.addPayment(locataireWithPayment.payment)
+                }
+                onReAddPaymentSuccess(locataireWithPayment, position)
+            }, {
+                onOperationFails(it)
+            })
+        }
+    }
+
+    private fun onReAddPaymentSuccess(locataireWithPayment: LocataireWithPayment, position: Int) {
+        payments.value = payments.value?.apply {
+            add(position, locataireWithPayment)
         }
     }
 }

@@ -19,11 +19,11 @@ interface PaymentDao {
     suspend fun deletePayment(payment: Payment)
 
     @Query("SELECT * from payment where idPayment=:id LIMIT 1")
-    suspend fun getPaymentById(id: Int): Payment
+    suspend fun getPaymentById(id: Long): Payment
 
     @Query("SELECT * from payment where idPayment = (SELECT MAX (idPayment) from payment) LIMIT 1")
     suspend fun getLastPayment(): Payment
 
-    @Query("SELECT * from payment where idRental=:id")
-    suspend fun getPaymentByRentalId(id: Int): List<Payment>
+    @Query("SELECT * from payment where rentalId=:id")
+    suspend fun getPaymentByRentalId(id: Long): List<Payment>
 }

@@ -21,7 +21,7 @@ import com.kizitonwose.calendarview.utils.previous
 import com.rent.R
 import com.rent.base.BaseFragment
 import com.rent.data.model.flight.Flight
-import com.rent.data.model.rental.Rental
+import com.rent.data.model.relations.RentalWithLocataire
 import com.rent.databinding.FragmentCalendarBinding
 import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
@@ -225,11 +225,11 @@ class CalendarFragment : BaseFragment() {
     override fun navigate(navigationTo: Navigation) {
         super.navigate(navigationTo)
         when (navigationTo) {
-            is Navigation.RentalDetailActivityNavigation -> navigateToRentalDetail(navigationTo.rental)
+            is Navigation.RentalDetailActivityNavigation -> navigateToRentalDetail(navigationTo.rentalAndLocataire)
         }
     }
 
-    private fun navigateToRentalDetail(rental: Rental) {
+    private fun navigateToRentalDetail(rental: RentalWithLocataire) {
         Intent(requireActivity(), RentalDetailActivity::class.java).also {
             it.putExtra(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_EXTRA_RENTAL, rental)
             startActivityForResult(it, REQUEST_CODE)
