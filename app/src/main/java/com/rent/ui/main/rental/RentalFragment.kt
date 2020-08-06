@@ -20,6 +20,7 @@ import com.rent.global.helper.ViewModelFactory
 import com.rent.global.listener.DialogCustomCallListener
 import com.rent.global.utils.ExtraKeys
 import com.rent.global.utils.observeOnlyNotNull
+import com.rent.ui.main.calendar.REQUEST_CODE
 import com.rent.ui.rental.add.AddRentalActivity
 import com.rent.ui.rental.detail.RentalDetailActivity
 import com.rent.ui.shared.dialog.CustomCallDialog
@@ -146,7 +147,12 @@ class RentalFragment : BaseFragment() {
     private fun navigateToRentalDetail(rental: RentalWithLocataire) {
         Intent(requireActivity(), RentalDetailActivity::class.java).also {
             it.putExtra(ExtraKeys.RentalDetailActivity.RENAL_DETAIL_EXTRA_RENTAL, rental)
-            startActivity(it)
+            startActivityForResult(it, REQUEST_CODE)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.loadRentals()
     }
 }

@@ -31,8 +31,8 @@ import com.rent.global.utils.observeOnlyNotNull
 import com.rent.global.utils.setTextColorRes
 import com.rent.ui.rental.add.AddRentalActivity
 import com.rent.ui.rental.detail.RentalDetailActivity
+import kotlinx.android.synthetic.main.calendar_day_item.view.*
 import kotlinx.android.synthetic.main.calendar_day_legend.view.*
-import kotlinx.android.synthetic.main.example_5_calendar_day.view.*
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -133,6 +133,7 @@ class CalendarFragment : BaseFragment() {
             val layout = view.exFiveDayLayout
             val flightTopView = view.exFiveDayFlightTop
             val flightBottomView = view.exFiveDayFlightBottom
+            val flightMiddleView = view.exFiveDayFlightMiddle
 
             init {
                 view.setOnClickListener {
@@ -158,21 +159,32 @@ class CalendarFragment : BaseFragment() {
 
                 val flightTopView = container.flightTopView
                 val flightBottomView = container.flightBottomView
+                val flightMiddleView = container.flightMiddleView
 
                 flightTopView.background = null
                 flightBottomView.background = null
+                flightMiddleView.background = null
 
                 if (day.owner == DayOwner.THIS_MONTH) {
                     textView.setTextColorRes(R.color.example_5_text_grey)
-                    layout.setBackgroundResource(if (viewModel.selectDate.value == day.date) R.drawable.example_5_selected_bg else 0)
+                    layout.setBackgroundResource(if (viewModel.selectDate.value == day.date) R.drawable.calendar_selected_bg else 0)
 
-                    val item = items[day.date]
-                    if (item != null) {
-                        if (item.count() == 1) {
-                            flightBottomView.setBackgroundColor(item[0].color)
-                        } else {
-                            flightTopView.setBackgroundColor(item[0].color)
-                            flightBottomView.setBackgroundColor(item[1].color)
+                    items[day.date]?.let { item ->
+                        when {
+                            item.count() == 1 -> {
+                                flightBottomView.setBackgroundColor(item[0].color)
+                                flightTopView.visibility = View.GONE
+                            }
+                            item.count() == 2 -> {
+                                flightTopView.visibility = View.GONE
+                                flightMiddleView.setBackgroundColor(item[0].color)
+                                flightBottomView.setBackgroundColor(item[1].color)
+                            }
+                            else -> {
+                                flightTopView.setBackgroundColor(item[0].color)
+                                flightMiddleView.setBackgroundColor(item[1].color)
+                                flightBottomView.setBackgroundColor(item[2].color)
+                            }
                         }
                     }
                 } else {

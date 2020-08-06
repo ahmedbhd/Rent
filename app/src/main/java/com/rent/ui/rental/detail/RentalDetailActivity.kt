@@ -289,7 +289,7 @@ class RentalDetailActivity : BaseActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
                 (customListAdapter).removeItem(
-                    viewHolder.adapterPosition
+                    viewHolder.bindingAdapterPosition
                 )
             }
 

@@ -8,6 +8,7 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.rent.R
 import com.rent.databinding.DialogCustomPhoneBinding
@@ -17,7 +18,7 @@ import com.rent.global.utils.hideKeyboard
 
 class CustomPhoneDialog(
     context: Context,
-    private var stringTel:String = "",
+    private var stringTel: String,
     private var phoneDialogListener: PhoneDialogListener,
     private var dismissActionBlock: (() -> Unit)? = null
 ) : Dialog(context, R.style.CustomSimpleDialog) {
@@ -51,7 +52,8 @@ class CustomPhoneDialog(
             for (i in 1 until tab.size) {
                 val myEditText = EditText(context) // Pass it an Activity or Context
                 myEditText.setTextColor(Color.BLACK)
-                myEditText.hint = "Telephone"
+                myEditText.hint = context.getString(R.string.global_phone)
+                myEditText.setHintTextColor(ContextCompat.getColor(context, R.color.blue_grey_700))
                 myEditText.inputType = InputType.TYPE_CLASS_PHONE
                 myEditText.setText(tab[i])
                 myEditText.layoutParams =
@@ -69,7 +71,8 @@ class CustomPhoneDialog(
             binding.rootView.hideKeyboard()
             val myEditText = EditText(context) // Pass it an Activity or Context
             myEditText.setTextColor(Color.BLACK)
-            myEditText.hint = "Telephone"
+            myEditText.hint = context.getString(R.string.global_phone)
+            myEditText.setHintTextColor(ContextCompat.getColor(context, R.color.blue_grey_700))
             myEditText.inputType = InputType.TYPE_CLASS_PHONE
             myEditText.layoutParams =
                 LinearLayout.LayoutParams(

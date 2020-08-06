@@ -248,7 +248,7 @@ fun CharSequence?.isValidEmail(): Boolean {
 fun String.isValidPhoneNumber(): Boolean {
     val pattern = Pattern.compile("[+]?[0-9. ]{8,11}+")
     if (this.isEmpty()) {
-        return true
+        return false
     }
     if (this.trim() == "+") {
         return false

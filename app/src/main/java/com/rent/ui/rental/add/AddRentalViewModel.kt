@@ -16,13 +16,12 @@ import com.rent.global.helper.dialog.PhoneDialog
 import com.rent.global.listener.PhoneDialogListener
 import com.rent.global.listener.SchedulerProvider
 import com.rent.global.listener.ToolbarListener
-import com.rent.global.utils.DebugLog
-import com.rent.global.utils.TAG
-import com.rent.global.utils.formatDateTime
-import com.rent.global.utils.tryCatch
+import com.rent.global.utils.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class AddRentalViewModel @Inject constructor(
@@ -45,19 +44,21 @@ class AddRentalViewModel @Inject constructor(
     var phoneDialog = MutableLiveData<PhoneDialog>()
     var cin = MutableLiveData<String>()
     var name = MutableLiveData<String>()
-    var startDate = MutableLiveData<String>(applicationContext.getString(R.string.date))
-    var endDate = MutableLiveData<String>(applicationContext.getString(R.string.date))
+    var startDate = MutableLiveData<String>(formatDate.format(Date()))
+    var endDate = MutableLiveData<String>(formatDate.format(Date()))
     var addTime = MutableLiveData<String>(applicationContext.getString(R.string._00_00_00))
     var stringTel = ""
+    var house = MutableLiveData<String>()
+    private var rentals = ArrayList<Rental>()
 
 
     init {
-        loadLocataires()
+        loadLocatairesAndRentals()
     }
 
     fun showPhoneDialog() {
         phoneDialog.value = PhoneDialog.build(
-            "",
+            stringTel,
             dismissPhoneBuild()
         )
     }
@@ -65,6 +66,16 @@ class AddRentalViewModel @Inject constructor(
     private fun dismissPhoneBuild(): () -> Unit {
         return {
             phoneDialog.value = null
+        }
+    }
+
+    private fun checkAvailability(): Boolean {
+        return rentals.none { row ->
+            (((newRental.dateDebut.time >= row.dateDebut.time &&
+                    newRental.dateDebut.time <= row.dateFin.time) ||
+                    (newRental.dateFin.time >= row.dateDebut.time &&
+                            newRental.dateFin.time <= row.dateFin.time)
+                    ) && (row.house == newRental.house))
         }
     }
 
@@ -104,7 +115,7 @@ class AddRentalViewModel @Inject constructor(
                 }
                 onAddLocataireSuccess(response)
             }, {
-
+                onAddRentalFail(it)
             })
         }
     }
@@ -115,14 +126,17 @@ class AddRentalViewModel @Inject constructor(
         addRental()
     }
 
-    private fun loadLocataires() {
+    private fun loadLocatairesAndRentals() {
         showBlockingProgressBar()
         viewModelScope.launch {
             tryCatch({
-                val response = withContext(schedulerProvider.dispatchersIO()) {
+                val locataires = withContext(schedulerProvider.dispatchersIO()) {
                     locataireRepository.getLocataire()
                 }
-                onGetLocatairesSuccess(response)
+                val rentals = withContext(schedulerProvider.dispatchersIO()) {
+                    rentalRepository.getRentals()
+                }
+                onGetLocatairesSuccess(locataires, rentals)
             }, {
                 onLoadLocataireFail(it)
             })
@@ -134,8 +148,9 @@ class AddRentalViewModel @Inject constructor(
         DebugLog.e(TAG, throwable.toString())
     }
 
-    private fun onGetLocatairesSuccess(response: List<Locataire>) {
+    private fun onGetLocatairesSuccess(response: List<Locataire>, rentalsResponse: List<Rental>) {
         hideBlockingProgressBar()
+        rentals = ArrayList(rentalsResponse)
         resultRentals = ArrayList(response)
         val array = ArrayList<String>()
 //        array.add(applicationContext.getString(R.string.add_rental_empty_locataire))
@@ -152,43 +167,53 @@ class AddRentalViewModel @Inject constructor(
 
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         // An item was selected. You can retrieve the selected item using
-        selectedLocataire = parent.getItemAtPosition(position) as String
-        if (position > 0)
-            newRental.locataireOwnerId = resultRentals!![position - 1].idLocataire
-        else
-            newRental.locataireOwnerId = resultRentals!![position].idLocataire
+        when (parent.id) {
+            R.id.spinnerIRentalHouse -> {
+                house.value = parent.adapter?.getItem(position)?.toString()
+            }
+            R.id.spinnerusers -> {
+                selectedLocataire = parent.getItemAtPosition(position) as String
+                if (position > 0)
+                    newRental.locataireOwnerId = resultRentals!![position - 1].idLocataire
+                else
+                    newRental.locataireOwnerId = resultRentals!![position].idLocataire
+            }
+        }
     }
 
     override fun onSaveClicked(tel: String) {
-        stringTel = tel
+        var correctTel = tel
+        while (correctTel.endsWith(',')) {
+            correctTel = correctTel.removeSuffix(",")
+        }
+        stringTel = correctTel
     }
 
     fun onAddRentalClicked() {
+        newRental.house = house.value!!
         newRental.dateDebut = formatDateTime.parse(startDate.value + " " + addTime.value + ":00")!!
         newRental.dateFin = formatDateTime.parse(endDate.value + " " + addTime.value + ":00")!!
         checkInputs()
     }
 
     private fun checkInputs() {
-        if (!cin.value.isNullOrEmpty() && !name.value.isNullOrEmpty() && startDate.value != applicationContext.getString(
-                R.string.date
-            )
-        ) {
-            println("here2")
-
-            addLocataire()
-            return
+        if (checkAvailability()) {
+            if (cin.value.isNullOrEmpty().not() &&
+                name.value.isNullOrEmpty().not() &&
+                stringTel.isValidPhoneNumber() &&
+                newRental.dateFin.after(newRental.dateDebut)
+            ) {
+                addLocataire()
+                return
+            } else if ((selectedLocataire != applicationContext.getString(R.string.add_rental_empty_locataire)) && newRental.dateFin.after(
+                    newRental.dateDebut
+                )
+            ) {
+                addRental()
+                return
+            }
+        } else {
+            showToast(applicationContext.getString(R.string.global_incorrect_information))
         }
-
-        if ((selectedLocataire != applicationContext.getString(R.string.add_rental_empty_locataire)) && startDate.value != applicationContext.getString(
-                R.string.date
-            )
-        ) {
-            addRental()
-
-            return
-        }
-
-        showToast(applicationContext.getString(R.string.add_rental_incorrect_information))
     }
 }

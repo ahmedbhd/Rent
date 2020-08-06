@@ -36,14 +36,11 @@
     <string name="enregistrer">Enregistrer</string>
     <string name="date">00–00–00</string>
     <string name="_00_00_00">00:00</string>
-    <string-array name="types_array">
-        <item>Avance</item>
-        <item>Paiement</item>
-    </string-array>
+
     <string name="title_activity_splash">Splash</string>
     <string name="trouver_location">Trouver location</string>
     <string name="add_rental_empty_locataire"> - </string>
-    <string name="add_rental_incorrect_information">Information Incorrectes</string>
+    <string name="global_incorrect_information">Information Incorrectes</string>
 
 
     <string name="global_date_format">yyyy-MM-dd</string>
@@ -66,5 +63,31 @@
 
     <string name="payment_dialog_empty_amount">Montant est vide.</string>
 
+    <!--Payment list-->
+    <string-array name="payment_list">
+        <item>Avance</item>
+        <item>Paiement</item>
+    </string-array>
+
+    <!--House list-->
+    <string-array name="house_list">
+        <item>RDC</item>
+        <item>Etage 1</item>
+        <item>Etage 2</item>
+    </string-array>
+
+    <string name="rental_text_house">Maison</string>
+
+    <string name="global_date_string_format">%1$d-%2$d-%3$d</string>
+    <string name="global_time_string_format">%1$d:%2$d</string>
+    <string name="global_amount">Montant</string>
+    <string name="dialog_payment_type">Type :</string>
+    <string name="global_x">X</string>
+    <string name="global_detail_locataire">Detail Locataire</string>
+    <string name="global_identity_cart">Carte identitée</string>
+    <string name="global_name_surname">Nom et prénom</string>
+    <string name="global_phones">Telephones</string>
+    <string name="global_phone">Telephone</string>
+    <string name="global_locataire">Locataire</string>
 
 </resources>

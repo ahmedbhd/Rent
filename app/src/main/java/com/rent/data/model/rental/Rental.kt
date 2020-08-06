@@ -25,5 +25,6 @@ data class Rental(
     var dateDebut: Date = Date(),
     var dateFin: Date = Date(),
     var color: String = "",
+    var house: String = "",
     var locataireOwnerId: Long = 0
 ) : Parcelable

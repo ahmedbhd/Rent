@@ -2,6 +2,8 @@ package com.rent.ui.rental.detail
 
 import android.app.Application
 import android.graphics.Color
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rent.R
@@ -9,6 +11,7 @@ import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.payment.Payment
 import com.rent.data.model.relations.LocataireWithPayment
 import com.rent.data.model.relations.RentalWithLocataire
+import com.rent.data.model.rental.Rental
 import com.rent.data.repository.locataire.LocataireRepository
 import com.rent.data.repository.payment.PaymentRepository
 import com.rent.data.repository.rental.RentalRepository
@@ -22,6 +25,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.collections.ArrayList
 
 
 class RentalDetailViewModel @Inject constructor(
@@ -35,17 +39,15 @@ class RentalDetailViewModel @Inject constructor(
     application,
     schedulerProvider
 ), ToolbarListener, PaymentDialogListener, PhoneDialogListener, CalendarBottomSheetListener,
-    PaymentItemSwipeListener, PaymentItemClickListener {
+    PaymentItemSwipeListener, PaymentItemClickListener, AdapterView.OnItemSelectedListener {
 
 
     var sdate: Date = rentalWithLocataire.rental.dateDebut
     var edate: Date = rentalWithLocataire.rental.dateFin
 
-
     var payments = MutableLiveData<ArrayList<LocataireWithPayment>>()
     var paymentDialog = MutableLiveData<PaymentDialog>()
     var phoneDialog = MutableLiveData<PhoneDialog>()
-
 
     var rentalColor = MutableLiveData(Color.parseColor(rentalWithLocataire.rental.color))
 
@@ -54,36 +56,31 @@ class RentalDetailViewModel @Inject constructor(
     var startDate = MutableLiveData(rentalWithLocataire.rental.dateDebut.toString())
     var endDate = MutableLiveData(rentalWithLocataire.rental.dateFin.toString())
     var time = MutableLiveData("")
+    var house = MutableLiveData<String>(rentalWithLocataire.rental.house)
+    private var rentals = ArrayList<Rental>()
 
 
     init {
-//        loadLocataire()
         prepareDates()
+        loadRentals()
     }
 
-//    private fun loadLocataire() {
-//        showBlockingProgressBar()
-//        viewModelScope.launch {
-//            tryCatch({
-//                val response = withContext(schedulerProvider.dispatchersIO()) {
-//                    locataireRepository.getLocataireById(rentalWithLocataire.locataireOwnerId)
-//                }
-//                onLoadLocataireSuccess(response)
-//            }, {
-//                onLoadLocataireFails(it)
-//            })
-//        }
-//    }
+    private fun loadRentals() {
+        viewModelScope.launch {
+            tryCatch({
+                val response = withContext(schedulerProvider.dispatchersIO()) {
+                    rentalRepository.getRentals()
+                }
+                onLoadRentalsSuccess(response)
+            }, {
+                onOperationFails(it)
+            })
+        }
+    }
 
-//    private fun onLoadLocataireFails(it: Throwable) {
-//        onOperationFails(it)
-//        navigate(Navigation.Back)
-//    }
-//
-//    private fun onLoadLocataireSuccess(response: Locataire) {
-//        hideBlockingProgressBar()
-//        locataire.value = response
-//    }
+    private fun onLoadRentalsSuccess(response: List<Rental>) {
+        rentals = ArrayList(response)
+    }
 
     private fun prepareDates() {
         val c = Calendar.getInstance()
@@ -97,7 +94,6 @@ class RentalDetailViewModel @Inject constructor(
         startDate.value = mYear.toString() + "-" + (mMonth + 1) + "-" + (mDay)
 
         c.time = edate
-
 
         mYear = c.get(Calendar.YEAR)
         mMonth = c.get(Calendar.MONTH)
@@ -165,7 +161,11 @@ class RentalDetailViewModel @Inject constructor(
     }
 
     override fun onSaveClicked(tel: String) {
-        rentalWithLocataire.locataire.numTel = tel
+        var correctTel = tel
+        while (correctTel.endsWith(',')) {
+            correctTel = correctTel.removeSuffix(",")
+        }
+        rentalWithLocataire.locataire.numTel = correctTel
     }
 
     fun setRentalColor(color: Int) {
@@ -190,8 +190,31 @@ class RentalDetailViewModel @Inject constructor(
         endDate.value = dateRange.second
     }
 
-    fun updateRental() {
-        showBlockingProgressBar()
+    private fun checkInputs() {
+        if (rentalWithLocataire.rental.dateDebut.before(rentalWithLocataire.rental.dateFin) && checkAvailability()) {
+            updateRental()
+        } else {
+            showToast(applicationContext.getString(R.string.global_incorrect_information))
+        }
+    }
+
+    private fun checkAvailability(): Boolean {
+        return rentals.none { row ->
+            (
+                    (
+                            (rentalWithLocataire.rental.dateDebut.time >= row.dateDebut.time &&
+                                    rentalWithLocataire.rental.dateDebut.time <= row.dateFin.time) ||
+                                    (rentalWithLocataire.rental.dateFin.time >= row.dateDebut.time &&
+                                            rentalWithLocataire.rental.dateFin.time <= row.dateFin.time)
+                            ) &&
+                            row.house == rentalWithLocataire.rental.house &&
+                            row.idRental != rentalWithLocataire.rental.idRental
+                    )
+        }
+    }
+
+    fun onUpdateClicked() {
+        rentalWithLocataire.rental.house = house.value!!
         rentalWithLocataire.rental.dateFin =
             formatDateTime.parse(endDate.value.toString() + " " + time.value.toString() + ":00")!!
         rentalWithLocataire.rental.dateDebut =
@@ -199,6 +222,11 @@ class RentalDetailViewModel @Inject constructor(
         rentalWithLocataire.rental.color =
             String.format("#%06X", 0xFFFFFF and (rentalColor.value ?: R.color.colorPrimary))
 
+        checkInputs()
+    }
+
+    private fun updateRental() {
+        showBlockingProgressBar()
         viewModelScope.launch {
             tryCatch({
                 withContext(schedulerProvider.dispatchersIO()) {
@@ -223,7 +251,15 @@ class RentalDetailViewModel @Inject constructor(
         navigate(Navigation.Back)
     }
 
-    fun updateLocataire() {
+    fun checkLocataire() {
+        if (cin.value.isNullOrEmpty() || name.value.isNullOrEmpty() || rentalWithLocataire.locataire.numTel.isValidPhoneNumber().not()){
+            showToast(applicationContext.getString(R.string.global_incorrect_information))
+        }else {
+            updateLocataire()
+        }
+    }
+
+    private fun updateLocataire() {
         showBlockingProgressBar()
         rentalWithLocataire.locataire.cin = cin.value!!
         rentalWithLocataire.locataire.fullName = name.value!!
@@ -314,5 +350,13 @@ class RentalDetailViewModel @Inject constructor(
             this,
             dismissPaymentDialog()
         )
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+        DebugLog.d(TAG, "onNothingSelected")
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        house.value = parent?.adapter?.getItem(position)?.toString()
     }
 }

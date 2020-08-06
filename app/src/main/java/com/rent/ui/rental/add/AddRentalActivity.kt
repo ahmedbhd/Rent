@@ -144,16 +144,17 @@ class AddRentalActivity : BaseActivity() {
             this
         ) { phoneDialog ->
             showPhoneDialog(
+                phoneDialog.stringTel,
                 phoneDialog.dismissActionBlock
             )
         }
     }
 
-    private fun showPhoneDialog(dismissActionBlock: (() -> Unit)?) {
+    private fun showPhoneDialog(stringTel: String, dismissActionBlock: (() -> Unit)?) {
         if (!isFinishing) {
             CustomPhoneDialog(
                 this,
-                "",
+                stringTel,
                 viewModel,
                 dismissActionBlock
             ).show()

@@ -97,7 +97,7 @@ class RentalViewModel @Inject constructor(
     }
 
 
-    private fun loadRentals() {
+    fun loadRentals() {
         fetch.value = FetchState.Fetching
         viewModelScope.launch {
             tryCatch({

@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -28,11 +29,12 @@ class SplashActivity : BaseActivity() {
 
     private lateinit var anim: Animation
     private lateinit var gifImageView: ImageView
-    private lateinit var layoutView: LinearLayout
+    private lateinit var layoutView: ConstraintLayout
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-        val context = this
         gifImageView = findViewById(R.id.imageView2) // Declare an imageView to show the animation.
 
         val imageViewTarget = DrawableImageViewTarget(gifImageView)

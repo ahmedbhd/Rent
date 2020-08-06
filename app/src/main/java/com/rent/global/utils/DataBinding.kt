@@ -81,9 +81,11 @@ fun onMultipleClicks(imageView: View, action: (() -> Unit)?) {
 @BindingAdapter("selectedValue")
 fun setSelectedValue(
     spinner: AppCompatSpinner,
-    position: Int
+    value: String?
 ) {
-    spinner.setSelection(position, false)
+    spinner.setSelection(
+        spinner.context.resources.getStringArray(R.array.house_list).indexOf(value), false
+    )
 }
 
 @BindingAdapter("items")
@@ -108,12 +110,13 @@ fun setOnItemSelectedListener(
     spinner.onItemSelectedListener = listener
 }
 
-@BindingAdapter("data")
+@BindingAdapter("items")
 fun setCalendarItems(
     recyclerView: RecyclerView,
     data: ArrayList<Flight>?
 ) {
     data?.let {
+        recyclerView.invalidate()
         (recyclerView.adapter as CalendarAdapter).setData(it)
         recyclerView.addItemDecoration(
             DividerItemDecoration(

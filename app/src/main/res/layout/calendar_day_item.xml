@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/exFiveDayLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+        android:id="@+id/exFiveDayLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
@@ -26,6 +26,8 @@
                 android:gravity="center"
                 android:textColor="@color/example_5_text_grey"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="24" />
 
         <View
@@ -33,18 +35,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="18dp"
-                android:background="@color/blue_grey_700" />
+                android:layout_marginBottom="@dimen/margin_global_5dp"
+                android:background="@color/blue_grey_700"
+                app:layout_constraintBottom_toTopOf="@id/exFiveDayFlightMiddle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+                android:id="@+id/exFiveDayFlightMiddle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_global_5dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/margin_global_5dp"
+                android:background="@color/blue_grey_700"
+                app:layout_constraintBottom_toTopOf="@id/exFiveDayFlightBottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
         <View
                 android:id="@+id/exFiveDayFlightBottom"
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="8dp"
-                android:background="@color/brown_700" />
+                android:layout_marginBottom="@dimen/margin_global_8dp"
+                android:background="@color/brown_700"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

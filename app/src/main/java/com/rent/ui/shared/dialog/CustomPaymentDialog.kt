@@ -54,9 +54,17 @@ class CustomPaymentDialog(
         val mMonth = c.get(Calendar.MONTH)
         val mDay = c.get(Calendar.DAY_OF_MONTH)
 
-        binding.addTime.text = "$mHour:$mMinute"
-        binding.addDate.text = mYear.toString() + "-" + (mMonth + 1) + "-" + (mDay)
-
+        binding.addTime.text = context.getString(
+            R.string.global_time_string_format,
+            mHour,
+            mMinute
+        )
+        binding.addDate.text = context.getString(
+            R.string.global_date_string_format,
+            mYear,
+            mMinute,
+            mDay
+        )
 
 
         binding.imageTime.setOnClickListener {
@@ -65,7 +73,11 @@ class CustomPaymentDialog(
                 context,
                 TimePickerDialog.OnTimeSetListener { _: TimePicker, hourOfDay: Int, minute: Int
                     ->
-                    binding.addTime.text = "$hourOfDay:$minute"
+                    binding.addTime.text = context.getString(
+                        R.string.global_time_string_format,
+                        hourOfDay,
+                        minute
+                    )
                 },
                 mHour, mMinute, true
             )
@@ -78,8 +90,12 @@ class CustomPaymentDialog(
                 context,
                 DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth
                     ->
-                    binding.addDate.text =
-                        "${year.toString()}-${(monthOfYear + 1)}-$dayOfMonth"
+                    binding.addDate.text = context.getString(
+                        R.string.global_date_string_format,
+                        year,
+                        monthOfYear + 1,
+                        dayOfMonth
+                    )
                 },
                 mYear, // Initial year selection
                 mMonth, // Initial month selection
@@ -88,17 +104,15 @@ class CustomPaymentDialog(
             datePickerDialog.show()
         }
 
-        val users = arrayOf("Avance", "Paiment")
+        val paymentTypes = context.resources.getStringArray(R.array.payment_list)
         val spinner: Spinner = binding.typesSpinner
         // Create an ArrayAdapter using the string array and a default spinner layout
-        val adapter = ArrayAdapter(context, R.layout.drop_down_list_types, users)
+        val adapter = ArrayAdapter(context, R.layout.drop_down_list_types, paymentTypes)
         spinner.adapter = adapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, pos: Int, id: Long) {
                 // An item was selected. You can retrieve the selected item using
-                // parent.getItemAtPosition(pos)
-                println("hhhhhhhhh" + parent.getItemAtPosition(pos))
                 typePayment = parent.getItemAtPosition(pos).toString()
             }
 
@@ -109,11 +123,11 @@ class CustomPaymentDialog(
 
         val spinnerAdap = spinner.adapter as ArrayAdapter<String>
 
-        if (payment.type == "payment") {
-            val spinnerPosition = spinnerAdap.getPosition("Paiement")
+        val spinnerPosition =
+            spinnerAdap.getPosition(if (payment.type.isNotEmpty()) payment.type else paymentTypes.first())
 
-            spinner.setSelection(spinnerPosition)
-        }
+        spinner.setSelection(spinnerPosition)
+
         binding.txtclose.setOnClickListener {
             binding.root.hideKeyboard()
             dismiss()
@@ -129,7 +143,7 @@ class CustomPaymentDialog(
                 paymentDialogListener.onSavePaymentButtonClicked(
                     Payment(
                         payment.idPayment,
-                        binding.addDate.text.toString() + " " + binding.addTime.text.toString() + ":00",
+                        binding.addDate.text.toString() + " " + binding.addTime.text.toString(),
                         Integer.parseInt(binding.addAmount.text.toString()),
                         typePayment,
                         payment.rentalId

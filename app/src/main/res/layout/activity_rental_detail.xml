@@ -32,7 +32,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.35"
+                app:layout_constraintVertical_bias="0.15"
                 app:layout_constraintVertical_chainStyle="packed">
 
             <RelativeLayout
@@ -47,7 +47,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:text="Detail Locataire"
+                        android:text="@string/global_detail_locataire"
                         android:textColor="#C1F75959"
                         android:textStyle="italic" />
 
@@ -74,7 +74,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:hint="Carte identitée"
+                    android:hint="@string/global_identity_cart"
                     android:inputType="number"
                     android:text="@={viewModel.cin}"
                     android:textAlignment="center" />
@@ -84,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:hint="Nom et prénom"
+                    android:hint="@string/global_name_surname"
                     android:text="@={viewModel.name}"
                     android:textAlignment="center" />
 
@@ -98,14 +98,14 @@
                     android:drawableEnd="@drawable/phonelist"
                     android:drawablePadding="2dp"
                     android:gravity="center"
-                    android:text="Telephones"
+                    android:text="@string/global_phones"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/updateLoca"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    onClickWithDebounce="@{() -> viewModel.updateLocataire()}"
+                    onClickWithDebounce="@{() -> viewModel.checkLocataire()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
@@ -160,6 +160,49 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addLocContainer">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/editRentalHouse"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_global_30dp"
+                        android:layout_marginEnd="@dimen/margin_global_30dp"
+                        android:drawableEnd="@drawable/ic_dropdown"
+                        android:focusable="false"
+                        android:hint="@string/rental_text_house"
+                        android:paddingStart="@dimen/padding_global_10dp"
+                        android:paddingEnd="@dimen/padding_global_10dp"
+                        android:text="@={viewModel.house}"
+                        android:textAlignment="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:onClickWithDebounce="@{() -> spinnerIRentalHouse.performClick()}" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                        android:id="@+id/spinnerIRentalHouse"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_global_30dp"
+                        android:layout_marginEnd="@dimen/margin_global_30dp"
+                        android:entries="@array/house_list"
+                        android:paddingStart="@dimen/padding_global_10dp"
+                        android:paddingEnd="@dimen/padding_global_10dp"
+                        android:spinnerMode="dialog"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:onItemSelectedListener="@{viewModel}"
+                        app:selectedValue="@{viewModel.house}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/colorFrame"
@@ -281,7 +324,7 @@
             <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/updateLoc"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                    onClickWithDebounce="@{() -> viewModel.updateRental()}"
+                    onClickWithDebounce="@{() -> viewModel.onUpdateClicked()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
