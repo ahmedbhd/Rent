@@ -1,12 +1,10 @@
 package com.rent.ui.rental.add
 
-import android.app.Dialog
 import android.app.TimePickerDialog
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.widget.TimePicker
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.OrientationHelper
 import com.applikeysolutions.cosmocalendar.utils.SelectionType
@@ -35,7 +33,6 @@ class AddRentalActivity : BaseActivity() {
     private val viewModel: AddRentalViewModel by viewModels { viewModelFactory }
 
     private var calendarView: CalendarView? = null
-    lateinit var myDialog: Dialog
 
     private var mDefaultColor: Int = 0
     private lateinit var newStringColor: String
@@ -45,9 +42,6 @@ class AddRentalActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_rental)
-        val actionBar = (this as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Nouveau Location"
-        myDialog = Dialog(this)
         mDefaultColor = this.getColorCompat(R.color.greencircle)
         viewModel.newRental.color = "#9FE554"
 

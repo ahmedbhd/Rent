@@ -19,6 +19,12 @@ import kotlinx.android.synthetic.main.custom_toolbar.view.*
         type = CustomToolbar::class,
         attribute = "app:onActionClicked",
         method = "setToolbarListener"
+    ),
+
+    BindingMethod(
+        type = CustomToolbar::class,
+        attribute = "app:setCenterTitleText",
+        method = "setCenterTitleText"
     )
 )
 class CustomToolbar : FrameLayout {
@@ -42,46 +48,53 @@ class CustomToolbar : FrameLayout {
     private var toolbarListener: ToolbarListener? = null
 
     // Attributes
-    var toolbarBackgroundDrawable = DEFAULT_BACKGROUND_COLOR
+    private var toolbarBackgroundDrawable = DEFAULT_BACKGROUND_COLOR
         set(value) {
             field = value
             this.setBackgroundResource(value)
         }
 
-    var hasStartActionButton = false
+    private var hasStartActionButton = false
         set(value) {
             field = value
             setComponentVisibility(imageToolbarStartActionIcon, field)
         }
 
-    var hasEndActionButton = false
+    private var hasEndActionButton = false
         set(value) {
             field = value
-            setComponentVisibility(imageToolbarEndActionIcon, field)
+            setComponentVisibility(endAction, field)
         }
 
-    var hasCenterTitle = false
+    private var hasCenterTitle = false
         set(value) {
             field = value
             setComponentVisibility(textToolbarCenterTitle, field)
         }
 
-    var startActionButtonDrawable = DEFAULT_LEFT_ACTION_BUTTON_DRAWABLE
+    private var startActionDrawable = DEFAULT_LEFT_ACTION_BUTTON_DRAWABLE
         set(value) {
             field = value
             imageToolbarStartActionIcon.setImageResource(value)
         }
 
-    var centerTitleText: String? = ""
+    private var titleText
+            : String? = ""
         set(value) {
             field = value
             textToolbarCenterTitle.text = value
         }
 
-    var endActionButtonDrawable = DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE
+    private var endActionDrawable = DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE
         set(value) {
             field = value
             imageToolbarEndActionIcon.setImageResource(value)
+        }
+
+    private var endActionTitle: String? = ""
+        set(value) {
+            field = value
+            textToolbarEndAction.text = value
         }
 
     private fun init(context: Context, attrs: AttributeSet?) {
@@ -92,7 +105,7 @@ class CustomToolbar : FrameLayout {
         initEnd()
         toolbarBackgroundDrawable = toolbarBackgroundDrawable
         imageToolbarStartActionIcon.setClickWithDebounce { toolbarListener?.onStartActionClick() }
-        imageToolbarEndActionIcon.setClickWithDebounce { toolbarListener?.onEndActionClick() }
+        endAction.setClickWithDebounce { toolbarListener?.onEndActionClick() }
     }
 
     private fun initAttributes(context: Context, attrs: AttributeSet?) {
@@ -116,34 +129,43 @@ class CustomToolbar : FrameLayout {
                 R.styleable.CustomToolbar_hasCenterTitle,
                 DEFAULT_HAS_CENTER_TITLE
             )
-            startActionButtonDrawable = array.getResourceId(
-                R.styleable.CustomToolbar_startActionButtonDrawable,
+            startActionDrawable = array.getResourceId(
+                R.styleable.CustomToolbar_startActionDrawable,
                 DEFAULT_LEFT_ACTION_BUTTON_DRAWABLE
             )
-            centerTitleText = array.getString(R.styleable.CustomToolbar_centerTitleText)
-            endActionButtonDrawable = array.getResourceId(
-                R.styleable.CustomToolbar_endActionButtonDrawable,
+            titleText = array.getString(R.styleable.CustomToolbar_centerTitleText)
+            endActionDrawable = array.getResourceId(
+                R.styleable.CustomToolbar_endActionDrawable,
                 DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE
             )
+            endActionTitle = array.getString(R.styleable.CustomToolbar_endActionTitle)
             array.recycle()
         }
     }
 
     private fun initCenter() {
         if (hasCenterTitle) {
-            centerTitleText = centerTitleText
+            titleText = titleText
         }
     }
 
     private fun initStart() {
         if (hasStartActionButton) {
-            startActionButtonDrawable = startActionButtonDrawable
+            startActionDrawable = startActionDrawable
         }
     }
 
     private fun initEnd() {
         if (hasEndActionButton) {
-            endActionButtonDrawable = endActionButtonDrawable
+            if (endActionTitle.isNullOrEmpty()) {
+                endActionDrawable = endActionDrawable
+                setComponentVisibility(imageToolbarEndActionIcon, true)
+                setComponentVisibility(textToolbarEndAction, false)
+            } else {
+                endActionTitle = endActionTitle
+                setComponentVisibility(imageToolbarEndActionIcon, false)
+                setComponentVisibility(textToolbarEndAction, true)
+            }
         }
     }
 
@@ -158,17 +180,22 @@ class CustomToolbar : FrameLayout {
     fun setToolbarListener(toolbarListener: ToolbarListener) {
         this.toolbarListener = toolbarListener
     }
-    
+
     fun setStartDrawable(drawable: Drawable) {
         imageToolbarStartActionIcon.setImageDrawable(drawable)
+    }
+
+    fun setCenterTitleText(title: String?) {
+        title?.let {
+            titleText = title
+        }
     }
 }
 
 
-private const val DEFAULT_BACKGROUND_COLOR = R.color.colorPrimary
+private const val DEFAULT_BACKGROUND_COLOR = R.drawable.global_background
 private const val DEFAULT_HAS_LEFT_ACTION_BUTTON = false
 private const val DEFAULT_HAS_RIGHT_ACTION_BUTTON = false
 private const val DEFAULT_HAS_CENTER_TITLE = false
-private const val DEFAULT_LEFT_ACTION_BUTTON_DRAWABLE = R.drawable.ambilwarna_arrow_right
-private const val DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE = R.drawable.ambilwarna_arrow_down
-
+private const val DEFAULT_LEFT_ACTION_BUTTON_DRAWABLE = R.drawable.ic_arrow_back
+private const val DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE = R.drawable.garbage

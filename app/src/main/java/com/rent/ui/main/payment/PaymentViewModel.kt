@@ -13,14 +13,13 @@ import com.rent.data.repository.payment.PaymentRepository
 import com.rent.global.helper.FetchState
 import com.rent.global.helper.dialog.PaymentDialog
 import com.rent.global.listener.*
-import com.rent.global.utils.DebugLog
-import com.rent.global.utils.TAG
 import com.rent.global.utils.tryCatch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
+
 
 class PaymentViewModel @Inject constructor(
     application: Application,
@@ -126,14 +125,13 @@ class PaymentViewModel @Inject constructor(
 
     private fun onAddPaymentSuccess() {
         hideBlockingProgressBar()
-        showToast("Paiement avec succée")
+        showToast(R.string.payment_successful)
         loadPayments()
     }
 
     private fun onOperationFails(throwable: Throwable) {
         hideBlockingProgressBar()
-        DebugLog.e(TAG, throwable.toString())
-        showToast(applicationContext.getString(R.string.global_operation_failed))
+        handleThrowable(throwable)
     }
 
     override fun onPaymentItemClicked(payment: Payment) {
@@ -170,7 +168,7 @@ class PaymentViewModel @Inject constructor(
             removeAt(position)
         }
 
-        showSnackBarMessage("Paiment Supprimé") {
+        showSnackBarMessage(applicationContext.getString(R.string.delete_successful)) {
             addPayment(locataireWithPayment, position)
         }
     }

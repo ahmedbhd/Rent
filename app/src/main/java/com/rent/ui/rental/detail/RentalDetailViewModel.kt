@@ -41,10 +41,6 @@ class RentalDetailViewModel @Inject constructor(
 ), ToolbarListener, PaymentDialogListener, PhoneDialogListener, CalendarBottomSheetListener,
     PaymentItemSwipeListener, PaymentItemClickListener, AdapterView.OnItemSelectedListener {
 
-
-    var sdate: Date = rentalWithLocataire.rental.dateDebut
-    var edate: Date = rentalWithLocataire.rental.dateFin
-
     var payments = MutableLiveData<ArrayList<LocataireWithPayment>>()
     var paymentDialog = MutableLiveData<PaymentDialog>()
     var phoneDialog = MutableLiveData<PhoneDialog>()
@@ -57,6 +53,14 @@ class RentalDetailViewModel @Inject constructor(
     var endDate = MutableLiveData(rentalWithLocataire.rental.dateFin.toString())
     var time = MutableLiveData("")
     var house = MutableLiveData<String>(rentalWithLocataire.rental.house)
+
+    var dateError = MutableLiveData(false)
+    var cinError = MutableLiveData(false)
+    var nameError = MutableLiveData(false)
+
+    var sdate: Date = rentalWithLocataire.rental.dateDebut
+    var edate: Date = rentalWithLocataire.rental.dateFin
+
     private var rentals = ArrayList<Rental>()
 
 
@@ -119,7 +123,7 @@ class RentalDetailViewModel @Inject constructor(
 
     private fun onDeleteSuccess() {
         hideBlockingProgressBar()
-        showToast("Suppression avec succée")
+        showToast(R.string.delete_successful)
         navigate(Navigation.Back)
     }
 
@@ -157,7 +161,7 @@ class RentalDetailViewModel @Inject constructor(
 
     private fun onAddPaymentSuccess() {
         hideBlockingProgressBar()
-        showToast("Paiement avec succée")
+        showToast(R.string.payment_successful)
     }
 
     override fun onSaveClicked(tel: String) {
@@ -191,10 +195,20 @@ class RentalDetailViewModel @Inject constructor(
     }
 
     private fun checkInputs() {
-        if (rentalWithLocataire.rental.dateDebut.before(rentalWithLocataire.rental.dateFin) && checkAvailability()) {
-            updateRental()
+        if (checkAvailability()) {
+            if (validateDate()) updateRental()
         } else {
-            showToast(applicationContext.getString(R.string.global_incorrect_information))
+            showToast(R.string.global_wrong_rental_details)
+        }
+    }
+
+    private fun validateDate(): Boolean {
+        return if (rentalWithLocataire.rental.dateFin.after(rentalWithLocataire.rental.dateDebut)) {
+            dateError.value = false
+            true
+        } else {
+            dateError.value = true
+            false
         }
     }
 
@@ -241,20 +255,17 @@ class RentalDetailViewModel @Inject constructor(
 
     private fun onOperationFails(throwable: Throwable) {
         hideBlockingProgressBar()
-        DebugLog.e(TAG, throwable.toString())
-        showToast(applicationContext.getString(R.string.global_operation_failed))
+        handleThrowable(throwable)
     }
 
     private fun onUpdateRentalSuccess() {
         hideBlockingProgressBar()
-        showToast("Mise à jour succée")
+        showToast(R.string.global_update_successful)
         navigate(Navigation.Back)
     }
 
     fun checkLocataire() {
-        if (cin.value.isNullOrEmpty() || name.value.isNullOrEmpty() || rentalWithLocataire.locataire.numTel.isValidPhoneNumber().not()){
-            showToast(applicationContext.getString(R.string.global_incorrect_information))
-        }else {
+        if (validateCin() and validateName() and validateTel()) {
             updateLocataire()
         }
     }
@@ -277,7 +288,7 @@ class RentalDetailViewModel @Inject constructor(
 
     private fun onUpdateLocataireSuccess() {
         hideBlockingProgressBar()
-        showToast("Mise à jour succée")
+        showToast(R.string.global_update_successful)
     }
 
     fun getPaymentByRentalId() {
@@ -297,7 +308,7 @@ class RentalDetailViewModel @Inject constructor(
     private fun onGetPaymentByRentalIdSuccess(response: ArrayList<LocataireWithPayment>) {
         hideBlockingProgressBar()
         payments.value = response.also {
-            if (it.isEmpty()) showToast("Pas de données à afficher")
+            if (it.isEmpty()) showToast(R.string.global_no_data_to_display)
         }
     }
 
@@ -320,7 +331,7 @@ class RentalDetailViewModel @Inject constructor(
         payments.value = payments.value?.apply {
             removeAt(position)
         }
-        showSnackBarMessage("Paiment Supprimé") {
+        showSnackBarMessage(applicationContext.getString(R.string.delete_successful)) {
             addPayment(locataireWithPayment, position)
         }
     }
@@ -358,5 +369,42 @@ class RentalDetailViewModel @Inject constructor(
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         house.value = parent?.adapter?.getItem(position)?.toString()
+    }
+
+    private fun validateTel(): Boolean {
+        return if (rentalWithLocataire.locataire.numTel.isValidPhoneNumber()) {
+            true
+        } else {
+            showToast(R.string.global_wrong_phone)
+            false
+        }
+    }
+
+    private fun validateCin(): Boolean {
+        return if (cin.value.isNullOrEmpty()) {
+            cinError.value = true
+            false
+        } else {
+            cinError.value = false
+            true
+        }
+    }
+
+    private fun validateName(): Boolean {
+        return if (name.value.isNullOrEmpty()) {
+            nameError.value = true
+            false
+        } else {
+            nameError.value = false
+            true
+        }
+    }
+
+    override fun onEndActionClick() {
+        deleteRental()
+    }
+
+    override fun onStartActionClick() {
+        navigate(Navigation.Back)
     }
 }

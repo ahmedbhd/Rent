@@ -34,21 +34,26 @@ class AddRentalViewModel @Inject constructor(
     schedulerProvider
 ), ToolbarListener, AdapterView.OnItemSelectedListener, PhoneDialogListener {
 
-
-    var newRental: Rental = Rental()
-    var newLocataire: Locataire? = null
     var locataires = MutableLiveData<ArrayList<String>>()
     var resultRentals: ArrayList<Locataire>? = ArrayList()
-    var selectedLocataire: String =
-        applicationContext.getString(R.string.add_rental_empty_locataire)
     var phoneDialog = MutableLiveData<PhoneDialog>()
     var cin = MutableLiveData<String>()
     var name = MutableLiveData<String>()
     var startDate = MutableLiveData<String>(formatDate.format(Date()))
     var endDate = MutableLiveData<String>(formatDate.format(Date()))
     var addTime = MutableLiveData<String>(applicationContext.getString(R.string._00_00_00))
-    var stringTel = ""
     var house = MutableLiveData<String>()
+
+    var cinError = MutableLiveData(false)
+    var nameError = MutableLiveData(false)
+    var dateError = MutableLiveData(false)
+
+
+    var newRental: Rental = Rental()
+    private var newLocataire: Locataire? = null
+    private var selectedLocataire: String =
+        applicationContext.getString(R.string.add_rental_empty_locataire)
+    private var stringTel = ""
     private var rentals = ArrayList<Rental>()
 
 
@@ -96,12 +101,12 @@ class AddRentalViewModel @Inject constructor(
     private fun onAddRentalFail(throwable: Throwable) {
         hideBlockingProgressBar()
         DebugLog.e(TAG, throwable.toString())
-        showToast(applicationContext.getString(R.string.global_operation_failed))
+        showToast(R.string.global_operation_failed)
     }
 
     private fun onAddRentalSuccess() {
         hideBlockingProgressBar()
-        showToast(applicationContext.getString(R.string.global_add_succeeded))
+        showToast(R.string.global_add_succeeded)
         navigate(Navigation.Back)
     }
 
@@ -198,22 +203,71 @@ class AddRentalViewModel @Inject constructor(
 
     private fun checkInputs() {
         if (checkAvailability()) {
-            if (cin.value.isNullOrEmpty().not() &&
-                name.value.isNullOrEmpty().not() &&
-                stringTel.isValidPhoneNumber() &&
-                newRental.dateFin.after(newRental.dateDebut)
+            if (validateCin() and
+                validateName() and
+                validateTel() and
+                validateDate()
             ) {
                 addLocataire()
                 return
-            } else if ((selectedLocataire != applicationContext.getString(R.string.add_rental_empty_locataire)) && newRental.dateFin.after(
-                    newRental.dateDebut
-                )
-            ) {
+            } else if (validateLocataire() and validateDate()) {
                 addRental()
                 return
             }
         } else {
-            showToast(applicationContext.getString(R.string.global_incorrect_information))
+            showToast(R.string.global_wrong_rental_details)
         }
+    }
+
+    private fun validateCin(): Boolean {
+        return if (cin.value.isNullOrEmpty()) {
+            cinError.value = true
+            false
+        } else {
+            cinError.value = false
+            true
+        }
+    }
+
+    private fun validateName(): Boolean {
+        return if (name.value.isNullOrEmpty()) {
+            nameError.value = true
+            false
+        } else {
+            nameError.value = false
+            true
+        }
+    }
+
+    private fun validateDate(): Boolean {
+        return if (newRental.dateFin.after(newRental.dateDebut)) {
+            dateError.value = false
+            true
+        } else {
+            dateError.value = true
+            false
+        }
+    }
+
+    private fun validateTel(): Boolean {
+        return if (stringTel.isValidPhoneNumber()) {
+            true
+        } else {
+            showToast(R.string.global_wrong_phone)
+            false
+        }
+    }
+
+    private fun validateLocataire(): Boolean {
+        return if (selectedLocataire != applicationContext.getString(R.string.add_rental_empty_locataire)) {
+            true
+        } else {
+            showToast(R.string.global_wrong_locataire)
+            false
+        }
+    }
+
+    override fun onStartActionClick() {
+        navigate(Navigation.Back)
     }
 }

@@ -3,7 +3,7 @@ package com.rent.ui.main.rental
 import android.app.Application
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
@@ -37,17 +37,16 @@ class RentalViewModel @Inject constructor(
 ) : BaseAndroidViewModel(
     application,
     schedulerProvider
-), ToolbarListener, RentalItemClickListener, SearchView.OnQueryTextListener,
-    RentalItemSwipeListener, DialogCustomCallListener, Filterable {
+), ToolbarListener, RentalItemClickListener,
+    RentalItemSwipeListener, DialogCustomCallListener, Filterable,
+    SearchView.OnQueryTextListener {
 
     var rentals = MutableLiveData<ArrayList<RentalWithLocataire>>()
     private var backUpLocations: ArrayList<RentalWithLocataire> = ArrayList()
 
-    //    private var backUpLocataires: ArrayList<Locataire> = ArrayList()
     var callDialog = MutableLiveData<CallDialog>()
     var telToBeCalled = MutableLiveData<String>()
     private var fetch: MutableLiveData<FetchState> = MutableLiveData()
-//    private var locataires = ArrayList<Locataire>()
 
 
     init {

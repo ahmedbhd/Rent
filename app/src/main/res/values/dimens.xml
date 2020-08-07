@@ -11,4 +11,7 @@
     <dimen name="global_circle_image_width">100dp</dimen>
     <dimen name="global_circle_image_height">100dp</dimen>
     <dimen name="global_radius_button">5dp</dimen>
+
+    <!-- Custom Toolbar -->
+    <dimen name="size_custom_toolbar_end_action_image">25dp</dimen>
 </resources>

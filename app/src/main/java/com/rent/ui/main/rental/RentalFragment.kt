@@ -1,14 +1,12 @@
 package com.rent.ui.main.rental
 
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
-import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rent.R
@@ -21,7 +19,6 @@ import com.rent.global.listener.DialogCustomCallListener
 import com.rent.global.utils.ExtraKeys
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.main.calendar.REQUEST_CODE
-import com.rent.ui.rental.add.AddRentalActivity
 import com.rent.ui.rental.detail.RentalDetailActivity
 import com.rent.ui.shared.dialog.CustomCallDialog
 import javax.inject.Inject
@@ -50,10 +47,6 @@ class RentalFragment : BaseFragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_rental, container, false)
 
-        val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Locations"
-        setHasOptionsMenu(true)
-
         binding = FragmentRentalBinding.bind(root)
         registerBindingAndBaseObservers()
 
@@ -62,6 +55,7 @@ class RentalFragment : BaseFragment() {
 
     private fun registerBindingAndBaseObservers() {
         binding.viewModel = viewModel
+        binding.activity = requireActivity()
         binding.lifecycleOwner = viewLifecycleOwner
     }
 
@@ -109,32 +103,6 @@ class RentalFragment : BaseFragment() {
         binding.flistfav.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.flistfav.adapter = rentalListAdapter
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_location, menu)
-
-        // Associate searchable configuration with the SearchView
-        val searchManager =
-            requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchMenuItem = menu.findItem(R.id.search)
-        val searchView = searchMenuItem.actionView as SearchView
-
-        searchView.setSearchableInfo(
-            searchManager.getSearchableInfo(requireActivity().componentName)
-        )
-        searchView.isSubmitButtonEnabled = false
-        searchView.setOnQueryTextListener(viewModel)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.add_loc -> {
-                navigateToClass(AddRentalActivity::class)
-            }
-
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun navigate(navigationTo: Navigation) {

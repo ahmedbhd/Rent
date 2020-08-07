@@ -5,12 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.TimePicker
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.*
@@ -61,9 +58,6 @@ class RentalDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_rental_detail)
-
-        val actionBar = (this as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Detail Location"
 
         paymentRecyclerView = findViewById(R.id.det_listview)
         initCalendar()
@@ -379,21 +373,5 @@ class RentalDetailActivity : BaseActivity() {
                 finish()
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_det, menu)
-        super.onCreateOptionsMenu(menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.del_loc -> {
-                viewModel.deleteRental()
-            }
-
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

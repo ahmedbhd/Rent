@@ -1,5 +1,8 @@
 package com.rent.global.utils
 
+import android.app.Activity
+import android.app.SearchManager
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -383,5 +387,22 @@ fun setBackgroundColor(
     color?.let {
         val background = textView.background
         (background as GradientDrawable).setColor(it)
+    }
+}
+
+@BindingAdapter(value = ["searchListener", "searchActivity"], requireAll = true)
+fun setSearchListener(
+    searchView: SearchView,
+    listener: SearchView.OnQueryTextListener?,
+    activity: Activity
+) {
+    listener?.let {
+        val searchManager =
+            activity.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(
+            searchManager.getSearchableInfo(activity.componentName)
+        )
+        searchView.isSubmitButtonEnabled = false
+        searchView.setOnQueryTextListener(listener)
     }
 }

@@ -6,8 +6,9 @@
         <attr name="hasStartActionButton" format="boolean" />
         <attr name="hasEndActionButton" format="boolean" />
         <attr name="hasCenterTitle" format="boolean" />
-        <attr name="startActionButtonDrawable" format="integer" />
-        <attr name="endActionButtonDrawable" format="integer" />
+        <attr name="startActionDrawable" format="integer" />
+        <attr name="endActionDrawable" format="integer" />
+        <attr name="endActionTitle" format="string" />
         <attr name="centerTitleText" format="string" />
     </declare-styleable>
 

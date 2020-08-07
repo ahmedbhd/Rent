@@ -4,9 +4,10 @@ package com.rent.ui.main.calendar
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,10 +65,6 @@ class CalendarFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Calendrier"
-        setHasOptionsMenu(true)
-
         val view = inflater.inflate(R.layout.fragment_calendar, container, false)
         binding = FragmentCalendarBinding.bind(view)
         registerBindingAndBaseObservers()
@@ -98,22 +95,6 @@ class CalendarFragment : BaseFragment() {
         binding.exFiveRv.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.exFiveRv.adapter = calendarAdapter
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.add_loc -> {
-                Intent(requireContext(), AddRentalActivity::class.java).also {
-                    startActivityForResult(it, REQUEST_CODE)
-                }
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun prepareView(items: Map<LocalDate, List<Flight>>) {
@@ -238,6 +219,14 @@ class CalendarFragment : BaseFragment() {
         super.navigate(navigationTo)
         when (navigationTo) {
             is Navigation.RentalDetailActivityNavigation -> navigateToRentalDetail(navigationTo.rentalAndLocataire)
+
+            is Navigation.AddRentalActivityNavigation -> navigateToAddRentalActivity()
+        }
+    }
+
+    private fun navigateToAddRentalActivity() {
+        Intent(requireContext(), AddRentalActivity::class.java).also {
+            startActivityForResult(it, REQUEST_CODE)
         }
     }
 

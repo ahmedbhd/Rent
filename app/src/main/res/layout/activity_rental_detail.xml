@@ -15,38 +15,53 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/det_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:paddingTopSystemWindowInsets="@{true}">
+            android:layout_height="match_parent">
+
+        <com.rent.ui.shared.view.CustomToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:centerTitleText="@string/global_detail_locataire"
+                app:endActionDrawable="@drawable/garbage"
+                app:hasCenterTitle="true"
+                app:hasEndActionButton="true"
+                app:hasStartActionButton="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:onActionClicked="@{viewModel}"
+                app:paddingTopSystemWindowInsets="@{true}"
+                app:startActionDrawable="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/addLocContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginStart="@dimen/margin_global_10dp"
+                android:layout_marginTop="@dimen/margin_global_10dp"
+                android:layout_marginEnd="@dimen/margin_global_10dp"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toTopOf="@id/AddlayoutDetails"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintVertical_bias="0.15"
                 app:layout_constraintVertical_chainStyle="packed">
 
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="@dimen/margin_global_10dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="@dimen/margin_global_10dp"
+                        android:layout_marginRight="@dimen/margin_global_10dp"
                         android:text="@string/global_detail_locataire"
                         android:textColor="#C1F75959"
                         android:textStyle="italic" />
@@ -55,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/margin_global_16dp"
                         android:layout_toStartOf="@id/tvText"
                         android:background="#FF0000" />
 
@@ -63,7 +78,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginEnd="@dimen/margin_global_16dp"
                         android:layout_toEndOf="@id/tvText"
                         android:background="#FF0000" />
 
@@ -73,20 +88,22 @@
                     android:id="@+id/det_cin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_margin="@dimen/margin_global_5dp"
                     android:hint="@string/global_identity_cart"
                     android:inputType="number"
                     android:text="@={viewModel.cin}"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColorHint="@{viewModel.cinError ? @color/red_800: @color/dark_gray}" />
 
             <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/det_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_margin="@dimen/margin_global_5dp"
                     android:hint="@string/global_name_surname"
                     android:text="@={viewModel.name}"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:textColorHint="@{viewModel.nameError ? @color/red_800: @color/dark_gray}" />
 
             <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/add_tel_det"
@@ -94,13 +111,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_margin="@dimen/margin_global_5dp"
                     android:drawableEnd="@drawable/phonelist"
-                    android:drawablePadding="2dp"
+                    android:drawablePadding="@dimen/padding_global_2dp"
                     android:gravity="center"
                     android:text="@string/global_phones"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="@dimen/font_18sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/updateLoca"
@@ -108,25 +125,25 @@
                     onClickWithDebounce="@{() -> viewModel.checkLocataire()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:padding="8dp"
-                    android:text="Modifier Locataire"
+                    android:layout_margin="@dimen/margin_global_12dp"
+                    android:padding="@dimen/padding_global_8dp"
+                    android:text="@string/rental_detail_update_locataire"
                     android:theme="@style/FlatButton" />
 
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginTop="@dimen/margin_global_10dp"
+                    android:layout_marginBottom="@dimen/margin_global_10dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvText2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:text="Detail Location"
+                        android:layout_marginStart="@dimen/margin_global_10dp"
+                        android:layout_marginEnd="@dimen/margin_global_10dp"
+                        android:text="@string/global_rental_details"
                         android:textColor="#C1F75959"
                         android:textStyle="italic" />
 
@@ -134,7 +151,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginStart="@dimen/margin_global_16dp"
                         android:layout_toStartOf="@id/tvText2"
                         android:background="#FF0000" />
 
@@ -142,7 +159,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginEnd="@dimen/margin_global_16dp"
                         android:layout_toEndOf="@id/tvText2"
                         android:background="#FF0000" />
 
@@ -153,7 +170,7 @@
                 android:id="@+id/AddlayoutDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/margin_global_5dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -163,7 +180,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp">
+                    android:layout_margin="@dimen/margin_global_5dp">
 
                 <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/editRentalHouse"
@@ -217,9 +234,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20dp"
-                        android:text="Changer le couleur"
+                        android:text="@string/global_change_color"
                         android:textColor="#FC161515"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/font_18sp"
                         android:textStyle="bold|italic" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -245,7 +262,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"
+                    android:layout_margin="@dimen/margin_global_5dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -254,20 +271,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_marginStart="5dp"
-
-                        android:text="De: " />
+                        android:layout_marginStart="@dimen/margin_global_5dp"
+                        android:text="@string/global_from" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/det_date_debu"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal|center_vertical"
-
                         android:layout_weight="1"
                         android:text="@{viewModel.startDate}"
                         android:textAlignment="center"
-                        android:textSize="18sp"
+                        android:textColor="@{viewModel.dateError ? @color/red_800: @color/dark_gray}"
+                        android:textSize="@dimen/font_18sp"
                         android:textStyle="italic" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -275,9 +291,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:text="A: " />
+                        android:layout_marginStart="@dimen/margin_global_5dp"
+                        android:text="@string/global_to" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/det_date_fin"
@@ -287,7 +302,8 @@
                         android:layout_weight="1"
                         android:text="@{viewModel.endDate}"
                         android:textAlignment="center"
-                        android:textSize="18sp"
+                        android:textColor="@{viewModel.dateError ? @color/red_800: @color/dark_gray}"
+                        android:textSize="@dimen/font_18sp"
                         android:textStyle="italic" />
 
 
@@ -303,11 +319,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-
                         android:layout_weight="1"
                         android:text="@={viewModel.time}"
                         android:textAlignment="center"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/font_18sp"
                         android:textStyle="italic" />
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -316,7 +331,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:contentDescription="DATE"
+                        android:contentDescription="@string/global_date"
                         app:srcCompat="@drawable/clockicon" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -328,9 +343,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="12dp"
-                    android:padding="8dp"
-                    android:text="Modifier location"
+                    android:layout_margin="@dimen/margin_global_12dp"
+                    android:padding="@dimen/padding_global_8dp"
+                    android:text="@string/rental_details_update_rental"
                     android:theme="@style/FlatButton" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -339,7 +354,7 @@
                 onClickWithDebounce="@{() -> viewModel.showPaymentDialog()}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="@dimen/margin_global_8dp"
                 android:layout_marginBottom="92dp"
                 android:clickable="true"
                 app:backgroundTint="@color/dollar"

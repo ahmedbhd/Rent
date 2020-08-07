@@ -12,6 +12,8 @@ import com.rent.global.helper.dialog.ChooseDialog
 import com.rent.global.helper.dialog.CustomSnackBar
 import com.rent.global.helper.dialog.SimpleDialog
 import com.rent.global.listener.SchedulerProvider
+import com.rent.global.utils.DebugLog
+import com.rent.global.utils.TAG
 import com.rent.global.utils.isNetworkAvailable
 import java.io.IOException
 
@@ -206,8 +208,9 @@ abstract class BaseAndroidViewModel(
         )
     }
 
-    fun showToast(message: String) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_LONG).show()
+    fun showToast(resId: Int) {
+        Toast.makeText(applicationContext, applicationContext.getString(resId), Toast.LENGTH_LONG)
+            .show()
     }
 
     /**
@@ -216,20 +219,8 @@ abstract class BaseAndroidViewModel(
      *
      */
     protected fun handleThrowable(throwable: Throwable) {
-        when (throwable) {
-            is IOException -> {
-                if (!applicationContext.isNetworkAvailable()) {
-                    showSimpleDialog(
-                        titleId = R.string.global_error,
-                        messageId = R.string.global_error_unavailable_network,
-                        okId = R.string.global_ok
-                    )
-                } else {
-                    showServerErrorSimpleDialog()
-                }
-            }
-            else -> showServerErrorSimpleDialog()
-        }
+        DebugLog.e(TAG, throwable.toString())
+        showToast(R.string.global_operation_failed)
     }
 
 

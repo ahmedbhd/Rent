@@ -32,7 +32,6 @@
     <string name="log_selected_days">Log selected days</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="enregistrer">Enregistrer</string>
     <string name="date">00–00–00</string>
     <string name="_00_00_00">00:00</string>
@@ -84,10 +83,31 @@
     <string name="dialog_payment_type">Type :</string>
     <string name="global_x">X</string>
     <string name="global_detail_locataire">Detail Locataire</string>
-    <string name="global_identity_cart">Carte identitée</string>
+    <string name="global_identity_cart">Carte identité</string>
     <string name="global_name_surname">Nom et prénom</string>
-    <string name="global_phones">Telephones</string>
-    <string name="global_phone">Telephone</string>
+    <string name="global_phones">Téléphones</string>
+    <string name="global_phone">Téléphone</string>
     <string name="global_locataire">Locataire</string>
+
+    <string name="global_wrong_phone">Téléphone incorrect</string>
+    <string name="global_wrong_locataire">Locataire incorrect</string>
+    <string name="global_wrong_rental_details">Date/maison indisponible</string>
+    <string name="global_no_data_to_display">Pas de données à afficher</string>
+    <string name="global_update_successful">Mise à jour succée</string>
+    <string name="payment_successful">Paiement avec succée</string>
+    <string name="delete_successful">Suppression avec succée</string>
+    <string name="rental_details_update_rental">Modifier location</string>
+    <string name="global_date">DATE</string>
+    <string name="global_change_color">Changer le couleur</string>
+    <string name="global_rental_details">Detail Location</string>
+    <string name="rental_detail_update_locataire">Modifier Locataire</string>
+    <string name="global_from">De:</string>
+    <string name="global_to">A:</string>
+    <string name="add_rental">Ajouter Location</string>
+    <string name="global_finish">Terminer</string>
+    <string name="global_new_rental">Nouveau Location</string>
+    <string name="global_calendar">Calendrier</string>
+    <string name="global_payments">Paiements</string>
+    <string name="global_rentals">Locations</string>
 
 </resources>

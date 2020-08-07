@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rent.R
@@ -39,8 +38,6 @@ class PaymentFragment : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_payment, container, false)
-        val actionBar = (activity as AppCompatActivity).supportActionBar
-        actionBar!!.title = "Paiements"
 
         binding = FragmentPaymentBinding.bind(root)
         registerBindingAndBaseObservers()

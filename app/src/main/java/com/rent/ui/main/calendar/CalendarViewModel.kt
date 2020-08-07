@@ -1,8 +1,9 @@
 package com.rent.ui.main.calendar
 
 import android.app.Application
-import androidx.lifecycle.*
-import com.rent.R
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.flight.Flight
 import com.rent.data.model.locataire.Locataire
@@ -14,8 +15,6 @@ import com.rent.global.helper.Navigation
 import com.rent.global.listener.CalendarItemClickListener
 import com.rent.global.listener.SchedulerProvider
 import com.rent.global.listener.ToolbarListener
-import com.rent.global.utils.DebugLog
-import com.rent.global.utils.TAG
 import com.rent.global.utils.generateFlights
 import com.rent.global.utils.tryCatch
 import kotlinx.coroutines.launch
@@ -68,8 +67,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun onLoadRentalsFails(throwable: Throwable) {
         hideBlockingProgressBar()
-        DebugLog.e(TAG, throwable.toString())
-        showToast(applicationContext.getString(R.string.global_operation_failed))
+        handleThrowable(throwable)
     }
 
     private fun onLoadRentalsSuccess(response: List<Rental>) {
@@ -95,5 +93,9 @@ class CalendarViewModel @Inject constructor(
 
     override fun onCalendarItemClicked(flight: Flight) {
         navigate(Navigation.RentalDetailActivityNavigation(rentals.value!!.first { it.rental.idRental == flight.idRental }))
+    }
+
+    override fun onEndActionClick() {
+        navigate(Navigation.AddRentalActivityNavigation)
     }
 }
