@@ -132,6 +132,10 @@ dependencies {
     implementation "com.google.firebase:firebase-analytics-ktx:$versions.analytics_ktx"
     implementation "com.google.firebase:firebase-crashlytics:$versions.analytics"
 
+    //fireBase dataBase
+    implementation "com.google.firebase:firebase-database-ktx:$versions.firebase_database"
+    implementation "com.google.firebase:firebase-auth-ktx:$versions.firebase_auth"
+
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

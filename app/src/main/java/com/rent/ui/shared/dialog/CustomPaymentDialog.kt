@@ -13,6 +13,8 @@ import com.rent.R
 import com.rent.data.model.payment.Payment
 import com.rent.databinding.DialogCustomPaymentBinding
 import com.rent.global.listener.PaymentDialogListener
+import com.rent.global.utils.SECONDS
+import com.rent.global.utils.formatDateTime
 import com.rent.global.utils.hideKeyboard
 import java.util.*
 
@@ -143,7 +145,7 @@ class CustomPaymentDialog(
                 paymentDialogListener.onSavePaymentButtonClicked(
                     Payment(
                         payment.idPayment,
-                        binding.addDate.text.toString() + " " + binding.addTime.text.toString(),
+                        formatDateTime.parse(binding.addDate.text.toString() + " " + binding.addTime.text.toString() + SECONDS)!!,
                         Integer.parseInt(binding.addAmount.text.toString()),
                         typePayment,
                         payment.rentalId

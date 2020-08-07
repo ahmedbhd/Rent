@@ -22,7 +22,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:centerTitleText="@string/global_detail_locataire"
-                app:endActionDrawable="@drawable/garbage"
+                app:endActionDrawable="@drawable/ic_garbage"
                 app:hasCenterTitle="true"
                 app:hasEndActionButton="true"
                 app:hasStartActionButton="true"
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/margin_global_5dp"
-                    android:drawableEnd="@drawable/phonelist"
+                    android:drawableEnd="@drawable/ic_phone_contact"
                     android:drawablePadding="@dimen/padding_global_2dp"
                     android:gravity="center"
                     android:text="@string/global_phones"
@@ -255,7 +255,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/calendaricon" />
+                    app:srcCompat="@drawable/ic_calendar_icon" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/AddDateLayout"
@@ -332,7 +332,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:contentDescription="@string/global_date"
-                        app:srcCompat="@drawable/clockicon" />
+                        app:srcCompat="@drawable/ic_clock_icon" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -360,7 +360,7 @@
                 app:backgroundTint="@color/dollar"
                 app:layout_constraintBottom_toBottomOf="@+id/coordinatorLayout"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/dollar" />
+                app:srcCompat="@drawable/ic_dollar" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/coordinatorLayoutCal"

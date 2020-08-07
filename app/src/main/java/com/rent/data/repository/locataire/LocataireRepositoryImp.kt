@@ -6,12 +6,13 @@ import com.rent.data.model.locataire.Locataire
 import com.rent.global.helper.SharedPreferences
 import javax.inject.Inject
 
+
 class LocataireRepositoryImp
 @Inject constructor(
     sharedPreferences: SharedPreferences,
     database: Database
 ) : BaseRepository(sharedPreferences, database), LocataireRepository {
-    override suspend fun getLocataire() = database.locataireDao().getLocataires()
+    override suspend fun getLocataires() = database.locataireDao().getLocataires()
 
     override suspend fun addLocataire(locataire: Locataire): Locataire {
         database.locataireDao().addLocataire(locataire)
@@ -25,4 +26,9 @@ class LocataireRepositoryImp
 
     override suspend fun updateLocataire(locataire: Locataire) =
         database.locataireDao().updateLocataire(locataire)
+
+    override suspend fun synchronise(locataires: List<Locataire>) {
+        database.locataireDao().deleteAllLocataire()
+        database.locataireDao().addAllLocataire(*locataires.toTypedArray())
+    }
 }

@@ -23,7 +23,7 @@
                 android:layout_height="30dp"
                 android:layout_gravity="end"
                 android:layout_margin="@dimen/margin_global_2dp"
-                android:background="@drawable/cerclebackground"
+                android:background="@drawable/cercle_background"
                 android:gravity="center"
                 android:text="@string/global_x"
                 android:textColor="@color/backgroundColor"
@@ -100,7 +100,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/calendaricon" />
+                    app:srcCompat="@drawable/ic_calendar_icon" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -127,7 +127,7 @@
                     android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/clockicon" />
+                    app:srcCompat="@drawable/ic_clock_icon" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -138,7 +138,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/margin_global_25dp"
                 android:layout_marginBottom="@dimen/margin_global_15dp"
-                android:background="@drawable/buttonstyle"
+                android:background="@drawable/dialog_payment_button_style"
                 android:text="@string/enregistrer"
                 android:textColor="@color/backgroundColor" />
 

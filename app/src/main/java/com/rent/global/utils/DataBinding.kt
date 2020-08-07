@@ -16,7 +16,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -122,12 +121,6 @@ fun setCalendarItems(
     data?.let {
         recyclerView.invalidate()
         (recyclerView.adapter as CalendarAdapter).setData(it)
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                recyclerView.context,
-                RecyclerView.VERTICAL
-            )
-        )
     }
 }
 
@@ -138,12 +131,6 @@ fun setRentalItems(
 ) {
     data?.let {
         (recyclerView.adapter as RentalListAdapter).setData(it)
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                recyclerView.context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
         prepareRentalRecyclerView(recyclerView)
     }
 }
@@ -153,7 +140,7 @@ private fun prepareRentalRecyclerView(recyclerView: RecyclerView) {
     val colorDrawableBackground = ColorDrawable(Color.parseColor("#0097A7"))
     val deleteIcon = ContextCompat.getDrawable(
         recyclerView.context,
-        R.drawable.phonecall
+        R.drawable.ic_phone
     )!!
 
     val itemTouchHelperCallback = object :
@@ -267,12 +254,6 @@ fun setPaymentItems(
 ) {
     data?.let {
         (recyclerView.adapter as PaymentListAdapter).setData(it)
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                recyclerView.context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
         preparePaymentRecyclerView(recyclerView)
     }
 }
@@ -283,7 +264,7 @@ private fun preparePaymentRecyclerView(recyclerView: RecyclerView) {
     val colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
     val deleteIcon = ContextCompat.getDrawable(
         recyclerView.context,
-        R.drawable.ic_delete_white_24dp
+        R.drawable.ic_delete_item
     )!!
 
     val itemTouchHelperCallback = object :

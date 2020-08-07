@@ -17,16 +17,13 @@
             app:behavior_peekHeight="?actionBarSize"
             app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <!--expand to top android:layout_height="match_parent"-->
-        <!--android:layout_height="300dp"-->
-
         <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:background="@color/cardview_dark_background"
-                android:paddingEnd="8dp"
+                android:background="@color/example_5_text_grey_light"
                 android:orientation="horizontal"
-                android:paddingStart="8dp">
+                android:paddingStart="@dimen/padding_global_8dp"
+                android:paddingEnd="@dimen/padding_global_8dp">
 
             <androidx.appcompat.widget.AppCompatToggleButton
                     android:id="@+id/toggleButton"
@@ -34,29 +31,29 @@
                     android:layout_height="30dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:background="@drawable/tb_up_down"
+                    android:layout_gravity="center|start"
+                    android:layout_marginStart="@dimen/margin_global_8dp"
+                    android:layout_marginTop="@dimen/margin_global_8dp"
+                    android:layout_marginBottom="@dimen/margin_global_8dp"
+                    android:background="@drawable/bottom_sheet_toggle"
                     android:text=""
                     android:textOff=""
-                    android:textOn=""
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="center|start"/>
+                    android:textOn="" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:text="List Paiements"
+                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/textView4"
+                    android:layout_gravity="center|end"
+                    android:layout_marginStart="@dimen/margin_global_20dp"
+                    android:layout_marginTop="@dimen/margin_global_8dp"
+                    android:layout_marginBottom="@dimen/margin_global_8dp"
+                    android:gravity="center|end"
+                    android:text="@string/rental_detail_payment_list"
                     android:textColor="#FDFCF9F9"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:gravity="center|end"
-                    tools:layout_editor_absoluteX="145dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="center|end"
-                    android:layout_marginStart="20dp"/>
+                    tools:layout_editor_absoluteX="145dp" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -67,11 +64,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"
-
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

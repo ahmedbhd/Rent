@@ -136,7 +136,7 @@ class AddRentalViewModel @Inject constructor(
         viewModelScope.launch {
             tryCatch({
                 val locataires = withContext(schedulerProvider.dispatchersIO()) {
-                    locataireRepository.getLocataire()
+                    locataireRepository.getLocataires()
                 }
                 val rentals = withContext(schedulerProvider.dispatchersIO()) {
                     rentalRepository.getRentals()
@@ -158,7 +158,7 @@ class AddRentalViewModel @Inject constructor(
         rentals = ArrayList(rentalsResponse)
         resultRentals = ArrayList(response)
         val array = ArrayList<String>()
-//        array.add(applicationContext.getString(R.string.add_rental_empty_locataire))
+//        array.ic_add(applicationContext.getString(R.string.add_rental_empty_locataire))
         response.forEach {
             array.add(it.fullName + applicationContext.getString(R.string.add_rental_empty_locataire) + it.cin)
         }
@@ -196,8 +196,9 @@ class AddRentalViewModel @Inject constructor(
 
     fun onAddRentalClicked() {
         newRental.house = house.value!!
-        newRental.dateDebut = formatDateTime.parse(startDate.value + " " + addTime.value + ":00")!!
-        newRental.dateFin = formatDateTime.parse(endDate.value + " " + addTime.value + ":00")!!
+        newRental.dateDebut =
+            formatDateTime.parse(startDate.value + " " + addTime.value + SECONDS)!!
+        newRental.dateFin = formatDateTime.parse(endDate.value + " " + addTime.value + SECONDS)!!
         checkInputs()
     }
 
@@ -250,7 +251,9 @@ class AddRentalViewModel @Inject constructor(
     }
 
     private fun validateTel(): Boolean {
-        return if (stringTel.isValidPhoneNumber()) {
+        return if (stringTel.split(",")
+                .any { it.isValidPhoneNumber() }
+        ) {
             true
         } else {
             showToast(R.string.global_wrong_phone)

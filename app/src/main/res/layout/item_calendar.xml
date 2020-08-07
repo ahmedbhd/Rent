@@ -22,29 +22,28 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/example_5_item_view_bg_color">
+            android:background="@color/white_basic">
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/itemFlightDateText"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="#5D4037"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:lineSpacingExtra="2.5dp"
                 android:text="@{time}"
                 android:textAllCaps="true"
                 android:textColor="@color/example_5_text_grey"
-                android:textSize="12sp"
+                android:textSize="@dimen/font_12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="H,1:1"
+                app:layout_constraintDimensionRatio="H,1:2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="percent"
-                app:layout_constraintWidth_percent="0.143"
+                tools:background="#5D4037"
                 tools:text="THU\nJUN 30\n14:00" />
 
         <!--Colored view dividers-->
         <View
+                android:id="@+id/colorSeparator1"
                 android:layout_width="1.3dp"
                 android:layout_height="0dp"
                 android:background="@color/black"
@@ -54,7 +53,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         <View
-                android:id="@+id/v2"
+                android:id="@+id/colorSeparator2"
                 android:layout_width="0.7dp"
                 android:layout_height="0dp"
                 android:background="@color/black"
@@ -62,53 +61,41 @@
                 app:layout_constraintStart_toEndOf="@id/itemFlightDateText"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/itemFlightDepartureLayout"
-                android:layout_width="291dp"
-                android:layout_height="46dp"
-                android:layout_marginBottom="2dp"
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/itemDepartureAirportCodeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
                 android:gravity="center"
-                android:orientation="vertical"
+                android:text="@{code}"
+                android:textColor="@color/example_5_text_grey"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/itemDepartureAirportCityText"
+                app:layout_constraintEnd_toStartOf="@+id/viewEndEdge"
+                app:layout_constraintStart_toEndOf="@+id/colorSeparator2"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="LOS" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/itemDepartureAirportCityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:text="@{city}"
+                android:textColor="@color/example_5_text_grey"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintDimensionRatio="W,2:1"
-                app:layout_constraintEnd_toStartOf="@+id/view"
-                app:layout_constraintStart_toEndOf="@+id/v2"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintEnd_toStartOf="@+id/viewEndEdge"
+                app:layout_constraintStart_toEndOf="@+id/colorSeparator2"
+                app:layout_constraintTop_toBottomOf="@id/itemDepartureAirportCodeText"
+                tools:text="Lagos" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/itemDepartureAirportCodeText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:gravity="center"
-                    android:text="@{code}"
-                    android:textColor="@color/example_5_text_grey"
-                    android:textSize="16sp"
-                    tools:text="LOS" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/itemDepartureAirportCityText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:text="@{city}"
-                    android:textColor="@color/example_5_text_grey"
-                    android:textSize="16sp"
-                    tools:text="Lagos" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <!--Departure/Destination dividers-->
-        <View
-                android:layout_width="1.3dp"
-                android:layout_height="0dp"
-                android:background="@color/example_5_page_bg_color"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/itemFlightDepartureLayout"
-                app:layout_constraintTop_toTopOf="parent" />
 
         <!--Edge dividers-->
         <View
+                android:id="@+id/viewStartEdge"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
                 android:background="@color/example_5_page_bg_color"
@@ -117,7 +104,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         <View
-                android:id="@+id/view"
+                android:id="@+id/viewEndEdge"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
                 android:background="@color/example_5_page_bg_color"

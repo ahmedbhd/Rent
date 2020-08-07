@@ -21,7 +21,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:centerTitleText="@string/global_calendar"
-                app:endActionDrawable="@drawable/add"
+                app:endActionDrawable="@drawable/ic_add"
                 app:hasCenterTitle="true"
                 app:hasEndActionButton="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -103,10 +103,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/exFiveRv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 app:items="@{viewModel.calendarItemsList}"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/exFiveCalendar" />

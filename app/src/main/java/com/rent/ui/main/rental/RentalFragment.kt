@@ -8,7 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.rent.R
 import com.rent.base.BaseFragment
 import com.rent.data.model.relations.RentalWithLocataire
@@ -17,6 +21,8 @@ import com.rent.global.helper.Navigation
 import com.rent.global.helper.ViewModelFactory
 import com.rent.global.listener.DialogCustomCallListener
 import com.rent.global.utils.ExtraKeys
+import com.rent.global.utils.fireBaseEmail
+import com.rent.global.utils.fireBasePassword
 import com.rent.global.utils.observeOnlyNotNull
 import com.rent.ui.main.calendar.REQUEST_CODE
 import com.rent.ui.rental.detail.RentalDetailActivity
@@ -34,6 +40,7 @@ class RentalFragment : BaseFragment() {
     lateinit var rentalListAdapter: RentalListAdapter
 
     private lateinit var binding: FragmentRentalBinding
+    private lateinit var auth: FirebaseAuth
 
     companion object {
         fun newInstance(): RentalFragment {
@@ -49,7 +56,7 @@ class RentalFragment : BaseFragment() {
 
         binding = FragmentRentalBinding.bind(root)
         registerBindingAndBaseObservers()
-
+        auth = Firebase.auth
         return root
     }
 
@@ -75,6 +82,22 @@ class RentalFragment : BaseFragment() {
             phoneCall(it)
             viewModel.setTelNull()
         }
+
+        viewModel.onRefreshClicked.observeOnlyNotNull(viewLifecycleOwner) {
+            fireBaseSignIn()
+        }
+    }
+
+    private fun fireBaseSignIn() {
+        auth.signInWithEmailAndPassword(fireBaseEmail, fireBasePassword)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    viewModel.onFireBaseSignInSuccess()
+                } else {
+                    viewModel.onFireBaseFails(task.exception.toString())
+                }
+            }
     }
 
     private fun showCallDialog(
@@ -103,6 +126,12 @@ class RentalFragment : BaseFragment() {
         binding.flistfav.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.flistfav.adapter = rentalListAdapter
+        binding.flistfav.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     override fun navigate(navigationTo: Navigation) {

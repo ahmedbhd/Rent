@@ -1,4 +1,4 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can ic_add configuration options common to all sub-projects/modules.
 
 buildscript {
     ext.versions = [:]
@@ -49,6 +49,8 @@ buildscript {
     versions.firebase_crashlytics = '17.1.0'
     versions.analytics_ktx = '17.4.4'
     versions.analytics = '17.1.1'
+    versions.firebase_database = '19.3.1'
+    versions.firebase_auth = '19.3.2'
 
     versions.junit = "4.12"
     versions.ext_junit = "1.1.1"

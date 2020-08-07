@@ -110,4 +110,20 @@
     <string name="global_payments">Paiements</string>
     <string name="global_rentals">Locations</string>
 
+
+    <string name="payment_dialog_amount_text">%1$d ( %2$s )</string>
+    <string name="global_firebase_error">Synchronisation échoué</string>
+    <string name="global_alert">Alert</string>
+    <string name="global_upload">Upload</string>
+    <string name="global_download">Télécharger</string>
+    <string name="global_synchronise">Synchroniser avec le serveur</string>
+
+    <string name="rentals_synchronised">Locations synchronisés</string>
+    <string name="payments_synchronised">Paiments synchronisé</string>
+    <string name="locataires_synchronised">Locataires synchroniseé</string>
+    <string name="dialog_phone_title">Taper le N° pour appeler</string>
+
+    <string name="no_data_to_be_uploaded">Vous n\'avez pas des données à uploader</string>
+    <string name="rental_detail_payment_list">List Paiements</string>
+
 </resources>

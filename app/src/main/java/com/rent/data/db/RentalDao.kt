@@ -24,4 +24,9 @@ interface RentalDao {
     @Query("SELECT * from rental where idRental = (SELECT MAX (idRental) from rental) LIMIT 1")
     suspend fun getLastRental(): Rental
 
+    @Query("DELETE from rental")
+    suspend fun deleteAllRentals()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addAllRentals(vararg rentals: Rental)
 }

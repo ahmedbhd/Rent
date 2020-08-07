@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/margin_global_5dp"
-                    android:drawableEnd="@drawable/phonelist"
+                    android:drawableEnd="@drawable/ic_phone_contact"
                     android:drawablePadding="@dimen/padding_global_2dp"
                     android:gravity="center"
                     android:text="@string/global_phones"
@@ -267,7 +267,7 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/calendaricon" />
+                    app:srcCompat="@drawable/ic_calendar_icon" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/AddDateLayout"
@@ -341,7 +341,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        app:srcCompat="@drawable/clockicon" />
+                        app:srcCompat="@drawable/ic_clock_icon" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
 

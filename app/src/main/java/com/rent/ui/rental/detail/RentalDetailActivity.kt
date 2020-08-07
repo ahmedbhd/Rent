@@ -260,7 +260,7 @@ class RentalDetailActivity : BaseActivity() {
         val colorDrawableBackground = ColorDrawable(Color.parseColor("#ff0000"))
         val deleteIcon = ContextCompat.getDrawable(
             this,
-            R.drawable.ic_delete_white_24dp
+            R.drawable.ic_delete_item
         )!!
 
         paymentRecyclerView.apply {

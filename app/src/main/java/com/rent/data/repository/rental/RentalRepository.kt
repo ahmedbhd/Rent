@@ -18,4 +18,7 @@ interface RentalRepository {
 
     @WorkerThread
     suspend fun updateRental(rental: Rental)
+
+    @WorkerThread
+    suspend fun synchronise(rentals: List<Rental>)
 }

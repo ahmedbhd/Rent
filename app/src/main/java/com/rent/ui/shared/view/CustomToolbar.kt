@@ -198,4 +198,4 @@ private const val DEFAULT_HAS_LEFT_ACTION_BUTTON = false
 private const val DEFAULT_HAS_RIGHT_ACTION_BUTTON = false
 private const val DEFAULT_HAS_CENTER_TITLE = false
 private const val DEFAULT_LEFT_ACTION_BUTTON_DRAWABLE = R.drawable.ic_arrow_back
-private const val DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE = R.drawable.garbage
+private const val DEFAULT_RIGHT_ACTION_BUTTON_DRAWABLE = R.drawable.ic_garbage

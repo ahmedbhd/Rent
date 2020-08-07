@@ -8,17 +8,30 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
+import com.google.firebase.ktx.Firebase
 import com.rent.R
 import com.rent.base.BaseAndroidViewModel
 import com.rent.data.model.locataire.Locataire
+import com.rent.data.model.payment.Payment
+import com.rent.data.model.relations.LocataireWithPayment
 import com.rent.data.model.relations.RentalWithLocataire
 import com.rent.data.model.rental.Rental
 import com.rent.data.repository.locataire.LocataireRepository
+import com.rent.data.repository.payment.PaymentRepository
 import com.rent.data.repository.rental.RentalRepository
 import com.rent.global.helper.FetchState
 import com.rent.global.helper.Navigation
+import com.rent.global.helper.SingleLiveEvent
 import com.rent.global.helper.dialog.CallDialog
+import com.rent.global.helper.dialog.ChooseDialog
 import com.rent.global.listener.*
+import com.rent.global.utils.DebugLog
+import com.rent.global.utils.TAG
 import com.rent.global.utils.tryCatch
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,7 +46,8 @@ class RentalViewModel @Inject constructor(
     application: Application,
     schedulerProvider: SchedulerProvider,
     private val rentalRepository: RentalRepository,
-    private val locataireRepository: LocataireRepository
+    private val locataireRepository: LocataireRepository,
+    private val paymentRepository: PaymentRepository
 ) : BaseAndroidViewModel(
     application,
     schedulerProvider
@@ -46,7 +60,13 @@ class RentalViewModel @Inject constructor(
 
     var callDialog = MutableLiveData<CallDialog>()
     var telToBeCalled = MutableLiveData<String>()
+    var onRefreshClicked = SingleLiveEvent<Boolean>()
     private var fetch: MutableLiveData<FetchState> = MutableLiveData()
+
+    private val database = Firebase.database
+    private val rentalsRef = database.getReference("rentals")
+    private val locatairesRef = database.getReference("locataires")
+    private val paymentsRef = database.getReference("payments")
 
 
     init {
@@ -209,5 +229,173 @@ class RentalViewModel @Inject constructor(
                 rentals.value = ArrayList(locationFilteredList)
             }
         }
+    }
+
+    override fun onEndActionClick() {
+        onRefreshClicked.value = true
+    }
+
+    fun onFireBaseSignInSuccess() {
+        choseDialog.value = ChooseDialog.build(
+            applicationContext,
+            R.string.global_alert,
+            R.string.global_synchronise,
+            R.string.global_upload,
+            R.string.global_download,
+            {
+                uploadData()
+            },
+            {
+                downloadData()
+            }
+        )
+    }
+
+    private fun downloadData() {
+        showBlockingProgressBar()
+        downloadLocataires()
+    }
+
+    private fun downloadLocataires() {
+        locatairesRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue<List<Locataire>>()
+                value?.let {
+                    viewModelScope.launch {
+                        tryCatch({
+                            withContext(schedulerProvider.dispatchersIO()) {
+                                locataireRepository.synchronise(value)
+                            }
+                            onSynchroniseLocatairesSuccess()
+                        }, {
+                            onFireBaseFails(it.toString())
+                        })
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                onFireBaseFails(error.toString())
+            }
+        })
+    }
+
+    private fun onSynchroniseLocatairesSuccess() {
+        hideBlockingProgressBar()
+        showToast(R.string.locataires_synchronised)
+        downloadRentals()
+    }
+
+    private fun downloadPayments() {
+        paymentsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue<List<Payment>>()
+                value?.let {
+                    viewModelScope.launch {
+                        tryCatch({
+                            withContext(schedulerProvider.dispatchersIO()) {
+                                paymentRepository.synchronise(value)
+                            }
+                            onSynchronisePaymentsSuccess()
+                        }, {
+                            onFireBaseFails(it.toString())
+                        })
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                onFireBaseFails(error.toString())
+            }
+        })
+    }
+
+    private fun onSynchronisePaymentsSuccess() {
+        hideBlockingProgressBar()
+        showToast(R.string.payments_synchronised)
+        loadRentals()
+    }
+
+    private fun downloadRentals() {
+        rentalsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.getValue<List<Rental>>()
+                value?.let {
+                    viewModelScope.launch {
+                        tryCatch({
+                            withContext(schedulerProvider.dispatchersIO()) {
+                                rentalRepository.synchronise(value)
+                            }
+                            onSynchroniseRentalsSuccess()
+                        }, {
+                            onFireBaseFails(it.toString())
+                        })
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                onFireBaseFails(error.toString())
+            }
+        })
+    }
+
+    private fun onSynchroniseRentalsSuccess() {
+        hideBlockingProgressBar()
+        showToast(R.string.rentals_synchronised)
+        downloadPayments()
+    }
+
+    private fun onLoadLocalDataSuccess(
+        locataireResponse: List<Locataire>,
+        paymentsResponse: ArrayList<LocataireWithPayment>
+    ) {
+        hideBlockingProgressBar()
+        if (locataireResponse.isEmpty() && paymentsResponse.isEmpty() && backUpLocations.isEmpty()) {
+            showToast(R.string.no_data_to_be_uploaded)
+        } else {
+            rentalsRef.setValue(ArrayList<Rental>().apply {
+                backUpLocations.forEach {
+                    add(it.rental)
+                }
+            })
+            locatairesRef.setValue(locataireResponse)
+            paymentsRef.setValue(ArrayList<Payment>().apply {
+                paymentsResponse.forEach {
+                    add(it.payment)
+                }
+            })
+        }
+    }
+
+    private fun uploadData() {
+        hideBlockingProgressBar()
+        viewModelScope.launch {
+            tryCatch({
+                val locataireResponse = withContext(schedulerProvider.dispatchersIO()) {
+                    locataireRepository.getLocataires()
+                }
+                val paymentsResponse = withContext(schedulerProvider.dispatchersIO()) {
+                    paymentRepository.getPayments()
+                }
+                onLoadLocalDataSuccess(locataireResponse, paymentsResponse)
+            }, {
+
+            })
+        }
+    }
+
+    fun onFireBaseFails(exception: String?) {
+        DebugLog.e(TAG, exception.toString())
+        showToast(R.string.global_firebase_error)
     }
 }

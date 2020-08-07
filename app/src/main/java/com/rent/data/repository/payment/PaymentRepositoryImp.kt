@@ -7,6 +7,7 @@ import com.rent.data.model.relations.LocataireWithPayment
 import com.rent.global.helper.SharedPreferences
 import javax.inject.Inject
 
+
 class PaymentRepositoryImp
 @Inject constructor(
     sharedPreferences: SharedPreferences,
@@ -56,5 +57,10 @@ class PaymentRepositoryImp
                 )
             }
         }
+    }
+
+    override suspend fun synchronise(payments: List<Payment>) {
+        database.paymentDao().deleteAllPayments()
+        database.paymentDao().addAllPayments(*payments.toTypedArray())
     }
 }

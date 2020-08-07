@@ -246,7 +246,7 @@ fun CharSequence?.isValidEmail(): Boolean {
  * @return Boolean value
  */
 fun String.isValidPhoneNumber(): Boolean {
-    val pattern = Pattern.compile("[+]?[0-9. ]{8,11}+")
+    val pattern = Pattern.compile("[+]?[0-9. ]{8,20}+")
     if (this.isEmpty()) {
         return false
     }
@@ -267,7 +267,7 @@ fun Array<String>.allPermissionsGranted() = this.all {
 
 fun File.toMultipartBody(): MultipartBody.Part {
     val mFile: RequestBody = this.asRequestBody("".toMediaTypeOrNull())
-    return MultipartBody.Part.createFormData("avatar", this.name, mFile)
+    return MultipartBody.Part.createFormData("ic_avatar", this.name, mFile)
 }
 
 fun String.clearTempFiles() {
@@ -326,11 +326,13 @@ internal fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean 
 
 internal inline fun Boolean?.orFalse(): Boolean = this ?: false
 
-internal fun Context.getDrawableCompat(@DrawableRes drawable: Int) = ContextCompat.getDrawable(this, drawable)
+internal fun Context.getDrawableCompat(@DrawableRes drawable: Int) =
+    ContextCompat.getDrawable(this, drawable)
 
 internal fun Context.getColorCompat(@ColorRes color: Int) = ContextCompat.getColor(this, color)
 
-internal fun TextView.setTextColorRes(@ColorRes color: Int) = setTextColor(context.getColorCompat(color))
+internal fun TextView.setTextColorRes(@ColorRes color: Int) =
+    setTextColor(context.getColorCompat(color))
 
 fun daysOfWeekFromLocale(): Array<DayOfWeek> {
     val firstDayOfWeek = WeekFields.of(Locale.FRENCH).firstDayOfWeek

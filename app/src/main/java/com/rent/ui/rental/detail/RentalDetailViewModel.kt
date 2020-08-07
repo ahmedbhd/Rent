@@ -129,7 +129,7 @@ class RentalDetailViewModel @Inject constructor(
 
     fun showPaymentDialog() {
         paymentDialog.value = PaymentDialog.build(
-            Payment(0, "", 0, "", rentalWithLocataire.rental.idRental),
+            Payment(0, Date(), 0, "", rentalWithLocataire.rental.idRental),
             this,
             dismissPaymentDialog()
         )
@@ -372,7 +372,9 @@ class RentalDetailViewModel @Inject constructor(
     }
 
     private fun validateTel(): Boolean {
-        return if (rentalWithLocataire.locataire.numTel.isValidPhoneNumber()) {
+        return if (rentalWithLocataire.locataire.numTel.split(",")
+                .any { it.isValidPhoneNumber() }
+        ) {
             true
         } else {
             showToast(R.string.global_wrong_phone)

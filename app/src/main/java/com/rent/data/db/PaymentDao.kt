@@ -26,4 +26,10 @@ interface PaymentDao {
 
     @Query("SELECT * from payment where rentalId=:id")
     suspend fun getPaymentByRentalId(id: Long): List<Payment>
+
+    @Query("DELETE from payment")
+    suspend fun deleteAllPayments()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addAllPayments(vararg payments: Payment)
 }

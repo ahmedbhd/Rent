@@ -23,4 +23,7 @@ interface PaymentRepository {
 
     @WorkerThread
     suspend fun getPaymentByRentalId(id: Long): ArrayList<LocataireWithPayment>
+
+    @WorkerThread
+    suspend fun synchronise(payment: List<Payment>)
 }

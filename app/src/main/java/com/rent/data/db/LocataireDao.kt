@@ -23,4 +23,10 @@ interface LocataireDao {
 
     @Query("SELECT * from locataire where idLocataire = (SELECT MAX (idLocataire) from locataire) LIMIT 1")
     suspend fun getLastLocataire(): Locataire
+
+    @Query("DELETE from locataire")
+    suspend fun deleteAllLocataire()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addAllLocataire(vararg rentals: Locataire)
 }

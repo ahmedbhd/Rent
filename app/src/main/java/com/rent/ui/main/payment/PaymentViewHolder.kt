@@ -3,9 +3,11 @@ package com.rent.ui.main.payment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.rent.R
 import com.rent.data.model.relations.LocataireWithPayment
 import com.rent.databinding.PaymentListItemBinding
 import com.rent.global.listener.PaymentItemClickListener
+import com.rent.global.utils.formatDate
 
 
 class PaymentViewHolder private constructor(
@@ -14,9 +16,12 @@ class PaymentViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(locataireWithPayment: LocataireWithPayment) {
-        binding.textmontant.text =
-            locataireWithPayment.payment.amount.toString() + " ( " + locataireWithPayment.payment.type + " )"
-        binding.description.text = locataireWithPayment.payment.paymentDate
+        binding.textmontant.text = binding.root.context.getString(
+            R.string.payment_dialog_amount_text,
+            locataireWithPayment.payment.amount,
+            locataireWithPayment.payment.type
+        )
+        binding.description.text = formatDate.format(locataireWithPayment.payment.paymentDate)
         binding.tvName.text = locataireWithPayment.locataire.fullName
 
         binding.root.setOnClickListener {

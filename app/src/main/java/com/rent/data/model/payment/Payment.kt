@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.rent.data.model.rental.Rental
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 @Entity(tableName = "Payment", foreignKeys = (arrayOf(
@@ -21,7 +22,7 @@ import kotlinx.android.parcel.Parcelize
 data class Payment(
     @PrimaryKey(autoGenerate = true)
     val idPayment: Long = 0,
-    val paymentDate: String = "",
+    val paymentDate: Date = Date(),
     val amount: Int = 0,
     val type: String = "",
     val rentalId: Long = 0

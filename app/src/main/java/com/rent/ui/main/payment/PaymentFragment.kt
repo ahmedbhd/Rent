@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rent.R
 import com.rent.base.BaseFragment
@@ -63,6 +64,12 @@ class PaymentFragment : BaseFragment() {
         binding.paymentRecycler.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.paymentRecycler.adapter = paymentListAdapter
+        binding.paymentRecycler.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     private fun registerPaymentDialog() {

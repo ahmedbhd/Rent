@@ -12,108 +12,81 @@
             android:id="@+id/swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/margin_global_5dp"
             app:leftEdgeSwipeOffset="0dp"
             app:rightEdgeSwipeOffset="0dp">
 
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRentalItemName"
+                style="@style/titetextstyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toTopOf="@+id/vstart"
-                app:layout_constraintEnd_toStartOf="@+id/vend"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_avatar"
+                android:drawablePadding="10dp"
+                android:textAlignment="center"
+                android:textColor="#686868"
+                android:textSize="23sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="full name" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/loc_cin"
-                    style="@style/titetextstyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/avatar"
-                    android:drawablePadding="10dp"
-                    android:text="full name"
-                    android:textAlignment="center"
-                    android:textColor="#686868"
-                    android:textSize="23sp"
-                    android:textStyle="bold" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/vend"
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRentalItemDateEnd"
+                style="@style/subtitetextstyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                android:layout_height="40dp"
+                android:layout_marginEnd="@dimen/margin_global_5dp"
+                android:gravity="center"
+                android:inputType="datetime"
+                android:textSize="@dimen/font_18sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvRentalItemTimeEnd"
+                app:layout_constraintEnd_toStartOf="@id/tvRentalItemTimeEnd"
+                tools:text="2019-08-02" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/loc_end"
-                    style="@style/subtitetextstyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="5dp"
-
-
-                    android:layout_marginBottom="8dp"
-                    android:gravity="right|center_vertical|end"
-                    android:inputType="datetime"
-                    android:text="2019-08-02"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/subtitetextstyle"
-                    android:textSize="18sp" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/etime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:drawableEnd="@drawable/hourglassend"
-                    android:drawablePadding="2dp"
-                    android:gravity="center"
-                    android:text="13:54" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/vstart"
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRentalItemTimeEnd"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:layout_height="40dp"
+                android:layout_marginEnd="@dimen/margin_global_10dp"
+                android:layout_marginBottom="@dimen/margin_global_8dp"
+                android:drawableEnd="@drawable/ic_hour_glass_end"
+                android:drawablePadding="@dimen/padding_global_2dp"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvRentalItemName"
+                tools:text="13:54" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/loc_start"
-                    style="@style/subtitetextstyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="8dp"
 
-                    android:drawableStart="@drawable/hourglassstart"
-                    android:gravity="start|center_vertical"
-                    android:inputType="datetime"
-                    android:text="2019-07-17"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/subtitetextstyle"
-                    android:textSize="18sp" />
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRentalItemDateStart"
+                style="@style/subtitetextstyle"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/margin_global_10dp"
+                android:layout_marginEnd="@dimen/margin_global_5dp"
+                android:drawableStart="@drawable/ic_hour_glass_start"
+                android:gravity="center"
+                android:inputType="datetime"
+                android:padding="@dimen/padding_global_2dp"
+                android:textSize="@dimen/font_18sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/tvRentalItemTimeStart"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="2019-07-17" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/stime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="00:00" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvRentalItemTimeStart"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginBottom="@dimen/margin_global_8dp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/tvRentalItemDateStart"
+                app:layout_constraintTop_toBottomOf="@id/tvRentalItemName"
+                app:layout_goneMarginEnd="@dimen/margin_global_4dp"
+                tools:text="00:00" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

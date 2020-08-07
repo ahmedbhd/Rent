@@ -7,44 +7,55 @@
 
     </data>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/listcalls"
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@android:color/white"
-            android:gravity="center"
-            android:orientation="vertical"
             android:padding="@dimen/padding_global_5dp"
             app:layout_anchorGravity="center">
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/margin_global_10dp"
                 android:background="#1B1818"
                 android:backgroundTint="#2E2828"
                 android:gravity="center"
-                android:padding="2dp"
-                android:text="Taper le N° pour appeler"
+                android:padding="@dimen/padding_global_2dp"
+                android:text="@string/dialog_phone_title"
                 android:textColor="#CCC5C5"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/callnumberCall"
-                android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/listcalls"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:drawableStart="@drawable/phonesettings"
-                android:drawablePadding="5dp"
                 android:gravity="center"
-                android:padding="5dp"
-                android:text="53594242"
-                android:textSize="20sp" />
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textView">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/callnumberCall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/margin_global_5dp"
+                    android:drawableStart="@drawable/ic_phone_dialing"
+                    android:drawablePadding="@dimen/padding_global_10dp"
+                    android:gravity="center"
+                    android:padding="@dimen/padding_global_5dp"
+                    android:textSize="@dimen/font_20sp"
+                    tools:text="53594242" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

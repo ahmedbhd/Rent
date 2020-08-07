@@ -52,21 +52,33 @@ class CustomCallDialog(
                 myTextView.text = tab[i]
 
                 myTextView.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.phonesettings,
+                    R.drawable.ic_phone_dialing,
                     0,
                     0,
                     0
                 )
-                myTextView.compoundDrawablePadding = 5
                 myTextView.gravity = Gravity.CENTER
-                myTextView.setPadding(5, 5, 5, 5)
+                myTextView.setPadding(
+                    context.resources.getDimension(R.dimen.padding_global_5dp).toInt(),
+                    context.resources.getDimension(R.dimen.padding_global_5dp).toInt(),
+                    context.resources.getDimension(R.dimen.padding_global_5dp).toInt(),
+                    context.resources.getDimension(R.dimen.padding_global_5dp).toInt()
+                )
                 myTextView.textSize = 20f
+                myTextView.setTextColor(addTel1.currentTextColor)
+                myTextView.compoundDrawablePadding =
+                    context.resources.getDimension(R.dimen.padding_global_10dp).toInt()
                 val parms = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 ) // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
                 parms.gravity = Gravity.CENTER
-                parms.setMargins(5, 5, 5, 5)
+                parms.setMargins(
+                    context.resources.getDimension(R.dimen.margin_global_5dp).toInt(),
+                    context.resources.getDimension(R.dimen.margin_global_5dp).toInt(),
+                    context.resources.getDimension(R.dimen.margin_global_5dp).toInt(),
+                    context.resources.getDimension(R.dimen.margin_global_5dp).toInt()
+                )
                 myTextView.layoutParams = parms
                 myLayout.addView(myTextView)
                 myTextView.setOnClickListener {

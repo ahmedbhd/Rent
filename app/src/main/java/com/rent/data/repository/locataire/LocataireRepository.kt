@@ -6,7 +6,7 @@ import com.rent.data.model.locataire.Locataire
 interface LocataireRepository {
 
     @WorkerThread
-    suspend fun getLocataire(): List<Locataire>
+    suspend fun getLocataires(): List<Locataire>
 
     @WorkerThread
     suspend fun addLocataire(locataire: Locataire): Locataire
@@ -19,4 +19,7 @@ interface LocataireRepository {
 
     @WorkerThread
     suspend fun updateLocataire(locataire: Locataire)
+
+    @WorkerThread
+    suspend fun synchronise(locataires: List<Locataire>)
 }

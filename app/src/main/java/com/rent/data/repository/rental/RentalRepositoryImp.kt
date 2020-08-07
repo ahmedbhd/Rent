@@ -27,4 +27,9 @@ class RentalRepositoryImp
     }
 
     override suspend fun updateRental(rental: Rental) = database.rentalDao().updateRental(rental)
+
+    override suspend fun synchronise(rentals: List<Rental>) {
+        database.rentalDao().deleteAllRentals()
+        database.rentalDao().addAllRentals(*rentals.toTypedArray())
+    }
 }

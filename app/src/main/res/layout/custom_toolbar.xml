@@ -47,7 +47,7 @@
                 android:id="@+id/imageToolbarEndActionIcon"
                 android:layout_width="@dimen/size_custom_toolbar_end_action_image"
                 android:layout_height="@dimen/size_custom_toolbar_end_action_image"
-                android:src="@drawable/garbage"
+                android:src="@drawable/ic_garbage"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
